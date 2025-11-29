@@ -1,12 +1,15 @@
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, initializeAuth } from "firebase/auth";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
 import { store } from "../store";
 import Toast from 'react-native-toast-message';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export class AuthService {
-    async handleUserLogin(email: string, password: string, isStaff: boolean) {
+    
+    async handleUserLogin(email: string, password: string) {
         try {
             const userCredential = await signInWithEmailAndPassword(
                 auth,
@@ -31,14 +34,14 @@ export class AuthService {
                     userType?.toLowerCase() === "staff" ||
                     userType?.toLowerCase() === "admin";
 
-                if (isUserActuallyStaff !== isStaff) {
-                    await auth.signOut();
-                    throw new Error(
-                        isStaff
-                            ? "This account is not a staff account. Please use the member login."
-                            : "Staff accounts must log in through the Staff Login portal."
-                    );
-                }
+                // if (isUserActuallyStaff !== isStaff) {
+                //     await auth.signOut();
+                //     throw new Error(
+                //         isStaff
+                //             ? "This account is not a staff account. Please use the member login."
+                //             : "Staff accounts must log in through the Staff Login portal."
+                //     );
+                // }
 
                 // const updatedEntries =
                 //   updatedData?.user?.staff?.staffSignInAndOut || [];

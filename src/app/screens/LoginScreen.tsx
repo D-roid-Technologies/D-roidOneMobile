@@ -60,7 +60,7 @@ const MemberLogin = ({ navigation }: any) => {
             await authService.handleUserLogin(
                 formData.email,
                 formData.password,
-                isStaff
+                // isStaff
             );
             setText("Fetching your information...");
 
@@ -88,7 +88,7 @@ const MemberLogin = ({ navigation }: any) => {
                 <TouchableOpacity
                     style={styles.backButton}
                     // Mapped 'Signup' to your existing RoutePaths constant
-                    onPress={() => navigation.navigate("-1")}
+                    onPress={() => navigation.navigate("Signup")}
                     disabled={isSubmitting}
                 >
                     <Ionicons name="arrow-back" size={20} color="#ffffff" />
@@ -101,8 +101,8 @@ const MemberLogin = ({ navigation }: any) => {
                 </View>
 
                 {/* Title & Subtext */}
-                <Text style={styles.title}>Member Login</Text>
-                <Text style={styles.subtext}>Welcome back! Please login to your account.</Text>
+                <Text style={styles.title}>Welcome back</Text>
+                <Text style={styles.subtext}>Please login to your D'roid One Staff or Member account.</Text>
 
                 {/* Email Input */}
                 <View style={styles.fieldContainer}>
