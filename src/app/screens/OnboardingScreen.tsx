@@ -134,7 +134,7 @@ export default OnboardingScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFFFFF", // White background
+        backgroundColor: "#000105", // White background
     },
     skipButton: {
         position: "absolute",
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     skipText: {
-        color: "#182b90", // Primary color for contrast
+        color: "#C7D2FE", // Primary color for contrast
         fontWeight: "900",
         fontSize: 16,
     },
@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         borderRadius: 12,
         borderWidth: 2,
-        borderColor: "#182b9022",
+        borderColor: "#000c3a",
     },
     title: {
         fontSize: 30,
         fontWeight: "900",
-        color: "#182b90", // Primary color
+        color: "#ffffff", // Primary color
         textAlign: "center",
         marginBottom: 10,
     },
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#182b90", // Primary color dots
     },
     button: {
-        backgroundColor: "#182b90", // Primary color button
+        backgroundColor: "#C7D2FE", // Primary color button
         paddingVertical: 14,
         paddingHorizontal: 40,
         borderRadius: 8,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         marginBottom: 50,
     },
     buttonText: {
-        color: "#FFFFFF", // White text
+        color: "#000105", // White text
         fontSize: 16,
         fontWeight: "900",
         textAlign: "center",
@@ -203,6 +203,6 @@ const styles = StyleSheet.create({
     icon: {
         marginBottom: 30,
         textAlign: "center",
-        color: "#182b90", // Icon in primary color
+        color: "#C7D2FE", // Icon in primary color
     },
 });

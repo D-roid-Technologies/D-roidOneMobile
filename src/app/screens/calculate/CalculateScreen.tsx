@@ -43,7 +43,7 @@ const CalculatorsScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>🧮 Calculation Tools</Text>
+            <Text style={styles.title}>Calculation Tools</Text>
             <Text style={styles.subtitle}>
                 Access various calculators for your needs
             </Text>
@@ -94,13 +94,13 @@ const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F9FAFB",
+        backgroundColor: "#000105",
         padding: 16,
     },
     title: {
         fontSize: 22,
         fontWeight: "700",
-        color: "#071D6A",
+        color: "#ffffff",
         textAlign: "center",
         marginBottom: 4,
     },

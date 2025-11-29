@@ -272,12 +272,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        backgroundColor: "#FFFFFF", // White background
+        backgroundColor: "#000105", // White background
     },
     header: {
         fontSize: 28,
         fontWeight: "700",
-        color: "#182b90", // Primary color
+        color: "#ffffff", // Primary color
         marginBottom: 8,
         textAlign: "center",
     },
@@ -294,9 +294,10 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 12,
         borderRadius: 5,
-        backgroundColor: "#fff",
+        backgroundColor: "#C7D2FE",
         borderWidth: 1,
-        borderColor: "#CCCCCC",
+        borderColor: "#C7D2FE",
+        color: "#000000"
     },
     picker: {
         width: "100%",
@@ -345,13 +346,13 @@ const styles = StyleSheet.create({
         right: 20,
     },
     button: {
-        backgroundColor: "#182b90", // Primary color button
+        backgroundColor: "#C7D2FE", // Primary color button
         paddingVertical: 14,
         borderRadius: 8,
         alignItems: "center",
     },
     buttonText: {
-        color: "#fff",
+        color: "#000105",
         fontSize: 16,
         fontWeight: "700",
     },

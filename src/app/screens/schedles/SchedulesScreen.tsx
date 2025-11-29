@@ -187,13 +187,13 @@ export default SchedulesScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: "#000105",
     padding: 16,
   },
   title: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#071D6A",
+    color: "#ffffff",
     marginBottom: 4,
     textAlign: "center",
   },

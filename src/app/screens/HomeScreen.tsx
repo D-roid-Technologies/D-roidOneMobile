@@ -8,12 +8,32 @@ import {
     Image,
     StatusBar,
     Platform,
+    Modal, // <-- Added Modal
+    Dimensions, // <-- Added Dimensions for calculating height
+    Alert, // Using Alert for the simple quick action notification as per existing code
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { ASSETS } from "../constants/Assets";
+// Updated Redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../redux/store";
+import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
+import { useNavigation } from "@react-navigation/native"; // <-- Import navigation hook
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
-const HomeScreen: React.FC = () => {
+const { height } = Dimensions.get('window'); // Get screen height for modal styling
+
+const HomeScreen: React.FC = ({ navigation }: any) => {
+    // Redux Hooks
+    const userMain = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+
+    // New state for controlling the visibility of the profile modal
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    // Placeholder data (kept for structure, but relying on userMain)
     const [user] = useState({
         name: "John Doe",
         email: "john.doe@email.com",
@@ -256,6 +276,20 @@ const HomeScreen: React.FC = () => {
 
     const greeting = getGreeting();
 
+    const handleQuickAction = (title: string) => {
+        // NOTE: Changed alert() to a simple, non-blocking notification
+        Alert.alert("Action Required", `Navigating to ${title} screen.`);
+    }
+
+    // Sign out handler function
+    const handleSignOut = async () => {
+        setIsModalVisible(false);
+        dispatch(logoutUser());
+        await signOut(auth).then(() => {
+            navigation.navigate("Login")
+        })
+    };
+
 
     return (
         <View
@@ -282,8 +316,12 @@ const HomeScreen: React.FC = () => {
                     <TouchableOpacity style={styles.iconBtn}>
                         <Ionicons name="notifications-outline" size={22} color="#ffffff" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.avatar}>
-                        <Text style={styles.avatarText}>{user.initials}</Text>
+                    {/* Updated Avatar to show the modal */}
+                    <TouchableOpacity
+                        style={styles.avatar}
+                        onPress={() => setIsModalVisible(true)}
+                    >
+                        <Text style={styles.avatarText}>{userMain.initials}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -294,13 +332,13 @@ const HomeScreen: React.FC = () => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <View>
                             <Text style={styles.greetingText}>{greeting}</Text>
-                            <Text style={styles.userName}>{user.name}</Text>
+                            <Text style={styles.userName}>{userMain.firstName} {userMain.lastName}</Text>
                         </View>
-                        <Text style={styles.userEmail}>{user.email}</Text>
+                        <Text style={styles.userEmail}>{userMain.email}</Text>
                     </View>
 
                     <Text style={styles.userDetails}>
-                        {user.accountType} • ID: {user.memberId}
+                        {userMain.userType} | {userMain.staffId}
                     </Text>
                 </View>
             </View>
@@ -325,7 +363,11 @@ const HomeScreen: React.FC = () => {
                 <Text style={styles.sectionTitle}>Quick Actions</Text>
                 <View style={styles.quickActionsContainer}>
                     {quickActions.map((action, index) => (
-                        <TouchableOpacity key={index} style={styles.actionCard} onPress={() => alert(`${action.title}`)}>
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.actionCard}
+                            onPress={() => handleQuickAction(action.title)}
+                        >
                             <View
                                 style={[styles.iconWrapper, { backgroundColor: action.color + "20" }]}
                             >
@@ -382,6 +424,68 @@ const HomeScreen: React.FC = () => {
                     ))}
                 </View>
             </ScrollView>
+
+            {/* User Profile Modal (Bottom Sheet Style) */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => setIsModalVisible(false)} // Handles Android back button
+            >
+                {/* Background overlay that closes the modal */}
+                <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
+                    onPress={() => setIsModalVisible(false)} // Close when touching outside
+                >
+                    {/* Modal content container (stops event propagation) */}
+                    <View style={styles.modalContentContainer} onStartShouldSetResponder={() => true}>
+
+                        <View style={styles.modalHandle} />
+
+                        {/* User Info */}
+                        <View style={styles.modalUserInfo}>
+                            <View style={[styles.avatar, styles.modalAvatar]}>
+                                <Text style={styles.avatarText}>{userMain.initials}</Text>
+                            </View>
+                            <Text style={styles.modalUserName}>{userMain.firstName} {userMain.lastName}</Text>
+                            <Text style={styles.modalUserDetail}>{userMain.userType}</Text>
+                            <Text style={styles.modalUserDetail}>{userMain.email}</Text>
+                        </View>
+
+                        {/* Action Buttons */}
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => {
+                                setIsModalVisible(false);
+                                // Placeholder: Navigate to profile screen
+                                // You would replace 'Profile' with your actual Profile route name
+                                navigation.navigate('Profile' as never);
+                            }}
+                        >
+                            <Ionicons name="person-circle-outline" size={24} color="#000c3a" />
+                            <Text style={styles.modalButtonText}>View Profile</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.modalButton, styles.signOutButton]}
+                            onPress={handleSignOut}
+                        >
+                            <Ionicons name="log-out-outline" size={24} color="#FF6F61" />
+                            <Text style={[styles.modalButtonText, styles.signOutButtonText]}>Sign Out</Text>
+                        </TouchableOpacity>
+
+                        {/* Close button (optional, but good for UX) */}
+                        <TouchableOpacity
+                            style={styles.modalCloseButton}
+                            onPress={() => setIsModalVisible(false)}
+                        >
+                            <Text style={styles.modalCloseButtonText}>Close</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </View>
     );
 };
@@ -433,7 +537,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#000c3a",
         borderRadius: 16,
         padding: 16,
-        width: "100%",
+        width: "48%",
         marginBottom: 12,
         height: 100
     },
@@ -444,7 +548,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
-        paddingHorizontal: 16,
+        paddingHorizontal: 22,
     },
     actionCard: {
         width: "48%",
@@ -499,7 +603,7 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 20,
         // marginTop: 5,
-        height: 170,
+        height: 140,
     },
     greetingText: {
         fontSize: 14,
@@ -527,7 +631,86 @@ const styles = StyleSheet.create({
     userDetails: {
         fontSize: 13,
         color: "#C7D2FE",
-        marginTop: 60,
+        marginTop: 10,
         fontWeight: "300"
+    },
+    // --- MODAL STYLES (New) ---
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "flex-end", // Align content to the bottom
+    },
+    modalContentContainer: {
+        backgroundColor: "#ffffff",
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: Platform.OS === 'ios' ? 30 : 20, // Extra padding for safe area on iOS
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        width: '100%',
+        maxHeight: height * 0.7, // Limit max height
+    },
+    modalHandle: {
+        width: 40,
+        height: 5,
+        backgroundColor: '#ccc',
+        borderRadius: 2.5,
+        alignSelf: 'center',
+        marginBottom: 15,
+    },
+    modalUserInfo: {
+        alignItems: 'center',
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        marginBottom: 15,
+    },
+    modalAvatar: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginBottom: 10,
+        backgroundColor: '#C7D2FE',
+    },
+    modalUserName: {
+        fontSize: 22,
+        fontWeight: '700',
+        color: '#000c3a',
+    },
+    modalUserDetail: {
+        fontSize: 14,
+        color: '#555',
+        marginTop: 4,
+    },
+    modalButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 15,
+        borderRadius: 10,
+        backgroundColor: '#F3F4F6', // Light gray background
+        marginBottom: 10,
+        paddingHorizontal: 15,
+    },
+    modalButtonText: {
+        marginLeft: 10,
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#000c3a',
+    },
+    signOutButton: {
+        backgroundColor: '#FFEBEE', // Light red for sign out context
+        marginTop: 10,
+    },
+    signOutButtonText: {
+        color: '#FF6F61', // Red text
+    },
+    modalCloseButton: {
+        marginTop: 20,
+        paddingVertical: 10,
+        alignItems: 'center',
+    },
+    modalCloseButtonText: {
+        fontSize: 16,
+        color: '#999',
     },
 });

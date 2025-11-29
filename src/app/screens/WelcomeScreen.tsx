@@ -5,13 +5,13 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       {/* Top Logo */}
-      <View style={styles.logoContainer}>
+      {/* <View style={styles.logoContainer}>
         <Image
           source={{ uri: "https://i.imgur.com/YXjB6Rr.png" }} // Replace with your company logo
           style={styles.logo}
           resizeMode="contain"
         />
-      </View>
+      </View> */}
 
       {/* Title & Subtitle */}
       <View style={styles.textContainer}>
@@ -44,7 +44,7 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000105",
     paddingHorizontal: 20,
     paddingTop: 50,
     justifyContent: "space-between",
@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 70,
+    fontSize: 40,
     fontWeight: "700",
-    color: "#071D6A",
+    color: "#ffffff",
     textAlign: "center",
     marginBottom: 10,
   },
@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   signupButton: {
-    backgroundColor: "#071D6A",
+    backgroundColor: "#C7D2FE",
     paddingVertical: 14,
     borderRadius: 8,
     marginBottom: 12,
     alignItems: "center",
   },
   signupText: {
-    color: "#fff",
+    color: "#000105",
     fontSize: 16,
     fontWeight: "600",
   },
