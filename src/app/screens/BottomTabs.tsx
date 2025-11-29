@@ -23,11 +23,11 @@ export default function UserDashboard() {
         <Tab.Navigator
             screenOptions={({ route }: any) => ({
                 headerShown: false,
-                tabBarActiveTintColor: "#203499",
+                tabBarActiveTintColor: "#C7D2FE",
                 tabBarInactiveTintColor: "#999",
                 tabBarStyle: {
-                    backgroundColor: "#fff",
-                    borderTopWidth: 1,
+                    backgroundColor: "#000105",
+                    borderTopWidth: 0,
                     borderColor: "#eee",
                     paddingBottom: 5,
                     height: 60,
