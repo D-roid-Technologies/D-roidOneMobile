@@ -25,15 +25,15 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
           style={styles.signupButton}
           onPress={() => navigation.navigate("Signup")}
         >
-          <Text style={styles.signupText}>Sign Up</Text>
+          <Text style={styles.signupText}>Let's Begin</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.loginButton}
           onPress={() => navigation.navigate("Login")}
         >
           <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

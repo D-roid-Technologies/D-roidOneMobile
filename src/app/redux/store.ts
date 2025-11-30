@@ -4,7 +4,8 @@ import { userSlice } from "./slice/user";
 
 const rootReducer = combineReducers({
     // Add all your slice reducers here
-    user: userSlice.reducer
+    user: userSlice.reducer,
+    location: userSlice.reducer
 });
 
 // 1. Configure the store using the root reducer directly.

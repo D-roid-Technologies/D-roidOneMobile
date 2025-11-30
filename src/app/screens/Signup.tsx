@@ -1,27 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     ScrollView,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
+    StyleSheet,
+    ActivityIndicator,
+    Alert, // Using RN Alert for simple messages instead of Toast
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { useSelector } from "react-redux";
+import { authService } from "../redux/configuration/auth.service";
+import { RootState, store } from "../redux/store";
+import { addLocation } from "../redux/slice/location";
 
-interface FormData {
-    userType: string;
-    staffId?: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    agreeToPolicy: boolean;
+// Placeholder for Redux RootState/LocationState (Simulated)
+interface UserLocation {
+    latitude: number;
+    longitude: number;
+    countryName: string;
 }
+
+interface LocationState extends UserLocation {
+    locality: string;
+}
+
+// Minimal necessary type definitions
+// Assuming UserType structure from the original web file
+interface UserType {
+    staffId?: string; // Add staffId if it's part of your UserType
+    // Add other properties if they are part of the UserType in your actual project
+}
+
+
+// Placeholder for useNavigation (Simulated)
+const useNavigation = () => ({
+    goBack: () => console.log('Navigation: goBack'),
+    navigate: (route: string) => console.log('Navigation: navigate to', route),
+});
+
+// Placeholder for Toast (Replaced with Alert)
+const Toast = {
+    show: (config: { type: 'success' | 'error', text1: string, text2: string }) => {
+        Alert.alert(config.text1, config.text2);
+    }
+}
+
+// Placeholder for Geolocation (Simulated or assuming global availability)
+const Geolocation = {
+    getCurrentPosition: (success: (res: any) => void, error: (err: any) => void, options: any) => {
+        // Simulate a successful location retrieval after a small delay
+        setTimeout(() => {
+            success({
+                coords: { latitude: 34.0522, longitude: -118.2437 }, // Example L.A. coordinates
+            });
+        }, 100);
+    },
+};
+
+// Placeholder for AntDesign Icons (Using inline text for simplicity)
+const AntDesign = {
+    name: (iconName: string, size: number, color: string) => {
+        // Render a simple text representation of the icon
+        return <Text style={{ fontSize: size, color: color, marginRight: 5 }}>{iconName === 'arrowleft' ? '←' : '✓'}</Text>;
+    }
+};
 
 interface FormErrors {
     userType?: string;
@@ -34,33 +77,167 @@ interface FormErrors {
     agreeToPolicy?: string;
 }
 
-const Signup: React.FC = ({ navigation }: any) => {
-    const [formData, setFormData] = useState<FormData>({
-        userType: "",
-        staffId: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeToPolicy: false,
-    });
+// --- Placeholder Service and Route Definitions ---
 
-    const [formErrors, setFormErrors] = useState<FormErrors>({});
+const RoutePaths = {
+    DashBoard: 'DashboardScreen', // Example RN Screen Name
+    StaffLogin: 'StaffLoginScreen',
+    MemberLogin: 'MemberLoginScreen',
+    TermsAndCondition: 'TermsScreen',
+    PrivacyPolicy: 'PrivacyScreen',
+    ForgotPassword: 'ForgotPasswordScreen',
+};
+
+// --- Helper Functions from the Web Component ---
+
+const regex = {
+    name: /^[A-Za-z\s]+$/,
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    password:
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,}$/,
+};
+
+const generateUniqueId = (userType: string): string | null => {
+    const prefix = "DT-";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let randomPart = "";
+
+    for (let i = 0; i < 5; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    let suffix = "";
+    const lowerType = userType.toLowerCase();
+
+    if (lowerType === "organisation") {
+        suffix = "O";
+    } else if (lowerType === "member") {
+        suffix = "M";
+    } else {
+        return null; // Return null for invalid type
+    }
+
+    return `${prefix}${randomPart}-${suffix}`;
+};
+
+
+const SignUp: React.FunctionComponent = ({ navigation }: any) => {
     const [text, setText] = useState<string>("Sign Up");
 
-    const regex = {
-        name: /^[A-Za-z\s]+$/,
-        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
+    // Replacing Redux selector with local state for location management
+    const userLocation: any = useSelector(
+        (state: RootState) => state.location
+    );
+
+    const [loadingLocation, setLoadingLocation] = useState(true);
+
+    const [formData, setFormData] = useState<any>({
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        initials: "",
+        userType: "",
+        uniqueId: "",
+        email: "",
+        phone: "",
+        agreeToPolicy: false,
+        isLoggedIn: false,
+        gender: "",
+        dateOfBirth: "",
+        disability: false,
+        disabilityType: "",
+        photoUrl: "",
+        educationalLevel: "",
+        referralName: "",
+        secondaryEmail: "",
+        securityQuestion: "",
+        securityAnswer: "",
+        verifiedEmail: false,
+        verifyPhoneNumber: false,
+        agreedToTerms: false,
+        twoFactorSettings: false,
+        password: "",
+        confirmPassword: "",
+        role: undefined,
+        streetNumber: "",
+        streetName: "",
+        city: "",
+        state: "",
+        country: "",
+        skills: [],
+        certifications: [],
+        accessLevel: "",
+        permissions: [],
+        notificationPreferences: { email: true },
+        organisationalType: "",
+        isCompanyRegistered: "",
+        dateOfRegistration: "",
+    } as any); // Asserting initial state as FormData
+
+    const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+    // --- useEffect for Location (Adapted for React Native) ---
+    useEffect(() => {
+        let attempts = 0;
+        const maxAttempts = 5;
+        const retryDelay = 5000;
+        setLoadingLocation(true);
+
+        const fetchLocation = () => {
+            Geolocation.getCurrentPosition(
+                async (res) => {
+                    const { latitude, longitude } = res.coords;
+                    const geoApi = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+
+                    try {
+                        const response = await fetch(geoApi);
+                        const data = await response.json();
+
+                        store.dispatch(addLocation(data));
+                        setLoadingLocation(false);
+                    } catch (e) {
+                        console.error("Geocoding API failed:", e);
+                        setLoadingLocation(false);
+                    }
+                },
+                (error) => {
+                    if (error.code === error.PERMISSION_DENIED) {
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            console.warn("Permission denied. Retrying in 5 seconds...");
+                            setTimeout(fetchLocation, retryDelay);
+                        } else {
+                            console.error("User denied location access. Max retries reached.");
+                            setLoadingLocation(false);
+                        }
+                    } else {
+                        console.error("Geolocation error:", error.message);
+                        setLoadingLocation(false);
+                    }
+                },
+                { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+            );
+        };
+
+        fetchLocation();
+    }, []);
+
+    // --- handleChange (Adapted for React Native TextInput) ---
+    // const handleChange = (name: keyof FormData, value: string | boolean) => {
+    //     setFormData((prev: any) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
+
+    const handleChange = (key: keyof FormData, value: string) => {
+        setFormData((prev: any) => ({ ...prev, [key]: value }));
     };
 
-    const handleChange = (name: keyof FormData, value: any) => {
-        setFormData({ ...formData, [name]: value });
-    };
 
+    // --- validate function ---
     const validate = () => {
-        const errors: FormErrors = {};
+        let errors: FormErrors = {};
         let isValid = true;
 
         if (!formData.userType) {
@@ -68,7 +245,7 @@ const Signup: React.FC = ({ navigation }: any) => {
             isValid = false;
         }
 
-        if (formData.userType === "Staff" && !formData.staffId?.trim()) {
+        if (formData.userType === "Staff" && !formData.uniqueId.trim()) {
             errors.staffId = "Staff ID is required for staff users.";
             isValid = false;
         }
@@ -90,7 +267,7 @@ const Signup: React.FC = ({ navigation }: any) => {
 
         if (!formData.password || !regex.password.test(formData.password)) {
             errors.password =
-                "Password must be at least 6 characters and include uppercase, lowercase, and number.";
+                "Password must be at least 6 characters long and include a number.";
             isValid = false;
         }
 
@@ -108,252 +285,333 @@ const Signup: React.FC = ({ navigation }: any) => {
         return isValid;
     };
 
-    const handleSubmit = () => {
-        // if (!validate()) return;
+    // --- startCountdown utility function ---
+    const startCountdown = (
+        seconds: number,
+        onTick: (value: number) => void
+    ): Promise<void> => {
+        return new Promise((resolve) => {
+            let count = seconds;
+            const timer = () => {
+                onTick(count);
+                if (count <= 0) {
+                    resolve();
+                    return;
+                }
+                count--;
+                setTimeout(timer, 1000);
+            };
+            setTimeout(timer, 1000);
+        });
+    };
+
+    // --- handleSubmit (Web logic converted to RN structure) ---
+    const handleSubmit = async () => {
+        if (!validate()) return;
+
+        let generatedId = formData.uniqueId;
+
+        if (formData.userType.trim().toLowerCase() !== "staff") {
+            const result = generateUniqueId(formData.userType.trim());
+            if (result === null) {
+                Toast.show({
+                    type: 'error',
+                    text1: 'ID Generation Failed',
+                    text2: "Invalid user type — could not generate ID. 🚫",
+                });
+                return;
+            }
+            generatedId = result;
+        }
+
+        const updatedFormData = {
+            ...formData,
+            uniqueId: generatedId,
+            organisationalType: "",
+            isCompanyRegistered: "",
+            dateOfRegistration: "",
+        };
 
         setText("Creating your D'roid Account...");
 
-        // Simulate API call
-        setTimeout(() => {
-            Alert.alert("Success", "Account created successfully!");
+        try {
+            await authService.handleUserRegistration(updatedFormData, userLocation);
+
+            await startCountdown(5, (value) => {
+                setText(`User Created. Redirecting in ${value}s...`);
+            });
+
+            // Success Toast (RN style)
+            // Toast.show({
+            //     type: 'success',
+            //     text1: 'Account Created',
+            //     text2: 'Welcome to D\'roid Technologies Ltd!',
+            // });
+
+            // Navigation (Uncomment when RoutePaths is correctly defined in RN)
+            navigation.navigate("BottomTabs");
+
+        } catch (error: any) {
             setText("Sign Up");
-            navigation.navigate("BottomTabs"); // redirect to home/dashboard
-        }, 1500);
+            // Error Toast (RN style)
+            // Toast.show({
+            //     type: 'error',
+            //     text1: 'Registration Failed',
+            //     text2: error.message || "User registration failed.",
+            // });
+        }
     };
 
-    return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-            <ScrollView
-                style={styles.container}
-                contentContainerStyle={{ paddingVertical: 40, paddingBottom: 120 }}
-            >
-                <Text style={styles.header}>Join the D'roid Community</Text>
-                <Text style={styles.subtext}>
-                    Connect with other developers. Learn, collaborate, and build amazing
-                    things!
-                </Text>
+    // --- RN UI Structure ---
 
-                {/* User Type */}
-                <View style={styles.fieldContainer}>
-                    <Picker
-                        selectedValue={formData.userType}
-                        onValueChange={(value) => handleChange("userType", value)}
-                        style={styles.picker}
-                    >
-                        <Picker.Item label="Select User Type" value="" />
-                        <Picker.Item label="Staff" value="Staff" />
-                        <Picker.Item label="Member" value="Member" />
-                    </Picker>
-                    {formErrors.userType && (
-                        <Text style={styles.errorText}>{formErrors.userType}</Text>
-                    )}
+    // Simple Select Implementation (requires a Picker/Dropdown package for robust use, using basic View/Text here)
+    const renderUserTypePicker = () => (
+        <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Select User Type</Text>
+            <View style={[styles.input, { paddingHorizontal: 0, paddingVertical: 0, height: 48 }]}>
+                {/* Placeholder for Picker component */}
+                <TextInput
+                    placeholder="Select User Type (e.g., Member or Staff)"
+                    value={formData.userType}
+                    onChangeText={(v) => handleChange('userType', v)}
+                    style={{ flex: 1, paddingHorizontal: 12, color: formData.userType ? '#000' : '#BAB8B8' }}
+                />
+
+            </View>
+            {formErrors.userType && (
+                <Text style={styles.errorText}>{formErrors.userType}</Text>
+            )}
+        </View>
+    );
+
+    const renderTextInput = (name: keyof FormData, placeholder: string, secure: boolean = false, keyboardType: 'default' | 'email-address' | 'numeric' = 'default') => (
+        <View style={styles.inputContainer}>
+            <TextInput
+                style={styles.input}
+                placeholder={placeholder}
+                value={String(formData[name] || '')}
+                onChangeText={(v) => handleChange(name, v)}
+                secureTextEntry={secure}
+                keyboardType={keyboardType}
+            />
+            {formErrors[name as keyof FormErrors] && (
+                <Text style={styles.errorText}>{formErrors[name as keyof FormErrors]}</Text>
+            )}
+        </View>
+    );
+
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
+
+            <View style={styles.contentBlock}>
+                <View style={styles.topLinksContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                        <Text style={styles.loginLink}>Member Login</Text>
+                    </TouchableOpacity>
                 </View>
 
-                {/* Staff ID */}
-                {formData.userType === "Staff" && (
-                    <View style={styles.fieldContainer}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Staff ID"
-                            value={formData.staffId}
-                            onChangeText={(value) => handleChange("staffId", value)}
-                        />
-                        {formErrors.staffId && (
-                            <Text style={styles.errorText}>{formErrors.staffId}</Text>
-                        )}
+                <Text style={styles.h2}>Join the D'roid Community</Text>
+                <Text style={styles.subtext}>
+                    Connect with other developers or like minded individuals. Learn
+                    together, and build amazing things!
+                </Text>
+
+                {loadingLocation && (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="small" color="#479BE8" />
+                        <Text style={styles.loadingText}>Fetching Location...</Text>
                     </View>
                 )}
 
-                {/* First Name */}
-                <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="First Name"
-                        value={formData.firstName}
-                        onChangeText={(value) => handleChange("firstName", value)}
-                    />
-                    {formErrors.firstName && (
-                        <Text style={styles.errorText}>{formErrors.firstName}</Text>
-                    )}
-                </View>
+                {/* Form Fields */}
+                {renderUserTypePicker()}
 
-                {/* Last Name */}
-                <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Last Name"
-                        value={formData.lastName}
-                        onChangeText={(value) => handleChange("lastName", value)}
-                    />
-                    {formErrors.lastName && (
-                        <Text style={styles.errorText}>{formErrors.lastName}</Text>
-                    )}
-                </View>
+                {formData.userType === "Staff" && renderTextInput('uniqueId', 'Unique ID')}
 
-                {/* Email */}
-                <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        value={formData.email}
-                        onChangeText={(value) => handleChange("email", value)}
-                    />
-                    {formErrors.email && (
-                        <Text style={styles.errorText}>{formErrors.email}</Text>
-                    )}
-                </View>
+                {renderTextInput('firstName', 'First Name')}
+                {renderTextInput('lastName', 'Last Name')}
+                {renderTextInput('email', 'Email', false, 'email-address')}
+                {renderTextInput('password', 'Password', true)}
+                {renderTextInput('confirmPassword', 'Confirm Password', true)}
 
-                {/* Password */}
-                <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        secureTextEntry
-                        value={formData.password}
-                        onChangeText={(value) => handleChange("password", value)}
-                    />
-                    {formErrors.password && (
-                        <Text style={styles.errorText}>{formErrors.password}</Text>
-                    )}
-                </View>
+                {/* Privacy Policy and Terms */}
+                <View style={styles.policyRow}>
+                    <View style={styles.checkboxContainer}>
+                        <TouchableOpacity onPress={() => handleChange('agreeToPolicy', !formData.agreeToPolicy)} style={[styles.checkbox, formData.agreeToPolicy && styles.checkboxChecked]}>
+                            {formData.agreeToPolicy && AntDesign.name('check', 14, '#FFF')}
+                        </TouchableOpacity>
+                        <View style={styles.policyText}>
+                            <Text style={styles.policyLinkA}>By clicking you accept our</Text>
+                            <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.TermsAndCondition)}><Text style={styles.policyLink}>Terms and Condition</Text></TouchableOpacity> and
+                            <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.PrivacyPolicy)}><Text style={styles.policyLink}>Privacy Policy</Text></TouchableOpacity>
+                        </View>
+                    </View>
 
-                {/* Confirm Password */}
-                <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Confirm Password"
-                        secureTextEntry
-                        value={formData.confirmPassword}
-                        onChangeText={(value) => handleChange("confirmPassword", value)}
-                    />
-                    {formErrors.confirmPassword && (
-                        <Text style={styles.errorText}>{formErrors.confirmPassword}</Text>
-                    )}
-                </View>
-
-                {/* Agree to Policy */}
-                <View style={styles.checkboxContainer}>
-                    <TouchableOpacity
-                        onPress={() =>
-                            handleChange("agreeToPolicy", !formData.agreeToPolicy)
-                        }
-                        style={styles.checkbox}
-                    >
-                        {formData.agreeToPolicy && <View style={styles.checked} />}
+                    <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.ForgotPassword)}>
+                        <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </TouchableOpacity>
-                    <Text style={styles.checkboxText}>
-                        I agree to the{" "}
-                        <Text style={styles.link}>Terms & Conditions</Text> and{" "}
-                        <Text style={styles.link}>Privacy Policy</Text>
-                    </Text>
-                </View>
-                {formErrors.agreeToPolicy && (
-                    <Text style={styles.errorText}>{formErrors.agreeToPolicy}</Text>
-                )}
-            </ScrollView>
 
-            {/* Submit Button fixed at bottom */}
-            <View style={styles.bottomButtonContainer}>
-                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>{text}</Text>
+                    {formErrors.agreeToPolicy && (
+                        <Text style={styles.errorTextFullWidth}>{formErrors.agreeToPolicy}</Text>
+                    )}
+                </View>
+
+
+                {/* Submit Button */}
+                <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+                    <Text style={styles.submitButtonText}>{text}</Text>
                 </TouchableOpacity>
             </View>
-        </KeyboardAvoidingView>
+        </ScrollView>
     );
 };
 
-export default Signup;
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingHorizontal: 20,
-        backgroundColor: "#000105", // White background
+        flexGrow: 1,
+        backgroundColor: '#000105',
+        padding: 20,
     },
     header: {
-        fontSize: 28,
-        fontWeight: "700",
-        color: "#ffffff", // Primary color
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    backButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    backText: {
+        color: '#479BE8',
+        marginLeft: 8,
+        fontSize: 16,
+    },
+    heroIconText: {
+        fontSize: 48,
+        color: '#071D6A',
+    },
+    contentBlock: {
+        marginTop: 20,
+    },
+    topLinksContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        gap: 15,
+        marginBottom: 30,
+    },
+    loginLink: {
+        color: '#C7D2FE',
+        fontSize: 14,
+        textDecorationLine: 'underline',
+    },
+    h2: {
+        fontSize: 24,
+        fontWeight: '900',
+        color: '#ffffff',
         marginBottom: 8,
-        textAlign: "center",
     },
     subtext: {
         fontSize: 16,
-        color: "#555",
-        textAlign: "center",
+        color: '#BAB8B8',
         marginBottom: 20,
     },
-    fieldContainer: {
+    inputContainer: {
         marginBottom: 15,
     },
+    inputLabel: {
+        fontSize: 14,
+        color: '#ffffff',
+        marginBottom: 5,
+    },
     input: {
-        width: "100%",
+        width: '100%',
         padding: 12,
         borderRadius: 5,
-        backgroundColor: "#C7D2FE",
         borderWidth: 1,
-        borderColor: "#C7D2FE",
-        color: "#000000"
-    },
-    picker: {
-        width: "100%",
-        backgroundColor: "#fff",
-        borderRadius: 5,
+        borderColor: '#CCCCCC',
+        backgroundColor: '#C7D2FE',
+        color: '#000',
+        height: 48,
     },
     errorText: {
-        color: "#FF6F61",
+        color: '#FF6F61',
         fontSize: 12,
         marginTop: 4,
     },
+    errorTextFullWidth: {
+        color: '#FF6F61',
+        fontSize: 12,
+        width: '100%',
+        marginTop: 8,
+    },
+    policyRow: {
+        marginBottom: 20,
+    },
     checkboxContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        flexShrink: 1,
     },
     checkbox: {
-        width: 22,
-        height: 22,
-        borderWidth: 1,
-        borderColor: "#CCCCCC",
+        width: 20,
+        height: 20,
         borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#479BE8',
         marginRight: 8,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    checked: {
-        width: 14,
-        height: 14,
-        backgroundColor: "#182b90", // Primary color
-        borderRadius: 2,
+    checkboxChecked: {
+        backgroundColor: '#479BE8',
     },
-    checkboxText: {
-        flex: 1,
+    policyText: {
         fontSize: 14,
-        color: "#555",
+        color: '#BAB8B8',
+        flexShrink: 1,
+        lineHeight: 20,
     },
-    link: {
-        color: "#479BE8",
-        textDecorationLine: "underline",
+    policyLink: {
+        color: '#479BE8',
+        textDecorationLine: 'underline',
     },
-    bottomButtonContainer: {
-        position: "absolute",
-        bottom: 20,
-        left: 20,
-        right: 20,
+    policyLinkA: {
+        color: '#ffffff',
     },
-    button: {
-        backgroundColor: "#C7D2FE", // Primary color button
-        paddingVertical: 14,
-        borderRadius: 8,
-        alignItems: "center",
+    forgotPassword: {
+        fontSize: 14,
+        color: '#ffffff',
+        textDecorationLine: 'underline',
+        marginTop: 10,
     },
-    buttonText: {
-        color: "#000105",
+    submitButton: {
+        backgroundColor: '#C7D2FE',
+        padding: 12,
+        borderRadius: 5,
+        marginTop: 15,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 48,
+    },
+    submitButtonText: {
+        color: '#000105',
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: '600',
     },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        marginBottom: 10,
+    },
+    loadingText: {
+        marginLeft: 10,
+        color: '#479BE8',
+    }
 });
+
+export default SignUp;

@@ -56,3 +56,26 @@ export type UserType = {
     employmentStatus?: string;
     workLocation?: string;
 };
+
+interface LocalityInfo {
+    administrative: Array<any>;
+    informative: Array<any>;
+}
+
+export type LocationState = {
+    city: string;
+    continent: string;
+    continentCode: string;
+    countryCode: string;
+    countryName: string;
+    latitude: number;
+    locality: string;
+    localityInfo: LocalityInfo;
+    localityLanguageRequested: string;
+    longitude: number;
+    lookupSource: string;
+    plusCode: string;
+    postcode: string;
+    principalSubdivision: string;
+    principalSubdivisionCode: string;
+};
