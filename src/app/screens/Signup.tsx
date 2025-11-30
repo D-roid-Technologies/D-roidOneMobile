@@ -340,15 +340,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
             await startCountdown(5, (value) => {
                 setText(`User Created. Redirecting in ${value}s...`);
             });
-
-            // Success Toast (RN style)
-            // Toast.show({
-            //     type: 'success',
-            //     text1: 'Account Created',
-            //     text2: 'Welcome to D\'roid Technologies Ltd!',
-            // });
-
-            // Navigation (Uncomment when RoutePaths is correctly defined in RN)
             navigation.navigate("BottomTabs");
 
         } catch (error: any) {
