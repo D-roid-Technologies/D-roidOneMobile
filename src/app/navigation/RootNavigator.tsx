@@ -12,6 +12,9 @@ import OnboardingScreen from "../screens/OnboardingScreen"
 import Signup from "../screens/Signup";
 import LoginScreen from "../screens/LoginScreen";
 import BottomTabs from "../screens/BottomTabs";
+import NotificationScreen from "../screens/NotificationScreen";
+import EventDescriptionScreen from "../screens/EventDescriptionScreen";
+import ServicesScreen from "../screens/ServiceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +38,9 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Signup" component={Signup} />
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="BottomTabs" component={BottomTabs} />
+                    <Stack.Screen name="Notifications" component={NotificationScreen} />
+                    <Stack.Screen name="EventDescription" component={EventDescriptionScreen} />
+                    <Stack.Screen name="Services" component={ServicesScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>

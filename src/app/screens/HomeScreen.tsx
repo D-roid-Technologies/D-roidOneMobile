@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -13,34 +13,31 @@ import {
     Alert, // Using Alert for the simple quick action notification as per existing code
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { ASSETS } from "../constants/Assets";
 // Updated Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
-import { useNavigation } from "@react-navigation/native"; // <-- Import navigation hook
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
+import { loadNotifications } from "../redux/slice/notifications";
 
 const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
 const HomeScreen: React.FC = ({ navigation }: any) => {
     // Redux Hooks
     const userMain = useSelector((state: RootState) => state.user);
+    const userTypee = userMain.userType;
+
+
     const dispatch = useDispatch();
+    const count = useSelector((state: RootState) => state.notifictions.notifications.length);
 
-    // New state for controlling the visibility of the profile modal
+    console.log(count)
     const [isModalVisible, setIsModalVisible] = useState(false);
-
-    // Placeholder data (kept for structure, but relying on userMain)
-    const [user] = useState({
-        name: "John Doe",
-        email: "john.doe@email.com",
-        accountType: "Member Account",
-        memberId: "DR-10452",
-        initials: "JD",
-    });
+    useEffect(() => {
+        dispatch(loadNotifications());
+    }, []);
 
     const memberStats = [
         { title: "Membership", value: "Active", change: "Since 2023" },
@@ -235,20 +232,22 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     ];
 
     const quickActions = [
-        { title: "Personal Details", icon: "user", color: "#3B82F6" },
-        { title: "Services", icon: "cogs", color: "#10B981" },
-        { title: "Careers", icon: "briefcase", color: "#F59E0B" },
-        { title: "Take Tests", icon: "clipboard-check", color: "#8B5CF6" },
-        { title: "Tasks", icon: "tasks", color: "#4F46E5" },                // Indigo
-        { title: "Payslip", icon: "money-bill-alt", color: "#14B8A6" },     // Teal
-        { title: "Onboarding", icon: "user-plus", color: "#EAB308" },       // Yellow
-        { title: "Training", icon: "graduation-cap", color: "#EC4899" },    // Pink
-        { title: "Attendance", icon: "calendar-check", color: "#6366F1" },  // Violet
-
-        // Shared items
-        { title: "Progression", icon: "chart-line", color: "#EF4444" },     // Red
-        { title: "Contact Us", icon: "envelope", color: "#06B6D4" },
+        { title: "Personal Details", icon: "user", color: "#3B82F6", type: "all" },
+        { title: "Services", icon: "cogs", color: "#10B981", type: "all" },
+        { title: "Careers", icon: "briefcase", color: "#F59E0B", type: "all" },
+        { title: "Take Tests", icon: "clipboard-check", color: "#8B5CF6", type: "all" },
+        { title: "Tasks", icon: "tasks", color: "#4F46E5", type: "staff" },                // Indigo
+        { title: "Payslip", icon: "money-bill-alt", color: "#14B8A6", type: "staff" },     // Teal
+        { title: "Onboarding", icon: "user-plus", color: "#EAB308", type: "staff" },       // Yellow
+        { title: "Training", icon: "graduation-cap", color: "#EC4899", type: "staff" },    // Pink
+        { title: "Attendance", icon: "calendar-check", color: "#6366F1", type: "staff" },
+        { title: "Progression", icon: "chart-line", color: "#EF4444", type: "all" },     // Red
+        { title: "Contact Us", icon: "envelope", color: "#06B6D4", type: "all" },
     ];
+
+    const filteredQuickActions = quickActions.filter(
+        (action) => action.type === "all" || action.type === userTypee.toLowerCase()
+    );
 
     const events = [
         { title: "AI & Automation Expo", date: "Oct 20, 2025" },
@@ -279,6 +278,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const handleQuickAction = (title: string) => {
         // NOTE: Changed alert() to a simple, non-blocking notification
         Alert.alert("Action Required", `Navigating to ${title} screen.`);
+        navigation.navigate(`${title}`);
     }
 
     // Sign out handler function
@@ -303,20 +303,56 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
-                    {/* <TouchableOpacity>
-                        <Ionicons name="menu" size={26} color="#000105" />
-                    </TouchableOpacity> */}
                     <Text style={styles.headerName}>D'roid One</Text>
                 </View>
 
                 <View style={styles.headerRight}>
-                    {/* <TouchableOpacity style={styles.iconBtn} onPress={() => { }}>
-                        <Ionicons name="settings-outline" size={22} color="#071D6A" />
-                    </TouchableOpacity> */}
-                    <TouchableOpacity style={styles.iconBtn}>
-                        <Ionicons name="notifications-outline" size={22} color="#ffffff" />
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Notifications")}
+                        style={{ marginHorizontal: 6 }}
+                    >
+                        <View style={{ position: "relative" }}>
+                            {/* Notification Icon */}
+                            <View
+                                style={{
+                                    backgroundColor: "#000105",
+                                    padding: 10,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Ionicons name="notifications-outline" size={22} color="#ffffff" />
+                            </View>
+
+                            {/* Badge */}
+                            {count > 0 && (
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        top: -4,
+                                        right: -4,
+                                        width: 20,
+                                        height: 20,
+                                        borderRadius: 10,
+                                        backgroundColor: "red",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: "white",
+                                            fontSize: 12,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {count}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
                     </TouchableOpacity>
-                    {/* Updated Avatar to show the modal */}
+
+
                     <TouchableOpacity
                         style={styles.avatar}
                         onPress={() => setIsModalVisible(true)}
@@ -362,7 +398,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 {/* Quick Actions */}
                 <Text style={styles.sectionTitle}>Quick Actions</Text>
                 <View style={styles.quickActionsContainer}>
-                    {quickActions.map((action, index) => (
+                    {filteredQuickActions.map((action, index) => (
                         <TouchableOpacity
                             key={index}
                             style={styles.actionCard}
@@ -382,19 +418,18 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                     ))}
                 </View>
 
+
                 {/* Our Events */}
                 <Text style={styles.sectionTitle}>Upcoming Events</Text>
                 {eventsPosts.map((event: any, index: React.Key | null | undefined) => (
                     <TouchableOpacity
+                        onPress={() => navigation.navigate("EventDescription", { event })}
                         key={index}
                         style={styles.eventCard}
                     >
                         <View style={{
-                            // Set the direction to row to place children side-by-side
                             flexDirection: "row",
-                            // Vertically center the image block and the text block relative to each other
                             alignItems: "center",
-                            // Remove alignContent/justifyContent unless you need complex distribution
                         }}>
                             <View>
                                 <Image
@@ -414,7 +449,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 ))}
 
                 {/* Analytics */}
-                <Text style={styles.sectionTitle}>Analytics</Text>
+                {/* <Text style={styles.sectionTitle}>Analytics</Text>
                 <View style={styles.analyticsContainer}>
                     {analytics.map((a, index) => (
                         <View key={index} style={styles.analyticsCard}>
@@ -422,7 +457,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                             <Text style={styles.analyticsLabel}>{a.metric}</Text>
                         </View>
                     ))}
-                </View>
+                </View> */}
             </ScrollView>
 
             {/* User Profile Modal (Bottom Sheet Style) */}

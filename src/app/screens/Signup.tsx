@@ -21,35 +21,14 @@ interface UserLocation {
     countryName: string;
 }
 
-interface LocationState extends UserLocation {
-    locality: string;
-}
-
-// Minimal necessary type definitions
-// Assuming UserType structure from the original web file
-interface UserType {
-    staffId?: string; // Add staffId if it's part of your UserType
-    // Add other properties if they are part of the UserType in your actual project
-}
-
-
-// Placeholder for useNavigation (Simulated)
-const useNavigation = () => ({
-    goBack: () => console.log('Navigation: goBack'),
-    navigate: (route: string) => console.log('Navigation: navigate to', route),
-});
-
-// Placeholder for Toast (Replaced with Alert)
 const Toast = {
     show: (config: { type: 'success' | 'error', text1: string, text2: string }) => {
         Alert.alert(config.text1, config.text2);
     }
 }
 
-// Placeholder for Geolocation (Simulated or assuming global availability)
 const Geolocation = {
     getCurrentPosition: (success: (res: any) => void, error: (err: any) => void, options: any) => {
-        // Simulate a successful location retrieval after a small delay
         setTimeout(() => {
             success({
                 coords: { latitude: 34.0522, longitude: -118.2437 }, // Example L.A. coordinates
@@ -58,10 +37,8 @@ const Geolocation = {
     },
 };
 
-// Placeholder for AntDesign Icons (Using inline text for simplicity)
 const AntDesign = {
     name: (iconName: string, size: number, color: string) => {
-        // Render a simple text representation of the icon
         return <Text style={{ fontSize: size, color: color, marginRight: 5 }}>{iconName === 'arrowleft' ? '←' : '✓'}</Text>;
     }
 };
@@ -77,18 +54,14 @@ interface FormErrors {
     agreeToPolicy?: string;
 }
 
-// --- Placeholder Service and Route Definitions ---
-
 const RoutePaths = {
-    DashBoard: 'DashboardScreen', // Example RN Screen Name
+    DashBoard: 'DashboardScreen',
     StaffLogin: 'StaffLoginScreen',
     MemberLogin: 'MemberLoginScreen',
     TermsAndCondition: 'TermsScreen',
     PrivacyPolicy: 'PrivacyScreen',
     ForgotPassword: 'ForgotPasswordScreen',
 };
-
-// --- Helper Functions from the Web Component ---
 
 const regex = {
     name: /^[A-Za-z\s]+$/,
@@ -123,8 +96,6 @@ const generateUniqueId = (userType: string): string | null => {
 
 const SignUp: React.FunctionComponent = ({ navigation }: any) => {
     const [text, setText] = useState<string>("Sign Up");
-
-    // Replacing Redux selector with local state for location management
     const userLocation: any = useSelector(
         (state: RootState) => state.location
     );
@@ -172,11 +143,10 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         organisationalType: "",
         isCompanyRegistered: "",
         dateOfRegistration: "",
-    } as any); // Asserting initial state as FormData
+    } as any);
 
     const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-    // --- useEffect for Location (Adapted for React Native) ---
     useEffect(() => {
         let attempts = 0;
         const maxAttempts = 5;
@@ -222,20 +192,11 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         fetchLocation();
     }, []);
 
-    // --- handleChange (Adapted for React Native TextInput) ---
-    // const handleChange = (name: keyof FormData, value: string | boolean) => {
-    //     setFormData((prev: any) => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }));
-    // };
-
-    const handleChange = (key: keyof FormData, value: string) => {
+    const handleChange = (key: keyof any, value: string | boolean) => {
         setFormData((prev: any) => ({ ...prev, [key]: value }));
     };
 
 
-    // --- validate function ---
     const validate = () => {
         let errors: FormErrors = {};
         let isValid = true;
@@ -285,7 +246,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         return isValid;
     };
 
-    // --- startCountdown utility function ---
     const startCountdown = (
         seconds: number,
         onTick: (value: number) => void
@@ -305,7 +265,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         });
     };
 
-    // --- handleSubmit (Web logic converted to RN structure) ---
     const handleSubmit = async () => {
         if (!validate()) return;
 
@@ -353,9 +312,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         }
     };
 
-    // --- RN UI Structure ---
-
-    // Simple Select Implementation (requires a Picker/Dropdown package for robust use, using basic View/Text here)
     const renderUserTypePicker = () => (
         <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Select User Type</Text>
@@ -375,7 +331,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         </View>
     );
 
-    const renderTextInput = (name: keyof FormData, placeholder: string, secure: boolean = false, keyboardType: 'default' | 'email-address' | 'numeric' = 'default') => (
+    const renderTextInput = (name: keyof any, placeholder: string, secure: boolean = false, keyboardType: 'default' | 'email-address' | 'numeric' = 'default') => (
         <View style={styles.inputContainer}>
             <TextInput
                 style={styles.input}
