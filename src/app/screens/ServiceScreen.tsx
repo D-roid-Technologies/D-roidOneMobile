@@ -47,7 +47,7 @@ const servicesPosts = [
     },
 ];
 
-const ServicesScreen = ({ navigation }: any) => {
+const ServicesScreen: React.FunctionComponent = ({ navigation }: any) => {
     const [expandedIds, setExpandedIds] = useState<number[]>([]);
 
     const toggleExpand = (id: any) => {

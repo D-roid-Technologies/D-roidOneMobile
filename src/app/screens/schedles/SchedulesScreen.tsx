@@ -5,309 +5,225 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Modal,
-  TextInput,
-  Pressable,
 } from "react-native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Calendar, Agenda } from "react-native-calendars";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { Event } from "../../redux/slice/eventSlice";
 
-interface Task {
-  id: string;
-  title: string;
-}
+const CalendarScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState<string>(
+    today.toISOString().split("T")[0]
+  );
+  const [viewMode, setViewMode] = useState<"month" | "week" | "agenda">(
+    "month"
+  );
+  const [currentDate, setCurrentDate] = useState(today);
+  const events = useSelector((state: RootState) => state.events.events)
 
-const SchedulesScreen: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [taskTitle, setTaskTitle] = useState("");
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [activeScreen, setActiveScreen] = useState<"main" | "tasks" | "calendar">("main");
+  const renderEventItem = ({ item }: { item: Event }) => (
+    <View style={styles.eventItem}>
+      <Text style={styles.eventType}>{item.type}</Text>
+      <Text style={styles.eventTitle}>{item.title}</Text>
+      <Text style={styles.eventDescription}>{item.description}</Text>
+      <Text style={styles.eventDate}>
+        {item.startDate} {item.startTime} - {item.endDate} {item.endTime}
+      </Text>
+    </View>
+  );
 
-  const handleSaveTask = () => {
-    if (taskTitle.trim() === "") return;
-
-    if (editingTaskId) {
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === editingTaskId ? { ...t, title: taskTitle } : t
-        )
-      );
-    } else {
-      setTasks((prev) => [
-        ...prev,
-        { id: Date.now().toString(), title: taskTitle },
-      ]);
-    }
-
-    setTaskTitle("");
-    setEditingTaskId(null);
-    setModalVisible(false);
+  const onDayPress = (day: any) => {
+    setSelectedDate(day.dateString);
   };
 
-  const handleDeleteTask = (id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+  const goToPrevious = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === "month") newDate.setMonth(newDate.getMonth() - 1);
+    else if (viewMode === "week") newDate.setDate(newDate.getDate() - 7);
+    else if (viewMode === "agenda") newDate.setDate(newDate.getDate() - 1);
+
+    setCurrentDate(newDate);
+    setSelectedDate(newDate.toISOString().split("T")[0]);
   };
 
-  const handleEditTask = (task: Task) => {
-    setTaskTitle(task.title);
-    setEditingTaskId(task.id);
-    setModalVisible(true);
+  const goToNext = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === "month") newDate.setMonth(newDate.getMonth() + 1);
+    else if (viewMode === "week") newDate.setDate(newDate.getDate() + 7);
+    else if (viewMode === "agenda") newDate.setDate(newDate.getDate() + 1);
+
+    setCurrentDate(newDate);
+    setSelectedDate(newDate.toISOString().split("T")[0]);
   };
 
-  // Main screen with two cards
-  if (activeScreen === "main") {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Schedules</Text>
-        <Text style={styles.subtitle}>Manage your events and appointments</Text>
 
-        <View style={styles.cardsContainer}>
-          <TouchableOpacity
-            style={[styles.mainCard, { backgroundColor: "#3B82F6" }]}
-            onPress={() => setActiveScreen("calendar")}
-          >
-            <Ionicons name="calendar" size={36} color="#fff" />
-            <Text style={styles.cardText}>Calendar</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.mainCard, { backgroundColor: "#10B981" }]}
-            onPress={() => setActiveScreen("tasks")}
-          >
-            <FontAwesome5 name="tasks" size={36} color="#fff" />
-            <Text style={styles.cardText}>Task Scheduler</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
-  // Task Scheduler screen
-  if (activeScreen === "tasks") {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Task Scheduler</Text>
-
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setActiveScreen("main")}
-        >
-          <Ionicons name="arrow-back" size={20} color="#fff" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Ionicons name="add-circle" size={24} color="#fff" />
-          <Text style={styles.addButtonText}>Add Task</Text>
-        </TouchableOpacity>
-
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.taskItem}>
-              <Text style={styles.taskText}>{item.title}</Text>
-              <View style={styles.taskActions}>
-                <TouchableOpacity onPress={() => handleEditTask(item)}>
-                  <Ionicons name="pencil" size={20} color="#10B981" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
-                  <Ionicons name="trash" size={20} color="#EF4444" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20, color: "#555" }}>
-              No tasks yet. Add a new task!
-            </Text>
-          }
-          contentContainerStyle={{ paddingBottom: 50 }}
-        />
-
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalBox}>
-              <Text style={styles.modalTitle}>
-                {editingTaskId ? "Edit Task" : "New Task"}
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Task title"
-                value={taskTitle}
-                onChangeText={setTaskTitle}
-              />
-              <View style={styles.modalButtons}>
-                <Pressable
-                  style={[styles.button, { backgroundColor: "#10B981" }]}
-                  onPress={handleSaveTask}
-                >
-                  <Text style={styles.buttonText}>Save</Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.button, { backgroundColor: "#EF4444" }]}
-                  onPress={() => {
-                    setModalVisible(false);
-                    setTaskTitle("");
-                    setEditingTaskId(null);
-                  }}
-                >
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-
-  // Calendar screen placeholder
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Calendar</Text>
-      <Text style={styles.subtitle}>Your scheduled events will appear here</Text>
+      <Text style={styles.title}>Scheduler</Text>
+      <Text style={styles.subtitle}>
+        Access, Create and Manage all your Events and Tasks in one place.
+      </Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={goToPrevious} style={styles.navButton}>
+          <Ionicons name="chevron-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{viewMode.toUpperCase()}</Text>
+        <TouchableOpacity onPress={goToNext} style={styles.navButton}>
+          <Ionicons name="chevron-forward" size={24} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
+      {/* View Mode Switch */}
+      <View style={styles.viewSwitch}>
+        {["month", "week", "agenda"].map((mode) => (
+          <TouchableOpacity key={mode} onPress={() => setViewMode(mode as any)}>
+            <Text
+              style={[styles.switchText, viewMode === mode && styles.switchActive]}
+            >
+              {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Calendar */}
+      {viewMode === "month" && (
+        <Calendar
+          onDayPress={onDayPress}
+          markedDates={{
+            [selectedDate]: { selected: true, selectedColor: "#C7D2FE" },
+            [today.toISOString().split("T")[0]]: { selected: true, selectedColor: "#C7D2FE" },
+          }}
+          theme={{
+            backgroundColor: "#000105",
+            calendarBackground: "#000105",
+            textSectionTitleColor: "#fff",
+            dayTextColor: "#fff",
+            monthTextColor: "#fff",
+            arrowColor: "#C7D2FE",
+            todayTextColor: "#C7D2FE",
+          }}
+        />
+      )}
+
+      {viewMode === "agenda" && (
+        <Agenda
+          selected={selectedDate}
+          onDayPress={onDayPress}
+          theme={{
+            backgroundColor: "#000105",
+            calendarBackground: "#000105",
+            agendaKnobColor: "#C7D2FE",
+            dayTextColor: "#fff",
+            monthTextColor: "#fff",
+            todayTextColor: "#C7D2FE",
+          }}
+        />
+      )}
+
+      {viewMode === "week" && (
+        <Calendar
+          current={selectedDate}
+          firstDay={1}
+          hideExtraDays
+          onDayPress={onDayPress}
+          markingType="period"
+          markedDates={{
+            [selectedDate]: { selected: true, selectedColor: "#C7D2FE" },
+          }}
+          theme={{
+            backgroundColor: "#000105",
+            calendarBackground: "#000105",
+            textSectionTitleColor: "#fff",
+            dayTextColor: "#fff",
+            monthTextColor: "#fff",
+            arrowColor: "#C7D2FE",
+            todayTextColor: "#C7D2FE",
+          }}
+        />
+      )}
+
+      {/* Event List */}
+      <Text style={styles.eventsTitle}>Events for {selectedDate}</Text>
+      <FlatList<Event>
+        data={events.filter(
+          (e) => e.startDate <= selectedDate && e.endDate >= selectedDate
+        )}
+        keyExtractor={(item) => item.id}
+        renderItem={renderEventItem}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        ListEmptyComponent={
+          <Text style={{ textAlign: "center", color: "#fff", marginTop: 20 }}>
+            No events for this day
+          </Text>
+        }
+      />
+
+      {/* Floating Button */}
       <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => setActiveScreen("main")}
+        style={styles.floatingButton}
+        onPress={() => navigation.navigate("CreateEvent", { date: selectedDate })}
       >
-        <Ionicons name="arrow-back" size={20} color="#fff" />
-        <Text style={styles.backText}>Back</Text>
+        <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
     </View>
   );
 };
 
-export default SchedulesScreen;
+export default CalendarScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000105",
-    padding: 16,
-  },
+  container: { flex: 1, backgroundColor: "#000105", paddingTop: 20, paddingHorizontal: 16 },
   title: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "900",
     color: "#ffffff",
-    marginBottom: 4,
     textAlign: "center",
+    marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
-    color: "#555",
-    marginBottom: 20,
+    color: "#C7D2FE",
     textAlign: "center",
-  },
-  cardsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 40,
-  },
-  mainCard: {
-    width: "48%",
-    height: 150,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 3,
-  },
-  cardText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-    marginTop: 10,
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#203499",
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 20,
-    alignSelf: "flex-start",
-  },
-  backText: {
-    color: "#fff",
-    fontWeight: "700",
-    marginLeft: 6,
-  },
-  addButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#203499",
-    padding: 12,
-    borderRadius: 10,
     marginBottom: 20,
   },
-  addButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-    marginLeft: 8,
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
+  headerText: { color: "#fff", fontSize: 18, fontWeight: "700" },
+  navButton: { padding: 8 },
+  viewSwitch: { flexDirection: "row", justifyContent: "space-around", marginBottom: 16 },
+  switchText: { color: "#fff", fontSize: 16 },
+  switchActive: { color: "#C7D2FE", fontWeight: "700" },
+  eventsTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginVertical: 12 },
+  // eventItem: { backgroundColor: "#1E293B", padding: 14, borderRadius: 10, marginBottom: 10 },
+  // eventType: { color: "#C7D2FE", fontWeight: "900", marginBottom: 4 },
+  // eventTitle: { color: "#fff", fontSize: 16, fontWeight: "300" },
+  floatingButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#C7D2FE",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    color: "red"
   },
-  taskItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
+  eventItem: {
+    backgroundColor: "#1E293B",
     padding: 14,
     borderRadius: 10,
     marginBottom: 10,
-    elevation: 1,
   },
-  taskText: {
-    fontSize: 16,
-    color: "#071D6A",
-    fontWeight: "600",
-  },
-  taskActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalBox: {
-    width: "85%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 12,
-    textAlign: "center",
-    color: "#071D6A",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
-  },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  button: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
+  eventType: { color: "#34D399", fontWeight: "700", marginBottom: 4 },
+  eventTitle: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  eventDescription: { color: "#fff", fontSize: 14, marginVertical: 4 },
+  eventDate: { color: "#D1D5DB", fontSize: 12 },
 });

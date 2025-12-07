@@ -15,6 +15,8 @@ import BottomTabs from "../screens/BottomTabs";
 import NotificationScreen from "../screens/NotificationScreen";
 import EventDescriptionScreen from "../screens/EventDescriptionScreen";
 import ServicesScreen from "../screens/ServiceScreen";
+import ProgressionScreen from "../screens/ProgressionScreen";
+import CreateEventScreen from "../screens/schedles/CreateEventScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +43,8 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Notifications" component={NotificationScreen} />
                     <Stack.Screen name="EventDescription" component={EventDescriptionScreen} />
                     <Stack.Screen name="Services" component={ServicesScreen} />
+                    <Stack.Screen name="Progression" component={ProgressionScreen} />
+                    <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>

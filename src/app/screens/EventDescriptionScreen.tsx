@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-const EventDescriptionScreen = () => {
+const EventDescriptionScreen: React.FunctionComponent = () => {
     const route = useRoute();
     const navigation = useNavigation();
 

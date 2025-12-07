@@ -26,7 +26,7 @@ const { height } = Dimensions.get('window'); // Get screen height for modal styl
 
 const HomeScreen: React.FC = ({ navigation }: any) => {
     // Redux Hooks
-    const userMain = useSelector((state: RootState) => state.user);
+    const userMain: any = useSelector((state: RootState) => state.user);
     const userTypee = userMain.userType;
 
 
