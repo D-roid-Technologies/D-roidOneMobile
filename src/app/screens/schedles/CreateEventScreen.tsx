@@ -1,3 +1,5 @@
+// ——— IMPORTS REMAIN THE SAME ———
+
 import React, { useState } from "react";
 import {
     View,
@@ -8,30 +10,29 @@ import {
     ScrollView,
     Platform,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Install via: npm install @react-native-picker/picker
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { addEvent, updateEvent, Event } from "../../redux/slice/eventSlice";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Ionicons } from "@expo/vector-icons";
+import { authService } from "../../redux/configuration/auth.service";
 
+// ——— EVENT TYPES ———
 type RouteParams = {
     date: string;
     eventId?: string;
 };
 
 const eventTypes: Event["type"][] = [
-    "Meeting",
-    "Reminder",
     "Note",
     "Task",
     "Appointment",
-    "Deadline",
-    "Call",
-    "Birthday",
-    "Holiday",
+    "Meeting",
 ];
 
+// ——— COMPONENT ———
 const CreateEventScreen: React.FC = () => {
     const navigation = useNavigation<any>();
     const route = useRoute<RouteProp<{ params: RouteParams }, "params">>();
@@ -50,12 +51,52 @@ const CreateEventScreen: React.FC = () => {
     const [startTime, setStartTime] = useState(editingEvent?.startTime || "09:00");
     const [endTime, setEndTime] = useState(editingEvent?.endTime || "10:00");
 
+    // ——— ADDITIONAL STATE FOR SPECIALIZED FORMS ———
+    const [taskStatus, setTaskStatus] = useState<"pending" | "in-progress" | "completed">(
+        editingEvent?.taskStatus || "pending"
+    );
+    // type TaskPriority = "low" | "medium" | "high";
+    const [taskPriority, setTaskPriority] = useState<"low" | "medium" | "high">(
+        editingEvent?.taskPriority || "medium"
+    );
+
+    const [noteItems, setNoteItems] = useState<string[]>([]);
+    const [inputNoteItem, setInputNoteItem] = useState("");
+
+    const [location, setLocation] = useState(editingEvent?.location || "");
+    const [participants, setParticipants] = useState<string>(
+        editingEvent?.participants?.join(", ") || ""
+    );
+
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+    const [participantsText, setParticipantsText] = useState(
+        editingEvent?.participants?.join(", ") || ""
+    );
+    const [text, setText] = useState<string>("Create Event")
+    // const statuses: any = ["pending", "in-progress", "completed"];
+    const TASK_STATUSES = [
+        "pending",
+        "in-progress",
+        "completed"
+    ] as const
 
-    const onSave = () => {
+    const TASK_PRIORITY = [
+        "low",
+        "medium",
+        "high"
+    ] as const
+
+    const dynamicDescriptionPlaceholder = {
+        Note: "Add Note",
+        Task: "Describe Task",
+        Appointment: "Add Appointment Notes",
+        Meeting: "Add Meeting Notes",
+    }[type];
+
+    const onSave = async () => {
         if (!title.trim()) return;
 
         const newEvent: Event = {
@@ -67,22 +108,35 @@ const CreateEventScreen: React.FC = () => {
             endDate,
             startTime,
             endTime,
+
+            location,
+            participants: Array.isArray(participants)
+                ? participants
+                : participants
+                    ? [participants]
+                    : undefined,
+
+            taskStatus,
+            taskPriority,
+            noteItems,
         };
+        setText("...Creating your event")
 
-        if (editingEvent) {
-            dispatch(updateEvent(newEvent));
-        } else {
-            dispatch(addEvent(newEvent));
-        }
+        await authService.addScheduleToFirebase(newEvent).then(() => {
+            setText("Event Created")
+            setTimeout(() => {
+                navigation.goBack();
+            }, 2000)
+        }).catch(() => {
+            setText(text)
+        })
 
-        navigation.goBack();
     };
 
     const onChangeDate = (event: any, selected: Date | undefined, which: "start" | "end") => {
         if (!selected) return;
         const dateStr = selected.toISOString().split("T")[0];
-        if (which === "start") setStartDate(dateStr);
-        else setEndDate(dateStr);
+        which === "start" ? setStartDate(dateStr) : setEndDate(dateStr);
 
         setShowStartDatePicker(false);
         setShowEndDatePicker(false);
@@ -91,8 +145,7 @@ const CreateEventScreen: React.FC = () => {
     const onChangeTime = (event: any, selected: Date | undefined, which: "start" | "end") => {
         if (!selected) return;
         const timeStr = selected.toTimeString().slice(0, 5);
-        if (which === "start") setStartTime(timeStr);
-        else setEndTime(timeStr);
+        which === "start" ? setStartTime(timeStr) : setEndTime(timeStr);
 
         setShowStartTimePicker(false);
         setShowEndTimePicker(false);
@@ -100,34 +153,42 @@ const CreateEventScreen: React.FC = () => {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
-            <Text style={styles.title}>{editingEvent ? "Edit Event" : "Create Event"}</Text>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
+                </TouchableOpacity>
 
-            {/* Title */}
+                <Text style={styles.title}>{editingEvent ? "Edit Event" : "Create Event"}</Text>
+
+                <View style={{ width: 26 }} />
+            </View>
+
+            {/* TITLE */}
             <TextInput
                 placeholder="Title"
                 value={title}
                 onChangeText={setTitle}
                 style={styles.input}
-                placeholderTextColor="#999"
+                placeholderTextColor="#000105"
             />
 
-            {/* Description */}
+            {/* DESCRIPTION */}
             <TextInput
-                placeholder="Description"
+                placeholder={dynamicDescriptionPlaceholder}
                 value={description}
                 onChangeText={setDescription}
-                style={[styles.input, { height: 80 }]}
+                style={[styles.input, { height: type === "Note" ? 120 : 80 }]}
                 multiline
-                placeholderTextColor="#999"
+                placeholderTextColor="#000105"
             />
 
-            {/* Event Type Dropdown */}
+            {/* EVENT TYPE PICKER */}
             <View style={styles.pickerContainer}>
                 <Picker
                     selectedValue={type}
-                    onValueChange={(itemValue) => setType(itemValue)}
+                    onValueChange={(value) => setType(value)}
                     style={styles.picker}
-                    dropdownIconColor="#fff"
+                    dropdownIconColor="#000000"
                 >
                     {eventTypes.map((t) => (
                         <Picker.Item key={t} label={t} value={t} />
@@ -135,27 +196,140 @@ const CreateEventScreen: React.FC = () => {
                 </Picker>
             </View>
 
-            {/* Start & End Date */}
+            {/* NOTE MODE */}
+            {type === "Note" && (
+                <View>
+                    <Text style={styles.sectionTitle}>Note Items</Text>
+
+                    <View style={{ flexDirection: "row", gap: 8, marginBottom: 15 }}>
+                        <TextInput
+                            value={inputNoteItem}
+                            onChangeText={setInputNoteItem}
+                            placeholder="Add list item"
+                            placeholderTextColor="#000105"
+                            style={[styles.input, { flex: 1 }]}
+                        />
+                        <TouchableOpacity
+                            style={styles.addItemBtn}
+                            onPress={() => {
+                                if (inputNoteItem.trim()) {
+                                    setNoteItems([...noteItems, inputNoteItem.trim()]);
+                                    setInputNoteItem("");
+                                }
+                            }}
+                        >
+                            <Ionicons name="add" size={20} color="#000" />
+                        </TouchableOpacity>
+                    </View>
+
+                    {noteItems.map((item, i) => (
+                        <Text key={i} style={{ color: "#fff", marginVertical: 4 }}>
+                            • {item}
+                        </Text>
+                    ))}
+                </View>
+            )}
+
+            {/* TASK MODE */}
+            {type === "Task" && (
+                <View>
+                    <Text style={styles.sectionTitle}>Task Status</Text>
+
+                    {TASK_STATUSES.map((s) => (
+                        <TouchableOpacity
+                            key={s}
+                            onPress={() => setTaskStatus(s)}
+                            style={styles.radioRow}
+                        >
+                            <View
+                                style={[
+                                    styles.radioCircle,
+                                    taskStatus === s && styles.radioSelected
+                                ]}
+                            />
+                            <Text style={{ color: "#fff" }}>{s}</Text>
+                        </TouchableOpacity>
+                    ))}
+
+                    <Text style={styles.sectionTitle}>Priority</Text>
+
+                    {TASK_PRIORITY.map((p) => (
+                        <TouchableOpacity
+                            key={p}
+                            onPress={() => setTaskPriority(p)}
+                            style={styles.radioRow}
+                        >
+                            <View
+                                style={[
+                                    styles.radioCircle,
+                                    taskPriority === p && styles.radioSelected,
+                                ]}
+                            />
+                            <Text style={{ color: "#fff" }}>{p}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            )}
+
+            {/* APPOINTMENT MODE */}
+            {type === "Appointment" && (
+                <View>
+                    <Text style={styles.sectionTitle}>Location</Text>
+                    <TextInput
+                        value={location}
+                        onChangeText={setLocation}
+                        placeholder="Enter location"
+                        placeholderTextColor="#000105"
+                        style={styles.input}
+                    />
+                </View>
+            )}
+
+            {/* MEETING MODE */}
+            {type === "Meeting" && (
+                <View>
+                    <Text style={styles.sectionTitle}>Location</Text>
+                    <TextInput
+                        value={location}
+                        onChangeText={setLocation}
+                        placeholder="Meeting location"
+                        placeholderTextColor="#000105"
+                        style={styles.input}
+                    />
+
+                    <Text style={styles.sectionTitle}>Participants</Text>
+                    <TextInput
+                        value={participants}
+                        onChangeText={setParticipants}
+                        placeholder="Enter participants"
+                        placeholderTextColor="#000105"
+                        style={styles.input}
+                    />
+                </View>
+            )}
+
+
+            {/* DATES */}
             <View style={styles.row}>
                 <TouchableOpacity onPress={() => setShowStartDatePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Start Date: {startDate}</Text>
+                    <Text style={styles.dateText}>Add Start Date: {startDate}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setShowEndDatePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>End Date: {endDate}</Text>
+                    <Text style={styles.dateText}>Add End Date: {endDate}</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Start & End Time */}
+            {/* TIMES */}
             <View style={styles.row}>
                 <TouchableOpacity onPress={() => setShowStartTimePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Start Time: {startTime}</Text>
+                    <Text style={styles.dateText}>Add Start Time: {startTime}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setShowEndTimePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>End Time: {endTime}</Text>
+                    <Text style={styles.dateText}>Add End Time: {endTime}</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Date & Time Pickers */}
+            {/* PICKERS */}
             {showStartDatePicker && (
                 <DateTimePicker
                     value={new Date(startDate)}
@@ -189,9 +363,10 @@ const CreateEventScreen: React.FC = () => {
                 />
             )}
 
-            {/* Save Button */}
             <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-                <Text style={styles.saveButtonText}>{editingEvent ? "Update Event" : "Create Event"}</Text>
+                <Text style={styles.saveButtonText}>
+                    {text}
+                </Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -203,30 +378,59 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "#000105", padding: 16 },
     title: { fontSize: 22, fontWeight: "700", color: "#fff", marginBottom: 16, textAlign: "center" },
     input: {
-        backgroundColor: "#1E293B",
-        color: "#fff",
+        backgroundColor: "#C7D2FE",
+        color: "#000000",
         padding: 12,
-        borderRadius: 8,
+        // borderRadius: 8,
         marginBottom: 16,
     },
+    headerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 12,
+        justifyContent: "space-between",
+    },
     pickerContainer: {
-        backgroundColor: "#1E293B",
-        borderRadius: 8,
+        backgroundColor: "#C7D2FE",
+        // borderRadius: 8,
         marginBottom: 16,
         overflow: "hidden",
     },
     picker: {
-        color: "#fff",
+        color: "#000000",
     },
+    sectionTitle: { color: "#fff", marginBottom: 10, fontWeight: "600", fontSize: 16 },
     row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
-    dateButton: { backgroundColor: "#1E293B", padding: 12, borderRadius: 8, flex: 0.48 },
-    dateText: { color: "#fff", textAlign: "center" },
+    dateButton: { backgroundColor: "#000c3a", padding: 12, flex: 0.48 },
+    dateText: { color: "#ffffff", textAlign: "center", fontWeight: "300" },
+
+    radioRow: { flexDirection: "row", alignItems: "center", marginBottom: 10, gap: 10 },
+    radioCircle: {
+        width: 18,
+        height: 18,
+        // borderRadius: 9,
+        borderWidth: 2,
+        borderColor: "#fff",
+    },
+    radioSelected: {
+        backgroundColor: "#fff",
+    },
+
+    addItemBtn: {
+        backgroundColor: "#C7D2FE",
+        width: 40,
+        height: 40,
+        // borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
     saveButton: {
         backgroundColor: "#C7D2FE",
         padding: 16,
-        borderRadius: 12,
+        // borderRadius: 12,
         alignItems: "center",
         marginTop: 24,
     },
-    saveButtonText: { color: "#000", fontWeight: "700", fontSize: 16 },
+    saveButtonText: { color: "#000000", fontWeight: "900", fontSize: 18 },
 });

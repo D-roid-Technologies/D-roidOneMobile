@@ -2,26 +2,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type EventType =
-    | "Meeting"
-    | "Reminder"
+
+    // | "Reminder"
     | "Note"
     | "Task"
     | "Appointment"
-    | "Deadline"
-    | "Call"
-    | "Birthday"
-    | "Holiday";
+    | "Meeting"
+// | "Deadline"
+// | "Call"
+// | "Birthday"
+// | "Holiday";
 
 export interface Event {
     id: string;
     type: EventType;
     title: string;
     description: string;
-    startDate: string; // YYYY-MM-DD
-    endDate: string;   // YYYY-MM-DD
-    startTime: string; // HH:mm
-    endTime: string;   // HH:mm
+    startDate: string;
+    endDate: string;
+    startTime: string;
+    endTime: string;
+
+    // Optional fields depending on event type
+    location?: string;
+    participants?: string[];   // Meeting / Appointment
+    taskStatus?: "pending" | "in-progress" | "completed"; // Task-specific
+    taskPriority?: "low" | "medium" | "high"; // Task-specific
+    noteItems?: string[]; // Notes
 }
+
 
 interface EventState {
     events: Event[];

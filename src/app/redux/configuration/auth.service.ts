@@ -1,11 +1,12 @@
 import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
 import { store } from "../store";
 import Toast from 'react-native-toast-message';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { LocationState, UserType } from "../../constants/TypesAndInerface";
+import { setEvents } from "../slice/eventSlice";
 
 
 
@@ -49,7 +50,6 @@ export class AuthService {
             isRead: false,
         };
     }
-
     async handleUserRegistration(
         userData: UserType,
         locationData: LocationState
@@ -194,7 +194,6 @@ export class AuthService {
             return null;
         }
     }
-
     async handleUserLogin(email: string, password: string) {
         try {
             const userCredential = await signInWithEmailAndPassword(
@@ -338,6 +337,206 @@ export class AuthService {
                     text2: err.message || `An error occurred while signing out.`,
                 });
             });
+    }
+    async addScheduleToFirebase(schedule: any) {
+        try {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                Toast.show({
+                    type: "error",
+                    text1: "Failed to Add Schedule",
+                    text2: "No authenticated user found",
+                });
+                return null;
+            }
+
+            const userId = currentUser.uid;
+            const userDocRef = doc(db, "droidaccount", userId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            // Remove undefined fields
+            const sanitizedSchedule = Object.fromEntries(
+                Object.entries(schedule).filter(([_, v]) => v !== undefined)
+            );
+
+            if (!userSnapshot.exists()) {
+                await setDoc(
+                    userDocRef,
+                    { schedules: { mySchedles: [sanitizedSchedule] } },
+                    { merge: true }
+                );
+            } else {
+                const existingSchedules = userSnapshot.data()?.schedules?.mySchedles || [];
+                const duplicate = existingSchedules.some((s: any) => s.id === sanitizedSchedule.id);
+
+                if (duplicate) {
+                    Toast.show({
+                        type: "error",
+                        text1: "Failed to Add Schedule",
+                        text2: "This schedule already exists.",
+                    });
+                    return null;
+                }
+
+                await updateDoc(userDocRef, {
+                    "schedules.mySchedles": arrayUnion(sanitizedSchedule),
+                });
+            }
+
+            // Update Redux state
+            const updatedSnapshot = await getDoc(userDocRef);
+            const updatedSchedules = updatedSnapshot.data()?.schedules?.mySchedles || [];
+            store.dispatch(setEvents(updatedSchedules));
+
+            Toast.show({
+                type: "success",
+                text1: "Schedule Added",
+                text2: "Your schedule has been successfully added.",
+            });
+
+            return sanitizedSchedule;
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: "Failed to Add Schedule",
+                text2: error.message || "Error adding schedule",
+            });
+            console.error("Error adding schedule: ", error);
+            return null;
+        }
+    }
+    async updateScheduleInFirebase(updatedSchedule: any) {
+        try {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                Toast.show({
+                    type: "error",
+                    text1: "Failed to Update Schedule",
+                    text2: "No authenticated user found",
+                });
+                return null;
+            }
+
+            const userId = currentUser.uid;
+            const userDocRef = doc(db, "droidaccount", userId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                Toast.show({
+                    type: "error",
+                    text1: "Update Failed",
+                    text2: "User data not found.",
+                });
+                return null;
+            }
+
+            // Remove undefined fields
+            const sanitizedSchedule = Object.fromEntries(
+                Object.entries(updatedSchedule).filter(([_, v]) => v !== undefined)
+            );
+
+            const existingSchedules = userSnapshot.data()?.schedules?.mySchedles || [];
+
+            // Remove old schedule
+            const oldSchedule = existingSchedules.find((s: any) => s.id === sanitizedSchedule.id);
+
+            if (!oldSchedule) {
+                Toast.show({
+                    type: "error",
+                    text1: "Update Failed",
+                    text2: "Schedule not found.",
+                });
+                return null;
+            }
+
+            await updateDoc(userDocRef, {
+                "schedules.mySchedles": arrayRemove(oldSchedule),
+            });
+
+            // Add updated schedule
+            await updateDoc(userDocRef, {
+                "schedules.mySchedles": arrayUnion(sanitizedSchedule),
+            });
+
+            // Refresh Redux store
+            const updatedSnapshot = await getDoc(userDocRef);
+            const finalSchedules = updatedSnapshot.data()?.schedules?.mySchedles || [];
+            store.dispatch(setEvents(finalSchedules));
+
+            Toast.show({
+                type: "success",
+                text1: "Schedule Updated",
+                text2: "Your schedule has been successfully updated.",
+            });
+
+            return sanitizedSchedule;
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: "Failed to Update Schedule",
+                text2: error.message || "Error updating schedule",
+            });
+            console.error("Error updating schedule: ", error);
+            return null;
+        }
+    }
+    async deleteScheduleFromFirebase(scheduleId: string) {
+        try {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                Toast.show({
+                    type: "error",
+                    text1: "Failed to Delete Schedule",
+                    text2: "No authenticated user found",
+                });
+                return null;
+            }
+
+            const userId = currentUser.uid;
+            const userDocRef = doc(db, "droidaccount", userId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                Toast.show({
+                    type: "error",
+                    text1: "Delete Failed",
+                    text2: "User data not found.",
+                });
+                return null;
+            }
+
+            const existingSchedules = userSnapshot.data()?.schedules?.mySchedles || [];
+
+            const newSchedules = existingSchedules.filter(
+                (s: any) => s.id !== scheduleId
+            );
+
+            await updateDoc(userDocRef, {
+                "schedules.mySchedles": newSchedules,
+            });
+
+            // refresh redux
+            store.dispatch(setEvents(newSchedules));
+
+            Toast.show({
+                type: "success",
+                text1: "Schedule Deleted",
+                text2: "Your schedule has been deleted.",
+            });
+
+            return true;
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: "Delete Failed",
+                text2: error.message || "Error deleting schedule",
+            });
+            console.error("Error deleting schedule: ", error);
+            return null;
+        }
     }
 }
 

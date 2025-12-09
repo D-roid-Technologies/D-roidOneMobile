@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Event } from "../../redux/slice/eventSlice";
+import { authService } from "../../redux/configuration/auth.service";
 
 const CalendarScreen: React.FC = () => {
   const navigation = useNavigation<any>();
@@ -23,17 +24,19 @@ const CalendarScreen: React.FC = () => {
     "month"
   );
   const [currentDate, setCurrentDate] = useState(today);
-  const events = useSelector((state: RootState) => state.events.events)
+  const events = useSelector((state: RootState) => state.events.events);
 
   const renderEventItem = ({ item }: { item: Event }) => (
-    <View style={styles.eventItem}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("EventDetail", { itemId: item.id })}
+      style={styles.eventItem}>
       <Text style={styles.eventType}>{item.type}</Text>
       <Text style={styles.eventTitle}>{item.title}</Text>
       <Text style={styles.eventDescription}>{item.description}</Text>
       <Text style={styles.eventDate}>
         {item.startDate} {item.startTime} - {item.endDate} {item.endTime}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   const onDayPress = (day: any) => {
@@ -44,7 +47,7 @@ const CalendarScreen: React.FC = () => {
     const newDate = new Date(currentDate);
     if (viewMode === "month") newDate.setMonth(newDate.getMonth() - 1);
     else if (viewMode === "week") newDate.setDate(newDate.getDate() - 7);
-    else if (viewMode === "agenda") newDate.setDate(newDate.getDate() - 1);
+    // else if (viewMode === "agenda") newDate.setDate(newDate.getDate() - 1);
 
     setCurrentDate(newDate);
     setSelectedDate(newDate.toISOString().split("T")[0]);
@@ -54,7 +57,7 @@ const CalendarScreen: React.FC = () => {
     const newDate = new Date(currentDate);
     if (viewMode === "month") newDate.setMonth(newDate.getMonth() + 1);
     else if (viewMode === "week") newDate.setDate(newDate.getDate() + 7);
-    else if (viewMode === "agenda") newDate.setDate(newDate.getDate() + 1);
+    // else if (viewMode === "agenda") newDate.setDate(newDate.getDate() + 1);
 
     setCurrentDate(newDate);
     setSelectedDate(newDate.toISOString().split("T")[0]);
@@ -81,7 +84,7 @@ const CalendarScreen: React.FC = () => {
 
       {/* View Mode Switch */}
       <View style={styles.viewSwitch}>
-        {["month", "week", "agenda"].map((mode) => (
+        {["month", "week"].map((mode) => (
           <TouchableOpacity key={mode} onPress={() => setViewMode(mode as any)}>
             <Text
               style={[styles.switchText, viewMode === mode && styles.switchActive]}
@@ -97,19 +100,28 @@ const CalendarScreen: React.FC = () => {
         <Calendar
           onDayPress={onDayPress}
           markedDates={{
-            [selectedDate]: { selected: true, selectedColor: "#C7D2FE" },
-            [today.toISOString().split("T")[0]]: { selected: true, selectedColor: "#C7D2FE" },
+            [selectedDate]: {
+              selected: true,
+              selectedColor: "#C7D2FE", // green background
+              selectedTextColor: "#000c3a", // yellow text
+            },
+            [today.toISOString().split("T")[0]]: {
+              selected: true,
+              selectedColor: "green", // optional: keep today a different color
+              selectedTextColor: "#ffffff",
+            },
           }}
           theme={{
             backgroundColor: "#000105",
             calendarBackground: "#000105",
-            textSectionTitleColor: "#fff",
-            dayTextColor: "#fff",
-            monthTextColor: "#fff",
+            textSectionTitleColor: "#ffffff",
+            dayTextColor: "#ffffff",
+            monthTextColor: "#ffffff",
             arrowColor: "#C7D2FE",
             todayTextColor: "#C7D2FE",
           }}
         />
+
       )}
 
       {viewMode === "agenda" && (
@@ -170,7 +182,7 @@ const CalendarScreen: React.FC = () => {
         style={styles.floatingButton}
         onPress={() => navigation.navigate("CreateEvent", { date: selectedDate })}
       >
-        <Ionicons name="add" size={28} color="#fff" />
+        <Ionicons name="add" size={28} color="#000105" />
       </TouchableOpacity>
     </View>
   );
@@ -200,9 +212,6 @@ const styles = StyleSheet.create({
   switchText: { color: "#fff", fontSize: 16 },
   switchActive: { color: "#C7D2FE", fontWeight: "700" },
   eventsTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginVertical: 12 },
-  // eventItem: { backgroundColor: "#1E293B", padding: 14, borderRadius: 10, marginBottom: 10 },
-  // eventType: { color: "#C7D2FE", fontWeight: "900", marginBottom: 4 },
-  // eventTitle: { color: "#fff", fontSize: 16, fontWeight: "300" },
   floatingButton: {
     position: "absolute",
     bottom: 30,
@@ -217,13 +226,13 @@ const styles = StyleSheet.create({
     color: "red"
   },
   eventItem: {
-    backgroundColor: "#1E293B",
+    backgroundColor: "#000c3a",
     padding: 14,
     borderRadius: 10,
     marginBottom: 10,
   },
-  eventType: { color: "#34D399", fontWeight: "700", marginBottom: 4 },
-  eventTitle: { color: "#fff", fontSize: 16, fontWeight: "700" },
-  eventDescription: { color: "#fff", fontSize: 14, marginVertical: 4 },
-  eventDate: { color: "#D1D5DB", fontSize: 12 },
+  eventType: { color: "#34D399", fontWeight: "900", marginBottom: 4, fontSize: 18 },
+  eventTitle: { color: "#ffffff", fontSize: 16, fontWeight: "900" },
+  eventDescription: { color: "#ffffff", fontSize: 14, marginVertical: 4, fontWeight: "300" },
+  eventDate: { color: "#D1D5DB", fontSize: 12, fontWeight: "300" },
 });
