@@ -32,6 +32,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
     const dispatch = useDispatch();
     const count = useSelector((state: RootState) => state.notifictions.notifications.length);
+    const membershipTier = useSelector((state: RootState) => state.membershipTier);
+    console.log(membershipTier)
+
 
     console.log(count)
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -47,10 +50,10 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const eventsPosts = [
         {
             id: 12,
-            title: "Clash of Kings - Chess Tournament[2025/2026]",
+            title: "Clash of Kings - Chess Tournament[2025]",
             excerpt:
                 "An exciting chess tournament featuring some of the region's top players.",
-            date: "Sunday, 30th November 2025",
+            date: "Sunday, 7th December 2025",
             author: "D'roid Technologies",
             authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
             category: "Events",
@@ -386,13 +389,23 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 {/* Membership Overview */}
                 <Text style={styles.sectionTitle}>Membership Overview</Text>
                 <View style={styles.statsContainer}>
-                    {memberStats.map((stat, index) => (
-                        <View key={index} style={styles.statCard}>
-                            <Text style={styles.statTitle}>{stat.title}</Text>
-                            <Text style={styles.statValue}>{stat.value}</Text>
-                            <Text style={styles.statChange}>{stat.change}</Text>
-                        </View>
-                    ))}
+                    {/* Membership Status */}
+                    <View style={styles.statCard}>
+                        <Text style={styles.statTitle}>Membership</Text>
+                        <Text style={styles.statValue}>{membershipTier.tier}</Text>
+                        <Text style={styles.statChange}>
+                            {membershipTier.nextTier ? `Next: ${membershipTier.nextTier}` : "Top Tier"}
+                        </Text>
+                    </View>
+
+                    {/* Total Hours */}
+                    <View style={styles.statCard}>
+                        <Text style={styles.statTitle}>Total Hours</Text>
+                        <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours} Hours</Text>
+                        <Text style={styles.statChange}>
+                            Membership Progress: {membershipTier.progressPercentage}%
+                        </Text>
+                    </View>
                 </View>
 
                 {/* Quick Actions */}
@@ -421,51 +434,53 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
                 {/* Our Events */}
                 <Text style={styles.sectionTitle}>Upcoming Events</Text>
-                {eventsPosts.map((event: any, index: React.Key | null | undefined) => (
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("EventDescription", { event })}
-                        key={index}
-                        style={styles.eventCard}
-                    >
-                        <View style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}>
-                            <View>
+                {eventsPosts
+                    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // Sort by date ascending
+                    .slice(0, 3) // Take top 3
+                    .map((event: any, index: React.Key | null | undefined) => (
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("EventDescription", { event })}
+                            key={index}
+                            style={styles.eventCard}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Image
                                     source={event.image}
-                                    style={{ width: 100, height: 100, }} // Added borderRadius for aesthetics
-                                    accessibilityLabel="Event Image" // Changed label to be more specific
+                                    style={{ width: 100, height: 100, borderRadius: 8 }}
+                                    accessibilityLabel="Event Image"
                                 />
+                                <View style={{ marginLeft: 12, flex: 1 }}>
+                                    <Text style={styles.eventTitle}>{event.title}</Text>
+                                    <Text style={styles.eventDate}>{event.date}</Text>
+                                </View>
                             </View>
-                            {/* Add marginLeft to separate the image and the text visually */}
-                            <View style={{ marginLeft: 12 }}>
-                                <Text style={styles.eventTitle}>{event.title}</Text>
-                                <Text style={styles.eventDate}>{event.date}</Text>
-                            </View>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color="#999" />
-                    </TouchableOpacity>
-                ))}
-
-                {/* Analytics */}
-                {/* <Text style={styles.sectionTitle}>Analytics</Text>
-                <View style={styles.analyticsContainer}>
-                    {analytics.map((a, index) => (
-                        <View key={index} style={styles.analyticsCard}>
-                            <Text style={styles.analyticsValue}>{a.value}</Text>
-                            <Text style={styles.analyticsLabel}>{a.metric}</Text>
-                        </View>
+                            <Ionicons name="chevron-forward" size={18} color="#999" />
+                        </TouchableOpacity>
                     ))}
-                </View> */}
-            </ScrollView>
 
-            {/* User Profile Modal (Bottom Sheet Style) */}
+                {/* Button to see all events */}
+                <TouchableOpacity
+                    style={{
+                        marginHorizontal: 16,
+                        marginTop: 10,
+                        paddingVertical: 12,
+                        borderRadius: 10,
+                        backgroundColor: "#C7D2FE",
+                        alignItems: "center",
+                    }}
+                    onPress={() => navigation.navigate("AllEventsScreen", { eventsPosts })}
+                >
+                    <Text style={{ fontSize: 16, fontWeight: "600", color: "#071D6A" }}>
+                        See All Events
+                    </Text>
+                </TouchableOpacity>
+
+            </ScrollView>
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={isModalVisible}
-                onRequestClose={() => setIsModalVisible(false)} // Handles Android back button
+                onRequestClose={() => setIsModalVisible(false)}
             >
                 {/* Background overlay that closes the modal */}
                 <TouchableOpacity
@@ -493,13 +508,21 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                             style={styles.modalButton}
                             onPress={() => {
                                 setIsModalVisible(false);
-                                // Placeholder: Navigate to profile screen
-                                // You would replace 'Profile' with your actual Profile route name
-                                navigation.navigate('Profile' as never);
+                                navigation.navigate('Profile');
                             }}
                         >
                             <Ionicons name="person-circle-outline" size={24} color="#000c3a" />
                             <Text style={styles.modalButtonText}>View Profile</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => {
+                                setIsModalVisible(false);
+                                navigation.navigate('Settings');
+                            }}
+                        >
+                            <Ionicons name="settings-outline" size={24} color="#000c3a" />
+                            <Text style={styles.modalButtonText}>Settings</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -574,11 +597,11 @@ const styles = StyleSheet.create({
         padding: 16,
         width: "48%",
         marginBottom: 12,
-        height: 100
+        height: 110
     },
     statTitle: { color: "#C7D2FE", fontWeight: "900", marginBottom: 20 },
-    statValue: { fontSize: 18, fontWeight: "300", color: "#e6e6e8" },
-    statChange: { fontSize: 10, color: "#999", fontWeight: "300" },
+    statValue: { fontSize: 16, fontWeight: "400", color: "#e6e6e8" },
+    statChange: { fontSize: 12, color: "#999", fontWeight: "600" },
     quickActionsContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -615,8 +638,8 @@ const styles = StyleSheet.create({
         marginBlock: 10,
         height: 120
     },
-    eventTitle: { fontSize: 8, fontWeight: "400", color: "#000c3a" },
-    eventDate: { fontSize: 7, color: "#666" },
+    eventTitle: { fontSize: 16, fontWeight: "400", color: "#000c3a" },
+    eventDate: { fontSize: 12, color: "#666", fontWeight: "300", },
     analyticsContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -676,7 +699,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end", // Align content to the bottom
     },
     modalContentContainer: {
-        backgroundColor: "#ffffff",
+        backgroundColor: "#000105",
         paddingHorizontal: 20,
         paddingTop: 10,
         paddingBottom: Platform.OS === 'ios' ? 30 : 20, // Extra padding for safe area on iOS
@@ -688,7 +711,7 @@ const styles = StyleSheet.create({
     modalHandle: {
         width: 40,
         height: 5,
-        backgroundColor: '#ccc',
+        backgroundColor: '#ffffff',
         borderRadius: 2.5,
         alignSelf: 'center',
         marginBottom: 15,
@@ -710,11 +733,11 @@ const styles = StyleSheet.create({
     modalUserName: {
         fontSize: 22,
         fontWeight: '700',
-        color: '#000c3a',
+        color: '#ffffff',
     },
     modalUserDetail: {
         fontSize: 14,
-        color: '#555',
+        color: '#ffffff',
         marginTop: 4,
     },
     modalButton: {

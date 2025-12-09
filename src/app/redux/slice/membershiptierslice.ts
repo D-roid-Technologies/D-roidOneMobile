@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 export type MembershipTierState = {
   tier: string;
   nextTier?: string;
   totalHours: number;
   progressPercentage: number;
+  status: string
 };
 
 const initialState: MembershipTierState = {
@@ -12,6 +14,7 @@ const initialState: MembershipTierState = {
   nextTier: "Gold",
   totalHours: 0,
   progressPercentage: 33,
+  status: "Active"
 };
 
 export const membershipTierSlice = createSlice({
@@ -25,7 +28,6 @@ export const membershipTierSlice = createSlice({
       state.nextTier = action.payload;
     },
 
-    // ➤ Add hours to user's total tracked time
     addHours: (state, action: PayloadAction<number>) => {
       state.totalHours += action.payload;
     },
@@ -41,7 +43,8 @@ export const membershipTierSlice = createSlice({
         tier: "Silver",
         nextTier: "Gold",
         totalHours: 0,
-        progressPercentage: 0,
+        progressPercentage: 33,
+        status: "Active"
       };
     },
   },

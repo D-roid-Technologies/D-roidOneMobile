@@ -31,11 +31,14 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
 
     const renderNotification = ({ item }: any) => (
         <View style={[styles.item, item.read ? styles.read : styles.unread]}>
-            <Text style={styles.message}>{item.message}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                {/* {!item.read && (
+                    <View style={[styles.unreadDot, { marginRight: 10 }]} />
+                )} */}
+                <Text style={styles.mHeader}>{item.title}</Text>
+            </View>
 
-            {!item.read && (
-                <View style={styles.unreadDot} />
-            )}
+            <Text style={styles.message}>{item.message}</Text>
         </View>
     );
 
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 24,
-        fontWeight: "700",
+        fontWeight: "900",
         marginBottom: 12,
         color: "#ffffff"
     },
@@ -81,9 +84,6 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 10,
         marginBottom: 12,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
@@ -94,7 +94,14 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         fontWeight: "300",
-        color: "#000105"
+        color: "#000105",
+        marginTop: 20
+    },
+    mHeader: {
+        flex: 1,
+        fontSize: 20,
+        fontWeight: "600",
+        color: "#000105",
     },
     unreadDot: {
         width: 12,

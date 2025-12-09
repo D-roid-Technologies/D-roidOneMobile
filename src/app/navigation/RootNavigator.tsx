@@ -21,6 +21,7 @@ import EventDetailScreen from "../screens/schedles/EventDetailScreen";
 import ForgotPassword from "../screens/ForgotPassword";
 import TermsAndConditions from "../screens/TermsAndConditions";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
+import AllEventsScreen from "../screens/AllEventsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,7 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
                     <Stack.Screen name="TAC" component={TermsAndConditions} />
                     <Stack.Screen name="PAP" component={PrivacyPolicyScreen} />
+                    <Stack.Screen name="AllEventsScreen" component={AllEventsScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>
