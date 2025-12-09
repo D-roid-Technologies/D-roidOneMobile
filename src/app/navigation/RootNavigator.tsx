@@ -18,6 +18,9 @@ import ServicesScreen from "../screens/ServiceScreen";
 import ProgressionScreen from "../screens/ProgressionScreen";
 import CreateEventScreen from "../screens/schedles/CreateEventScreen";
 import EventDetailScreen from "../screens/schedles/EventDetailScreen";
+import ForgotPassword from "../screens/ForgotPassword";
+import TermsAndConditions from "../screens/TermsAndConditions";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +50,9 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Progression" component={ProgressionScreen} />
                     <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
                     <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+                    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+                    <Stack.Screen name="TAC" component={TermsAndConditions} />
+                    <Stack.Screen name="PAP" component={PrivacyPolicyScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>

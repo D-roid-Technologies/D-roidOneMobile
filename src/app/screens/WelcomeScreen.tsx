@@ -1,25 +1,32 @@
 import React from "react";
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-const WelcomeScreen: React.FC = ({ navigation }: any) => {
+export type RootStackParamList = {
+  Welcome: undefined;
+  Signup: undefined;
+};
+
+type WelcomeScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, "Welcome">;
+};
+
+const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* Top Logo */}
-      {/* <View style={styles.logoContainer}>
-        <Image
-          source={{ uri: "https://i.imgur.com/YXjB6Rr.png" }} // Replace with your company logo
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View> */}
-
-      {/* Title & Subtitle */}
       <View style={styles.textContainer}>
         <Text style={styles.title}>D’roid One</Text>
-        <Text style={styles.subtitle}>Your One stop shop for everything Tech</Text>
+        <Text style={styles.subtitle}>
+          Your One stop shop for everything Tech
+        </Text>
       </View>
 
-      {/* Bottom Buttons */}
+      {/* Bottom Button */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.signupButton}
@@ -27,19 +34,13 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
         >
           <Text style={styles.signupText}>Let's Begin</Text>
         </TouchableOpacity>
-
-        {/* <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
 };
 
 export default WelcomeScreen;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -49,13 +50,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     justifyContent: "space-between",
   },
-  logoContainer: {
-    alignItems: "flex-start",
-  },
-  logo: {
-    width: 120,
-    height: 50,
-  },
   textContainer: {
     flex: 1,
     justifyContent: "center",
@@ -64,18 +58,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: "700",
+    fontWeight: "900",
     color: "#ffffff",
     textAlign: "center",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: "#555",
+    color: "#BAB8B8",
     textAlign: "center",
+    fontWeight: "300",
   },
   buttonContainer: {
-    paddingBottom: 40,
     width: "100%",
   },
   signupButton: {
@@ -87,19 +81,6 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: "#000105",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  loginButton: {
-    backgroundColor: "#fff",
-    paddingVertical: 14,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#071D6A",
-    alignItems: "center",
-  },
-  loginText: {
-    color: "#071D6A",
     fontSize: 16,
     fontWeight: "600",
   },

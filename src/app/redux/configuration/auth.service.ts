@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
@@ -538,6 +538,48 @@ export class AuthService {
             return null;
         }
     }
+    async handleForgotPassword(email: string) {
+        try {
+            if (!email || email.trim() === "") {
+                Toast.show({
+                    type: "error",
+                    text1: "Missing Email",
+                    text2: "Please enter your email address.",
+                });
+                return;
+            }
+
+            await sendPasswordResetEmail(auth, email);
+
+            Toast.show({
+                type: "success",
+                text1: "Password Reset Sent",
+                text2: "Check your email and spam folder for reset instructions.",
+            });
+
+            return true;
+        } catch (error: any) {
+            console.error("Forgot Password Error:", error);
+
+            let message = "Something went wrong.";
+
+            if (error.code === "auth/user-not-found") {
+                message = "No account found with this email.";
+            }
+            if (error.code === "auth/invalid-email") {
+                message = "Email format is invalid.";
+            }
+
+            Toast.show({
+                type: "error",
+                text1: "Reset Failed",
+                text2: message,
+            });
+
+            return null;
+        }
+    }
+
 }
 
 export const authService = new AuthService();
