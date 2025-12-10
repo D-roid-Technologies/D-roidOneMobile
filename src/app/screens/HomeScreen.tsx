@@ -277,7 +277,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
     const handleQuickAction = (title: string) => {
         // NOTE: Changed alert() to a simple, non-blocking notification
-        Alert.alert("Action Required", `Navigating to ${title} screen.`);
+        // Alert.alert("Action Required", `Navigating to ${title} screen.`);
         navigation.navigate(`${title}`);
     }
 
