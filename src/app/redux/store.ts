@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
     // Add all your slice reducers here
     user: userSlice.reducer,
     location: locationSlice.reducer,
-    notifictions: notificationsSlice.reducer,
+    notifications: notificationsSlice.reducer,
     membershipTier: membershipTierSlice.reducer,
     events: eventSlice.reducer
 });

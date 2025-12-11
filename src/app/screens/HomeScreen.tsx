@@ -16,7 +16,7 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { ASSETS } from "../constants/Assets";
 // Updated Redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState, AppDispatch } from "../redux/store";
 import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -30,8 +30,8 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const userTypee = userMain.userType;
 
 
-    const dispatch = useDispatch();
-    const count = useSelector((state: RootState) => state.notifictions.notifications.length);
+    const dispatch = useDispatch<AppDispatch>();
+    const count = useSelector((state: RootState) => state.notifications.notifications.length);
 
     console.log(count)
     const [isModalVisible, setIsModalVisible] = useState(false);
