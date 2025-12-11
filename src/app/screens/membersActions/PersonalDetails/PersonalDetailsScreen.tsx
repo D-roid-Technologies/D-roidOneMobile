@@ -22,10 +22,10 @@ import type { UserType } from "../../../utils/Types";
 import { addNotification, persistNotifications } from "../../../redux/slice/notifications";
 import type { NotificationItem } from "../../../redux/slice/notifications";
 
-// import AffiliatedApps from "./AffiliatedApps";
-// import DocumentUploadUI from "./DocumentUploadUI";
-// import PreferencesUI from "./PreferencesUI";
-// import SecuritySettingsUI from "./SecuritySettingsUI";
+import AffiliatedApps from "./AffiliatedApps/AffiliatedApps";
+import DocumentUploadUI from "./DocumentUploadUI/DocumentUploadUI";
+import PreferencesUI from "./PreferencesUI/PreferencesUI";
+import SecuritySettingsUI from "./SecuritySettings/SecuritySettingsUI";
 
 import Dropdown from "./components/Dropdown";
 import ProfilePhotoUploader from "./components/ProfilePhotoUploader";
@@ -42,6 +42,13 @@ export interface ValidationErrors {
 }
 
 type SubmitStatus = "success" | "error" | null;
+
+type TabKey =
+  | "Profile"
+  | "Security"
+  | "Preferences"
+  | "Affiliated Apps"
+  | "Documents";
 
 const securityQuestionOptions = [
   { value: "mother_maiden", label: "What is your mother's maiden name?" },
@@ -101,6 +108,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null);
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState<TabKey>("Profile");
 
   const scrollRef = useRef<ScrollView | null>(null);
 
@@ -658,6 +666,47 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
     );
   };
 
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case "Profile":
+        return renderProfileTab();
+      case "Security":
+        return (
+          <View style={{ marginTop: 16 }}>
+            <SecuritySettingsUI user={formData} onChange={setFormData} />
+          </View>
+        );
+      case "Preferences":
+        return (
+          <View style={{ marginTop: 16 }}>
+            <PreferencesUI user={formData} onChange={setFormData} />
+          </View>
+        );
+      case "Affiliated Apps":
+        return (
+          <View style={{ marginTop: 16 }}>
+            <AffiliatedApps />
+          </View>
+        );
+      case "Documents":
+        return (
+          <View style={{ marginTop: 16 }}>
+            <DocumentUploadUI />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const tabs: TabKey[] = [
+    "Profile",
+    "Security",
+    "Preferences",
+    "Affiliated Apps",
+    "Documents",
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
       {/* Custom Header with Back Button */}
@@ -677,36 +726,62 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="handled"
         >
-        
+          <Text style={styles.subHeaderText}>
+            Kindly fill the form below to update your information. Fields
+            marked with * are required.
+          </Text>
 
-        <Text style={styles.subHeaderText}>
-          Kindly fill the form below to update your information. Fields
-          marked with * are required.
-        </Text>
+          {/* Status Messages */}
+          {submitStatus === "success" && (
+            <View style={styles.successBox}>
+              <Text style={styles.successIcon}>✓</Text>
+              <Text style={styles.successText}>
+                Information updated successfully!
+              </Text>
+            </View>
+          )}
 
-        {/* Status Messages */}
-        {submitStatus === "success" && (
-          <View style={styles.successBox}>
-            <Text style={styles.successIcon}>✓</Text>
-            <Text style={styles.successText}>
-              Information updated successfully!
-            </Text>
-          </View>
-        )}
+          {submitStatus === "error" && Object.keys(errors).length > 0 && (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorIcon}>⚠</Text>
+              <Text style={styles.errorBoxText}>
+                Please fix the errors below before submitting.
+              </Text>
+            </View>
+          )}
 
-        {submitStatus === "error" && Object.keys(errors).length > 0 && (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorIcon}>⚠</Text>
-            <Text style={styles.errorBoxText}>
-              Please fix the errors below before submitting.
-            </Text>
-          </View>
-        )}
+          {/* Tabs */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.tabsScrollView}
+            contentContainerStyle={styles.tabsRow}
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  style={[styles.tabItem, isActive && styles.tabItemActive]}
+                  onPress={() => setActiveTab(tab)}
+                >
+                  <Text
+                    style={[
+                      styles.tabText,
+                      isActive && styles.tabTextActive,
+                    ]}
+                  >
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
 
-        {/* Profile Content */}
-        <View style={styles.card}>{renderProfileTab()}</View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          {/* Tab Content */}
+          <View style={styles.card}>{renderActiveTab()}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -733,10 +808,10 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     flex: 1,
     textAlign: "center",
-    marginRight: 40, // Offset for centering (back button width)
+    marginRight: 40,
   },
   headerPlaceholder: {
-    width: 40, // Same width as back button for centering
+    width: 40,
   },
   scrollContainer: {
     padding: 16,
@@ -856,5 +931,33 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  tabsScrollView: {
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  tabsRow: {
+    flexDirection: "row",
+    borderRadius: 999,
+    backgroundColor: "#edf2ff",
+    padding: 4,
+  },
+  tabItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 999,
+    marginRight: 4,
+  },
+  tabItemActive: {
+    backgroundColor: "#071D6A",
+  },
+  tabText: {
+    fontSize: 13,
+    color: "#071D6A",
+    fontWeight: "500",
+  },
+  tabTextActive: {
+    color: "#ffffff",
+    fontWeight: "600",
   },
 });
