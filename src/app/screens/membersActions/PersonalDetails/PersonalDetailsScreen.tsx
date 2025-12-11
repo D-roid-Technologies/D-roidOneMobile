@@ -35,6 +35,7 @@ import StaffInformationSection from "./components/StaffInformationSection";
 import OrganisationInformationSection from "./components/OrganisationInformationSection";
 import SecurityInformationSection from "./components/SecurityInformationSection";
 import ReadOnlyInformationSection from "./components/ReadOnlyInformationSection";
+import BackButton from "../../../components/BackButton";
 
 export interface ValidationErrors {
   [key: string]: string;
@@ -657,23 +658,11 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
     );
   };
 
-  const handleGoBack = useCallback(() => {
-    if (navigation) {
-      navigation.navigate("BottomTabs");
-    }
-  }, [navigation]);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
       {/* Custom Header with Back Button */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          onPress={handleGoBack}
-          style={styles.backButton}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
+        <BackButton navigation={navigation} />
         <Text style={styles.headerTitle}>Personal Details</Text>
         <View style={styles.headerPlaceholder} />
       </View>
@@ -737,10 +726,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-  },
-  backButton: {
-    padding: 8,
-    borderRadius: 8,
   },
   headerTitle: {
     fontSize: 18,
