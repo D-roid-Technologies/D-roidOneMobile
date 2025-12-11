@@ -1,73 +1,88 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export interface Notification {
+const NOTIFICATIONS_STORAGE_KEY = "notifications";
+
+export interface NotificationItem {
     id: string;
-    title: string;
+    title?: string;
     message: string;
-    type: "appointment" | "reminder" | "prescription" | "general";
-    read: boolean;
-    timestamp: string;
-    relatedLink?: string;
-    priority?: "low" | "medium" | "high";
+    date?: string;
+    time?: string;
+    type?: "success" | "error" | "info";
+    isRead: boolean;
 }
 
 interface NotificationState {
-    notifications: Notification[];
+    notifications: NotificationItem[];
+    isLoading: boolean;
+    error: string | null;
 }
 
 const initialState: NotificationState = {
-    notifications: [
-        {
-            id: "1",
-            title: "Appointment Reminder",
-            message: "Your appointment with Dr. John Smith at Riverside Clinic is scheduled for tomorrow, December 10th, 2025, at 10:00 AM. Please arrive 10 minutes early and bring your insurance card.",
-            type: "appointment",
-            read: false,
-            timestamp: "2025-12-09T08:00:00Z",
-            relatedLink: "/appointments/12345",
-            priority: "high",
-        },
-        {
-            id: "2",
-            title: "Medication Reminder",
-            message: "Daily reminder: Take your morning medication, Metformin 500mg, with a full glass of water. Remember to check your blood sugar before taking it.",
-            type: "reminder",
-            read: false,
-            timestamp: "2025-12-09T07:30:00Z",
-            relatedLink: "/medications/6789",
-            priority: "medium",
-        },
-        {
-            id: "3",
-            title: "Prescription Ready",
-            message: "Your prescription for Lisinopril 10mg has been refilled and is ready for pickup at Riverside Pharmacy. You can pick it up anytime between 9:00 AM and 6:00 PM today.",
-            type: "prescription",
-            read: true,
-            timestamp: "2025-12-08T16:45:00Z",
-            relatedLink: "/prescriptions/98765",
-            priority: "low",
-        },
-    ],
+    notifications: [],
+    isLoading: false,
+    error: null,
 };
+
+// Async Thunks for AsyncStorage operations
+export const loadNotifications = createAsyncThunk(
+    "notifications/loadNotifications",
+    async (_, { rejectWithValue }) => {
+        try {
+            const stored = await AsyncStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored) as NotificationItem[];
+                return parsed;
+            }
+            // Return default notifications if none stored
+            return [
+                {
+                    id: "1",
+                    message: "Your appointment with Dr. Smith is tomorrow at 10:00 AM.",
+                    isRead: false,
+                },
+                {
+                    id: "2",
+                    message: "Daily reminder: Take your morning medication.",
+                    isRead: false,
+                },
+                {
+                    id: "3",
+                    message: "Your prescription has been refilled and is ready for pickup.",
+                    isRead: true,
+                },
+            ];
+        } catch (error) {
+            console.error("Failed to load notifications:", error);
+            return rejectWithValue("Failed to load notifications");
+        }
+    }
+);
+
+export const persistNotifications = createAsyncThunk(
+    "notifications/persistNotifications",
+    async (notifications: NotificationItem[], { rejectWithValue }) => {
+        try {
+            await AsyncStorage.setItem(
+                NOTIFICATIONS_STORAGE_KEY,
+                JSON.stringify(notifications)
+            );
+            return notifications;
+        } catch (error) {
+            console.error("Failed to persist notifications:", error);
+            return rejectWithValue("Failed to save notifications");
+        }
+    }
+);
 
 export const notificationsSlice = createSlice({
     name: "notifications",
     initialState,
     reducers: {
-        addNotification: (state, action: PayloadAction<Notification>) => {
-            state.notifications.push(action.payload);
-
-            // Save to async storage
-            AsyncStorage.setItem(
-                "notifications",
-                JSON.stringify(state.notifications)
-            );
-        },
-
-        loadNotifications: (state) => {
-            // Load async (must be awaited in component)
-            // console.warn("loadNotifications must be called from a component with await");
+        // Pure reducers without side effects
+        addNotification: (state, action: PayloadAction<NotificationItem>) => {
+            state.notifications.unshift(action.payload);
         },
 
         setNotifications: (state, action: PayloadAction<Notification[]>) => {
@@ -76,12 +91,56 @@ export const notificationsSlice = createSlice({
 
         clearNotifications: (state) => {
             state.notifications = [];
-            AsyncStorage.setItem("notifications", JSON.stringify([]));
         },
+
+        markNotificationAsRead: (state, action: PayloadAction<string>) => {
+            const notification = state.notifications.find((n) => n.id === action.payload);
+            if (notification) {
+                notification.isRead = true;
+            }
+        },
+
+        markAllAsRead: (state) => {
+            // Optimize: only update if there are unread notifications
+            const hasUnread = state.notifications.some((n) => !n.isRead);
+            if (hasUnread) {
+                state.notifications.forEach((n) => {
+                    n.isRead = true;
+                });
+            }
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            // Load notifications
+            .addCase(loadNotifications.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(loadNotifications.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.notifications = action.payload;
+            })
+            .addCase(loadNotifications.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+            // Persist notifications
+            .addCase(persistNotifications.pending, (state) => {
+                state.error = null;
+            })
+            .addCase(persistNotifications.rejected, (state, action) => {
+                state.error = action.payload as string;
+            });
     },
 });
 
-export const { addNotification, loadNotifications, clearNotifications, setNotifications }
-    = notificationsSlice.actions;
+export const {
+    addNotification,
+    setNotifications,
+    clearNotifications,
+    markNotificationAsRead,
+    markAllAsRead,
+} = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

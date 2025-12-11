@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
@@ -538,6 +538,96 @@ export class AuthService {
             return null;
         }
     }
+    async getCurrentUser(): Promise<any> {
+  console.log("authService.getCurrentUser() called…");
+
+  return new Promise((resolve, reject) => {
+    try {
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        (user) => {
+          console.log("onAuthStateChanged fired. User =", user);
+
+          unsubscribe();
+
+          if (user) {
+            console.log("User authenticated. UID:", user.uid);
+            resolve(user);
+          } else {
+            console.log("No authenticated user found!");
+            reject(new Error("User not authenticated"));
+          }
+        },
+        (error) => {
+          console.log("onAuthStateChanged ERROR:", error);
+          reject(error);
+        }
+      );
+    } catch (err) {
+      console.log("getCurrentUser() unexpected error:", err);
+      reject(err);
+    }
+  });
+}
+
+
+    async updatePrimaryInformation(formData: any) {
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("No authenticated user found.");
+    }
+
+    const userDocRef = doc(db, "droidaccount", currentUser.uid);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      throw new Error("User profile not found in the database.");
+    }
+
+    const existingData = userSnapshot.data();
+
+    // Build update payload while preserving Firestore structure
+    const updatedPrimaryInfo = {
+      ...existingData.user.primaryInformation,
+      ...formData,
+      initials: `${formData.firstName?.[0] || ""}${formData.lastName?.[0] || ""}`.toUpperCase(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Update Firestore
+    await updateDoc(userDocRef, {
+      "user.primaryInformation": updatedPrimaryInfo,
+    });
+
+    // Save to local storage
+    await ReactNativeAsyncStorage.setItem(
+      "profileUpdated",
+      JSON.stringify(updatedPrimaryInfo)
+    );
+
+    // Display success toast
+    Toast.show({
+      type: "success",
+      text1: "Profile Updated",
+      text2: "Your personal details have been successfully saved.",
+    });
+
+    return { success: true, data: updatedPrimaryInfo };
+
+  } catch (error: any) {
+    console.error("Error updating profile:", error);
+
+    Toast.show({
+      type: "error",
+      text1: "Update Failed",
+      text2: error.message || "Unable to update profile information.",
+    });
+
+    return { success: false, error: error.message };
+  }
+}
+
     async handleForgotPassword(email: string) {
         try {
             if (!email || email.trim() === "") {

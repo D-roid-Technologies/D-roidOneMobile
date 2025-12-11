@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 const NotificationScreen: React.FC = ({ navigation }: any) => {
     const dispatch = useDispatch();
     const notifications = useSelector(
-        (state: RootState) => state.notifictions.notifications
+        (state: RootState) => state.notifications.notifications
     );
 
 

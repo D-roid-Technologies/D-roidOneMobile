@@ -23,6 +23,20 @@ import TermsAndConditions from "../screens/TermsAndConditions";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 import AllEventsScreen from "../screens/AllEventsScreen";
 
+// Quick Actions - Member Screens
+import PersonalDetailsScreen from "../screens/membersActions/PersonalDetails/PersonalDetailsScreen";
+import MemberServicesScreen from "../screens/membersActions/Services/ServicesScreen";
+import CareersScreen from "../screens/membersActions/Careers/CareersScreen";
+import TakeTestsScreen from "../screens/membersActions/TakeTests/TakeTestsScreen";
+import ContactUsScreen from "../screens/membersActions/ContactUs/ContactUsScreen";
+
+// Quick Actions - Staff Screens
+import TasksScreen from "../screens/membersActions/Tasks/TasksScreen";
+import PayslipScreen from "../screens/membersActions/Payslip/PayslipScreen";
+import StaffOnboardingScreen from "../screens/membersActions/Onboarding/OnboardingScreen";
+import TrainingScreen from "../screens/membersActions/Training/TrainingScreen";
+import AttendanceScreen from "../screens/membersActions/Attendance/AttendanceScreen";
+
 const Stack = createNativeStackNavigator();
 
 const RootNavigator: React.FC = () => {
@@ -51,6 +65,18 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Progression" component={ProgressionScreen} />
                     <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
                     <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+                    
+                    {/* Quick Actions - Member Screens */}
+                    <Stack.Screen name="Personal Details" component={PersonalDetailsScreen} />
+                    <Stack.Screen name="Careers" component={CareersScreen} />
+                    <Stack.Screen name="Take Tests" component={TakeTestsScreen} />
+                    <Stack.Screen name="Contact Us" component={ContactUsScreen} />
+                    
+                    {/* Quick Actions - Staff Screens */}
+                    <Stack.Screen name="Tasks" component={TasksScreen} />
+                    <Stack.Screen name="Payslip" component={PayslipScreen} />
+                    <Stack.Screen name="Training" component={TrainingScreen} />
+                    <Stack.Screen name="Attendance" component={AttendanceScreen} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
                     <Stack.Screen name="TAC" component={TermsAndConditions} />
                     <Stack.Screen name="PAP" component={PrivacyPolicyScreen} />

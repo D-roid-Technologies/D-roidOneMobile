@@ -5,14 +5,16 @@ import { userSlice } from "./slice/user";
 import { notificationsSlice } from "./slice/notifications";
 import { membershipTierSlice } from "./slice/membershiptierslice";
 import { eventSlice } from "./slice/eventSlice";
+import { affiliatedAppsSlice } from "./slice/affiliatedAppsSlice";
 
 const rootReducer = combineReducers({
     // Add all your slice reducers here
     user: userSlice.reducer,
     location: locationSlice.reducer,
-    notifictions: notificationsSlice.reducer,
+    notifications: notificationsSlice.reducer,
     membershipTier: membershipTierSlice.reducer,
-    events: eventSlice.reducer
+    events: eventSlice.reducer,
+    affiliatedApps: affiliatedAppsSlice.reducer
 });
 
 // 1. Configure the store using the root reducer directly.
