@@ -36,26 +36,42 @@ const SecuritySettingsUI: React.FC<SecuritySettingsUIProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // WHY: keep original fetch pattern, show RN loader.
   useEffect(() => {
-    const load = async () => {
-      try {
-        const currentUser = await authService.getCurrentUser();
-        if (!currentUser?.uid) return;
-        const ref = doc(db, "securitySettings", currentUser.uid);
-        const snap = await getDoc(ref);
-        if (snap.exists()) {
-          const data = snap.data() as Partial<SecuritySettings>;
-          setSecuritySettings((s) => ({ ...s, ...data }));
-        }
-      } catch {
-        Alert.alert("Error", "Failed to load security settings.");
-      } finally {
-        setIsLoading(false);
+  try {
+    throw new Error("Security Test Error Breakpoint");
+  } catch (e) {
+    console.log("Component renders OK:", e);
+  }
+}, []);
+
+
+  // WHY: keep original fetch pattern, show RN loader.
+
+
+  useEffect(() => {
+
+  const load = async () => {
+    try {
+
+      const currentUser = await authService.getCurrentUser();
+
+      const ref = doc(db, "securitySettings", currentUser.uid);
+
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+      } else {
+        console.log("No security settings doc found — using defaults");
       }
-    };
-    load();
-  }, []);
+    } catch (error) {
+      console.log("Error inside securitySettings load():", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  load();
+}, []);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -171,7 +187,7 @@ const sStyles = StyleSheet.create({
   title: { fontSize: 20, fontWeight: "600", marginBottom: 12 },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    // borderRadius: 12,
     padding: 16,
     elevation: 2,
   },
@@ -190,7 +206,7 @@ const sStyles = StyleSheet.create({
   button: {
     marginTop: 16,
     backgroundColor: "#111827",
-    borderRadius: 10,
+    // borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
   },

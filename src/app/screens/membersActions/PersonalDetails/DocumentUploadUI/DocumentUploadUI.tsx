@@ -10,7 +10,7 @@ import {
 import * as DocumentPicker from "expo-document-picker";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store";
-import { googleAppScriptService } from "../../../../googleAppScriptService/googleAppScriptService";
+import { googleAppScriptServiceRN } from "../../../../googleAppScriptService/googleAppScriptServiceRN";
 
 type DocKey =
   | "meansOfIdentification"
@@ -41,7 +41,7 @@ const initialState: Record<DocKey, PickedFile> = {
 };
 
 const DocumentUploadUI: React.FC = () => {
-  const user = useSelector((s: RootState) => s.auth?.user);
+  const user = useSelector((s: RootState) => s.user);
   const [documents, setDocuments] =
     useState<Record<DocKey, PickedFile>>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -95,8 +95,10 @@ const DocumentUploadUI: React.FC = () => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Adapt your upload pipe (e.g., googleAppScriptService) to accept RN file URIs.
-      await googleAppScriptService.uploadDocuments(user?.id, documents);
+      // Use React Native upload service
+      const userId = user?.uniqueId || "unknown-user";
+      const userName = user ? `${user.firstName} ${user.lastName}` : "Unknown User";
+      await googleAppScriptServiceRN.uploadDocuments(documents, userId, userName);
       setSubmitted(true);
       Alert.alert("Uploaded", "Documents uploaded successfully.");
     } catch (e) {

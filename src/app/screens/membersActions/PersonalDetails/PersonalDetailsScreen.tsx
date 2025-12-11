@@ -26,6 +26,8 @@ import AffiliatedApps from "./AffiliatedApps/AffiliatedApps";
 import DocumentUploadUI from "./DocumentUploadUI/DocumentUploadUI";
 import PreferencesUI from "./PreferencesUI/PreferencesUI";
 import SecuritySettingsUI from "./SecuritySettings/SecuritySettingsUI";
+import { Dimensions } from "react-native";
+
 
 import Dropdown from "./components/Dropdown";
 import ProfilePhotoUploader from "./components/ProfilePhotoUploader";
@@ -36,6 +38,7 @@ import OrganisationInformationSection from "./components/OrganisationInformation
 import SecurityInformationSection from "./components/SecurityInformationSection";
 import ReadOnlyInformationSection from "./components/ReadOnlyInformationSection";
 import BackButton from "../../../components/BackButton";
+const screenWidth = Dimensions.get("window").width;
 
 export interface ValidationErrors {
   [key: string]: string;
@@ -438,7 +441,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
         [fieldName]: error,
       }));
     }
-  }, [formData, markFieldTouched, touchedFields]);
+  }, [formData, markFieldTouched]);
 
   const handleInputChange = (
     fieldName: string,
@@ -932,32 +935,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  tabsScrollView: {
-    marginTop: 12,
-    marginBottom: 4,
-  },
-  tabsRow: {
-    flexDirection: "row",
-    borderRadius: 999,
-    backgroundColor: "#edf2ff",
-    padding: 4,
-  },
+ tabsScrollView: {
+  marginTop: 12,
+  marginBottom: 4,
+},
+
+tabsRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  padding: 4,
+},
   tabItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 999,
-    marginRight: 4,
-  },
-  tabItemActive: {
-    backgroundColor: "#071D6A",
-  },
-  tabText: {
-    fontSize: 13,
-    color: "#071D6A",
-    fontWeight: "500",
-  },
-  tabTextActive: {
-    color: "#ffffff",
-    fontWeight: "600",
-  },
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 30,
+  marginRight: 6,
+  minWidth: screenWidth * 0.25, // 25% of screen width
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+tabItemActive: {
+  backgroundColor: "#071D6A",
+},
+ tabText: {
+  fontSize: 14,
+  color: "#071D6A",
+  fontWeight: "500",
+},
+
+tabTextActive: {
+  color: "#ffffff",
+  fontWeight: "600",
+},
 });

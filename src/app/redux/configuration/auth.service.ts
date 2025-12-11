@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
@@ -538,6 +538,39 @@ export class AuthService {
             return null;
         }
     }
+    async getCurrentUser(): Promise<any> {
+  console.log("authService.getCurrentUser() called…");
+
+  return new Promise((resolve, reject) => {
+    try {
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        (user) => {
+          console.log("onAuthStateChanged fired. User =", user);
+
+          unsubscribe();
+
+          if (user) {
+            console.log("User authenticated. UID:", user.uid);
+            resolve(user);
+          } else {
+            console.log("No authenticated user found!");
+            reject(new Error("User not authenticated"));
+          }
+        },
+        (error) => {
+          console.log("onAuthStateChanged ERROR:", error);
+          reject(error);
+        }
+      );
+    } catch (err) {
+      console.log("getCurrentUser() unexpected error:", err);
+      reject(err);
+    }
+  });
+}
+
+
     async updatePrimaryInformation(formData: any) {
   try {
     const currentUser = auth.currentUser;
@@ -567,19 +600,6 @@ export class AuthService {
       "user.primaryInformation": updatedPrimaryInfo,
     });
 
-    function getCurrentUser(): Promise<User> {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (user) => {
-        unsubscribe();
-        if (user) resolve(user);
-        else reject(new Error("User not authenticated"));
-      },
-      reject
-    );
-  });
-}
     // Save to local storage
     await ReactNativeAsyncStorage.setItem(
       "profileUpdated",
