@@ -8,7 +8,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { AppDispatch } from "../../../redux/store";
@@ -82,7 +84,11 @@ const genderOptions = [
   { value: "Prefer not to say", label: "Prefer not to say" },
 ];
 
-const PersonalDetailsScreen: React.FunctionComponent = () => {
+interface PersonalDetailsScreenProps {
+  navigation?: any;
+}
+
+const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch<AppDispatch>();
   const userDetails: UserType = useSelector((state: RootState) => state.user);
   const notifications = useSelector((state: RootState) => state.notifications.notifications);
@@ -651,22 +657,38 @@ const PersonalDetailsScreen: React.FunctionComponent = () => {
     );
   };
 
+  const handleGoBack = useCallback(() => {
+    if (navigation) {
+      navigation.navigate("BottomTabs");
+    }
+  }, [navigation]);
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#ffffff" }}
-      behavior={Platform.select({ ios: "padding", android: undefined })}
-    >
-      <ScrollView
-        ref={scrollRef}
-        showsVerticalScrollIndicator={true}
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
+      {/* Custom Header with Back Button */}
+      <View style={styles.header}>
+        <TouchableOpacity 
+          onPress={handleGoBack}
+          style={styles.backButton}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Personal Details</Text>
+        <View style={styles.headerPlaceholder} />
+      </View>
+
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: "#ffffff" }}
+        behavior={Platform.select({ ios: "padding", android: undefined })}
       >
-        <View style={styles.headerRow}>
-          <Text style={styles.headerText}>
-            Here you can view and update your personal information.
-          </Text>
-        </View>
+        <ScrollView
+          ref={scrollRef}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+        
 
         <Text style={styles.subHeaderText}>
           Kindly fill the form below to update your information. Fields
@@ -696,12 +718,41 @@ const PersonalDetailsScreen: React.FunctionComponent = () => {
         <View style={styles.card}>{renderProfileTab()}</View>
       </ScrollView>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 export default PersonalDetailsScreen;
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#071D6A",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  backButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#ffffff",
+    flex: 1,
+    textAlign: "center",
+    marginRight: 40, // Offset for centering (back button width)
+  },
+  headerPlaceholder: {
+    width: 40, // Same width as back button for centering
+  },
   scrollContainer: {
     padding: 16,
     paddingBottom: 100,
