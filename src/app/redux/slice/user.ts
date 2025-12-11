@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserType } from "../../constants/TypesAndInerface";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// NOTE: You must ensure 'UserType' is defined in '../../utils/Types'
+const STORAGE_KEY = "@user_data";
 
 const initialState: UserType = {
     firstName: "",
@@ -60,14 +61,36 @@ const initialState: UserType = {
     workLocation: "",
 };
 
+// Helper function to persist data
+const saveUserToStorage = async (userData: UserType) => {
+    try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    } catch (error) {
+        console.error("Failed to save user data to storage:", error);
+    }
+};
+
+// Helper function to load data from storage
+export const loadUserFromStorage = async (): Promise<UserType> => {
+    try {
+        const data = await AsyncStorage.getItem(STORAGE_KEY);
+        if (data) {
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error("Failed to load user data from storage:", error);
+    }
+    return initialState;
+};
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
         setUser(state, action: PayloadAction<Partial<UserType>>) {
-            console.log(state.firstName)
-            // Note: Direct assignment to return new state object is typical for slice-level reducers
-            return { ...state, ...action.payload };
+            const updatedState = { ...state, ...action.payload };
+            saveUserToStorage(updatedState); // persist
+            return updatedState;
         },
 
         updateStaffInfo(
@@ -81,8 +104,9 @@ export const userSlice = createSlice({
                 workLocation?: string;
             }>
         ) {
-            // Immer allows direct mutation here
-            return { ...state, ...action.payload };
+            const updatedState = { ...state, ...action.payload };
+            saveUserToStorage(updatedState);
+            return updatedState;
         },
 
         updatePerformanceMetrics(
@@ -94,7 +118,9 @@ export const userSlice = createSlice({
                 activeTasks?: number;
             }>
         ) {
-            return { ...state, ...action.payload };
+            const updatedState = { ...state, ...action.payload };
+            saveUserToStorage(updatedState);
+            return updatedState;
         },
 
         updateNotificationPreferences(
@@ -107,28 +133,33 @@ export const userSlice = createSlice({
                 ...state.notificationPreferences,
                 ...action.payload,
             };
+            saveUserToStorage(state);
         },
 
         addSkill(state, action: PayloadAction<string>) {
             if (!state.skills.includes(action.payload)) {
                 state.skills.push(action.payload);
             }
+            saveUserToStorage(state);
         },
 
         removeSkill(state, action: PayloadAction<string>) {
             state.skills = state.skills.filter((skill) => skill !== action.payload);
+            saveUserToStorage(state);
         },
 
         addCertification(state, action: PayloadAction<string>) {
             if (!state.certifications.includes(action.payload)) {
                 state.certifications.push(action.payload);
             }
+            saveUserToStorage(state);
         },
 
         removeCertification(state, action: PayloadAction<string>) {
             state.certifications = state.certifications.filter(
                 (cert) => cert !== action.payload
             );
+            saveUserToStorage(state);
         },
 
         updateAccessLevel(
@@ -140,10 +171,11 @@ export const userSlice = createSlice({
         ) {
             state.accessLevel = action.payload.accessLevel;
             state.permissions = action.payload.permissions;
+            saveUserToStorage(state);
         },
 
         logoutUser() {
-            // When logging out, reset state to initial state
+            AsyncStorage.removeItem(STORAGE_KEY); // clear storage on logout
             return { ...initialState };
         },
     },

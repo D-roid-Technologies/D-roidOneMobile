@@ -85,7 +85,7 @@ export const notificationsSlice = createSlice({
             state.notifications.unshift(action.payload);
         },
 
-        setNotifications: (state, action: PayloadAction<NotificationItem[]>) => {
+        setNotifications: (state, action: PayloadAction<Notification[]>) => {
             state.notifications = action.payload;
         },
 
