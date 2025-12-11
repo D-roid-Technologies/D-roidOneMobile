@@ -5,30 +5,21 @@ import {
     TextInput,
     TouchableOpacity,
     StyleSheet,
-    ActivityIndicator, // Kept for showing loading state on the button
-    KeyboardAvoidingView, // New for keyboard management
-    Platform, // New for platform-specific behavior
-    ScrollView, // New for scrollable content
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
 } from "react-native";
-// Switched to Ionicons as requested in the structure
-import { Ionicons } from "@expo/vector-icons";
-// Use React Navigation's hook
-import { useNavigation } from "@react-navigation/native";
-
-// Assuming these paths are correct in your RN project structure
 import { authService } from "../redux/configuration/auth.service";
 
-const MemberLogin = ({ navigation }: any) => {
+const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [formErrors, setFormErrors] = useState<{
         email?: string;
         password?: string;
     }>({});
-    // Use 'Login' as the initial text, and handle loading with a boolean or the text state
     const [text, setText] = useState<string>("Login");
     const isStaff = false;
-
-    // 2. Updated handleChange for RN TextInput pattern, now accepts string for name
     const handleChange = (name: string, value: string) => {
         setFormData({ ...formData, [name]: value });
     };
@@ -51,7 +42,6 @@ const MemberLogin = ({ navigation }: any) => {
         return isValid;
     };
 
-    // 3. Updated handleSubmit for RN onPress handler
     const handleSubmitMember = async () => {
         if (!validate()) return;
         setText("Verifying your credentials...");
@@ -60,12 +50,8 @@ const MemberLogin = ({ navigation }: any) => {
             await authService.handleUserLogin(
                 formData.email,
                 formData.password,
-                // isStaff
             );
             setText("Fetching your information...");
-
-            // 4. Use navigation.replace() for React Navigation
-            // Ensure RoutePaths.DashBoard is defined and correct
             navigation.navigate("BottomTabs");
         } catch {
             setText("Login");
@@ -76,55 +62,42 @@ const MemberLogin = ({ navigation }: any) => {
 
     return (
         <KeyboardAvoidingView
-            // Use padding behavior for iOS when keyboard shows up
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             style={{ flex: 1, backgroundColor: styles.container.backgroundColor }}
         >
+            {/* Scrollable top content */}
             <ScrollView
-                contentContainerStyle={styles.container}
+                contentContainerStyle={styles.scrollContainer}
                 keyboardShouldPersistTaps="handled"
             >
-                {/* Back Button */}
-                <TouchableOpacity
-                    style={styles.backButton}
-                    // Mapped 'Signup' to your existing RoutePaths constant
-                    onPress={() => navigation.navigate("Signup")}
-                    disabled={isSubmitting}
-                >
-                    <Ionicons name="arrow-back" size={20} color="#ffffff" />
-                    <Text style={styles.backText}>Back to Sign Up</Text>
-                </TouchableOpacity>
-
-                {/* Icon (Updated to use Ionicons and themed color) */}
-                <View style={styles.iconContainer}>
-                    <Ionicons name="person-circle-outline" size={80} color="#C7D2FE" />
+                <View style={styles.topLinksContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+                        <Text style={styles.loginLink}>Back to Signup</Text>
+                    </TouchableOpacity>
                 </View>
 
-                {/* Title & Subtext */}
-                <Text style={styles.title}>Welcome back</Text>
-                <Text style={styles.subtext}>Please login to your D'roid One Staff or Member account.</Text>
+                <Text style={styles.h2}>Let's Log you back in</Text>
+                <Text style={styles.subtext}>Please login to your D'roid One account.</Text>
 
-                {/* Email Input */}
+                {/* Email */}
                 <View style={styles.fieldContainer}>
                     <TextInput
                         style={[
                             styles.input,
-                            formErrors.email && { borderColor: '#FF6F61' } // Error border color from new styles
+                            formErrors.email && { borderColor: '#FF6F61' }
                         ]}
                         placeholder="Email"
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        placeholderTextColor="#777" // Placeholder contrast on dark background
+                        placeholderTextColor="#777"
                         value={formData.email}
                         onChangeText={(value) => handleChange("email", value)}
                         editable={!isSubmitting}
                     />
-                    {formErrors.email && (
-                        <Text style={styles.errorText}>{formErrors.email}</Text>
-                    )}
+                    {formErrors.email && <Text style={styles.errorText}>{formErrors.email}</Text>}
                 </View>
 
-                {/* Password Input */}
+                {/* Password */}
                 <View style={styles.fieldContainer}>
                     <TextInput
                         style={[
@@ -138,45 +111,39 @@ const MemberLogin = ({ navigation }: any) => {
                         onChangeText={(value) => handleChange("password", value)}
                         editable={!isSubmitting}
                     />
-                    {formErrors.password && (
-                        <Text style={styles.errorText}>{formErrors.password}</Text>
-                    )}
+                    {formErrors.password && <Text style={styles.errorText}>{formErrors.password}</Text>}
                 </View>
 
-                {/* Login Button */}
+                <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")} style={styles.forgotPassword} disabled={isSubmitting}>
+                    <Text style={styles.link}>Forgot Password?</Text>
+                </TouchableOpacity>
+            </ScrollView>
+
+            {/* Fixed bottom login button */}
+            <View style={styles.bottomButtonContainer}>
                 <TouchableOpacity
                     style={[styles.button, isSubmitting && { opacity: 0.6 }]}
                     onPress={handleSubmitMember}
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? (
-                        // Activity indicator color matches the button text color in the new theme
                         <ActivityIndicator color={styles.buttonText.color} />
                     ) : (
                         <Text style={styles.buttonText}>{text}</Text>
                     )}
                 </TouchableOpacity>
-
-                {/* Forgot Password Link */}
-                <TouchableOpacity
-                    style={styles.forgotPassword}
-                    // onPress={() => navigation.navigate(RoutePaths.ForgotPassword as never)}
-                    disabled={isSubmitting}
-                >
-                    <Text style={styles.link}>Forgot Password?</Text>
-                </TouchableOpacity>
-            </ScrollView>
+            </View>
         </KeyboardAvoidingView>
     );
+
 };
 
-// Styles adopted from your new structure for the dark theme
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         paddingHorizontal: 20,
         paddingTop: 60,
-        backgroundColor: "#000105", // Very dark background
+        backgroundColor: "#000105",
     },
     backButton: {
         flexDirection: "row",
@@ -189,9 +156,26 @@ const styles = StyleSheet.create({
         marginLeft: 6,
         fontWeight: "500",
     },
+    topLinksContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        gap: 15,
+        marginBottom: 30,
+    },
     iconContainer: {
         alignItems: "center",
         marginBottom: 20,
+    },
+    h2: {
+        fontSize: 30,
+        fontWeight: '900',
+        color: '#ffffff',
+        marginBottom: 8,
+    },
+    loginLink: {
+        color: '#C7D2FE',
+        fontSize: 14,
+        textDecorationLine: 'underline',
     },
     title: {
         fontSize: 28,
@@ -202,9 +186,9 @@ const styles = StyleSheet.create({
     },
     subtext: {
         fontSize: 16,
-        color: "#555555",
-        textAlign: "center",
-        marginBottom: 30,
+        color: '#BAB8B8',
+        marginBottom: 20,
+        fontWeight: "300"
     },
     fieldContainer: {
         marginBottom: 15,
@@ -230,17 +214,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 10,
     },
+    scrollContainer: {
+        paddingHorizontal: 20,
+        paddingTop: 60,
+    },
+    bottomButtonContainer: {
+        padding: 20,
+        backgroundColor: "#000105",
+    },
     buttonText: {
-        color: "#000105", // Dark text on light button
+        color: "#000105",
         fontSize: 16,
         fontWeight: "700",
     },
     forgotPassword: {
         marginTop: 20,
-        alignItems: "center",
     },
     link: {
-        color: "#479BE8", // Link blue
+        color: "#479BE8",
         fontSize: 15,
         textDecorationLine: "underline",
     },

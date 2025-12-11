@@ -7,7 +7,9 @@ import {
     ScrollView,
     StyleSheet,
     ActivityIndicator,
-    Alert, // Using RN Alert for simple messages instead of Toast
+    Alert,
+    KeyboardAvoidingView,
+    Platform, // Using RN Alert for simple messages instead of Toast
 } from "react-native";
 import { useSelector } from "react-redux";
 import { authService } from "../redux/configuration/auth.service";
@@ -348,69 +350,95 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
     );
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            style={{ flex: 1, backgroundColor: styles.container.backgroundColor }}
+        >
+            <ScrollView
+                contentContainerStyle={styles.container}
+                showsVerticalScrollIndicator={false}
+            >
 
-            <View style={styles.contentBlock}>
-                <View style={styles.topLinksContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                        <Text style={styles.loginLink}>Member Login</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <Text style={styles.h2}>Join the D'roid Community</Text>
-                <Text style={styles.subtext}>
-                    Connect with other developers or like minded individuals. Learn
-                    together, and build amazing things!
-                </Text>
-
-                {loadingLocation && (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="small" color="#479BE8" />
-                        <Text style={styles.loadingText}>Fetching Location...</Text>
-                    </View>
-                )}
-
-                {/* Form Fields */}
-                {renderUserTypePicker()}
-
-                {formData.userType === "Staff" && renderTextInput('uniqueId', 'Unique ID')}
-
-                {renderTextInput('firstName', 'First Name')}
-                {renderTextInput('lastName', 'Last Name')}
-                {renderTextInput('email', 'Email', false, 'email-address')}
-                {renderTextInput('password', 'Password', true)}
-                {renderTextInput('confirmPassword', 'Confirm Password', true)}
-
-                {/* Privacy Policy and Terms */}
-                <View style={styles.policyRow}>
-                    <View style={styles.checkboxContainer}>
-                        <TouchableOpacity onPress={() => handleChange('agreeToPolicy', !formData.agreeToPolicy)} style={[styles.checkbox, formData.agreeToPolicy && styles.checkboxChecked]}>
-                            {formData.agreeToPolicy && AntDesign.name('check', 14, '#FFF')}
+                <View style={styles.contentBlock}>
+                    <View style={styles.topLinksContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                            <Text style={styles.loginLink}>Login</Text>
                         </TouchableOpacity>
-                        <View style={styles.policyText}>
-                            <Text style={styles.policyLinkA}>By clicking you accept our</Text>
-                            <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.TermsAndCondition)}><Text style={styles.policyLink}>Terms and Condition</Text></TouchableOpacity> and
-                            <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.PrivacyPolicy)}><Text style={styles.policyLink}>Privacy Policy</Text></TouchableOpacity>
-                        </View>
                     </View>
 
-                    <TouchableOpacity onPress={() => (navigation as any).navigate(RoutePaths.ForgotPassword)}>
-                        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.h2}>Join the D'roid Community</Text>
+                    <Text style={styles.subtext}>
+                        Connect with other developers or like minded individuals...
+                    </Text>
 
-                    {formErrors.agreeToPolicy && (
-                        <Text style={styles.errorTextFullWidth}>{formErrors.agreeToPolicy}</Text>
+                    {loadingLocation && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="small" color="#479BE8" />
+                            <Text style={styles.loadingText}>Fetching Location...</Text>
+                        </View>
                     )}
+
+                    {renderUserTypePicker()}
+                    {formData.userType === "Staff" && renderTextInput('uniqueId', 'Unique ID')}
+                    {renderTextInput('firstName', 'First Name')}
+                    {renderTextInput('lastName', 'Last Name')}
+                    {renderTextInput('email', 'Email', false, 'email-address')}
+                    {renderTextInput('password', 'Password', true)}
+                    {renderTextInput('confirmPassword', 'Confirm Password', true)}
+
+                    {/* Privacy section */}
+                    <View style={styles.policyRow}>
+                        <View style={styles.checkboxContainer}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    handleChange('agreeToPolicy', !formData.agreeToPolicy)
+                                }
+                                style={[
+                                    styles.checkbox,
+                                    formData.agreeToPolicy && styles.checkboxChecked,
+                                ]}
+                            >
+                                {formData.agreeToPolicy && AntDesign.name('check', 14, '#FFF')}
+                            </TouchableOpacity>
+
+                            <View style={styles.policyText}>
+                                <Text style={styles.policyText}>
+                                    By clicking you accept our
+                                    <Text
+                                        style={styles.policyLink}
+                                        onPress={() => navigation.navigate("TAC")}
+                                    >
+                                        {" "}Terms and Condition
+                                    </Text>
+                                    {" "}and{" "}
+                                    <Text
+                                        style={styles.policyLink}
+                                        onPress={() => navigation.navigate("PAP")}
+                                    >
+                                        Privacy Policy
+                                    </Text>
+                                </Text>
+                            </View>
+                        </View>
+
+                        {formErrors.agreeToPolicy && (
+                            <Text style={styles.errorTextFullWidth}>
+                                {formErrors.agreeToPolicy}
+                            </Text>
+                        )}
+                    </View>
+
                 </View>
-
-
-                {/* Submit Button */}
-                <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-                    <Text style={styles.submitButtonText}>{text}</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+                {/* FIXED BOTTOM BUTTON */}
+                <View style={styles.fixedButtonContainer}>
+                    <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+                        <Text style={styles.submitButtonText}>{text}</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
+
 };
 
 const styles = StyleSheet.create({
@@ -418,6 +446,16 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: '#000105',
         padding: 20,
+    },
+    fixedButtonContainer: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: 15,
+        backgroundColor: "#000105",
+        borderTopWidth: 1,
+        borderTopColor: "#222",
     },
     header: {
         flexDirection: 'row',
@@ -449,11 +487,12 @@ const styles = StyleSheet.create({
     },
     loginLink: {
         color: '#C7D2FE',
-        fontSize: 14,
+        fontSize: 16,
         textDecorationLine: 'underline',
+        fontWeight: "300"
     },
     h2: {
-        fontSize: 24,
+        fontSize: 30,
         fontWeight: '900',
         color: '#ffffff',
         marginBottom: 8,
@@ -462,6 +501,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#BAB8B8',
         marginBottom: 20,
+        fontWeight: "300"
     },
     inputContainer: {
         marginBottom: 15,
@@ -470,6 +510,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#ffffff',
         marginBottom: 5,
+        fontWeight: "300"
     },
     input: {
         width: '100%',

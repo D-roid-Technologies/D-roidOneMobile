@@ -18,6 +18,9 @@ import ServicesScreen from "../screens/ServiceScreen";
 import ProgressionScreen from "../screens/ProgressionScreen";
 import CreateEventScreen from "../screens/schedles/CreateEventScreen";
 import EventDetailScreen from "../screens/schedles/EventDetailScreen";
+import ForgotPassword from "../screens/ForgotPassword";
+import TermsAndConditions from "../screens/TermsAndConditions";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 
 // Quick Actions - Member Screens
 import PersonalDetailsScreen from "../screens/membersActions/PersonalDetails/PersonalDetailsScreen";
@@ -73,6 +76,9 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Payslip" component={PayslipScreen} />
                     <Stack.Screen name="Training" component={TrainingScreen} />
                     <Stack.Screen name="Attendance" component={AttendanceScreen} />
+                    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+                    <Stack.Screen name="TAC" component={TermsAndConditions} />
+                    <Stack.Screen name="PAP" component={PrivacyPolicyScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>
