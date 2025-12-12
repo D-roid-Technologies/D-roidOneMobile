@@ -57,7 +57,8 @@ const PreferencesUI: React.FC<PreferencesUIProps> = ({ user, onChange }) => {
   }
 
   return (
-    <View style={pStyles.container}>
+  <View style={pStyles.screen}>
+    <View style={pStyles.card}>
       <Text style={pStyles.title}>Preferences</Text>
 
       <Section title="Language" icon={<Globe size={18} />}>
@@ -104,7 +105,9 @@ const PreferencesUI: React.FC<PreferencesUIProps> = ({ user, onChange }) => {
         </Text>
       </TouchableOpacity>
     </View>
-  );
+  </View>
+);
+
 };
 
 const Section = ({
@@ -153,33 +156,94 @@ const Chips = ({
 );
 
 const pStyles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 20, fontWeight: "600", marginBottom: 12 },
-  section: { marginBottom: 16 },
-  sectionHeader: { flexDirection: "row", alignItems: "center", gap: 8 },
-  sectionTitle: { marginLeft: 8, fontWeight: "600" },
-  chipsWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+  screen: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#f8fafc",
+  },
+
+  card: {
+    backgroundColor: "#ffffff",
     borderRadius: 16,
+    padding: 16,
+
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 16,
+  },
+
+  section: {
+    marginBottom: 20, // more breathing room
+  },
+
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  sectionTitle: {
+    marginLeft: 10,
+    fontSize: 15,
+    fontWeight: "600",
+  },
+
+  chipsWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+
+  chip: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: "#d1d5db",
+    backgroundColor: "#fff",
   },
-  chipActive: { backgroundColor: "#111827", borderColor: "#111827" },
-  chipText: { color: "#111827" },
-  chipTextActive: { color: "#fff" },
+
+  chipActive: {
+    backgroundColor: "#111827",
+    borderColor: "#111827",
+  },
+
+  chipText: {
+    fontSize: 14,
+    color: "#111827",
+  },
+
+  chipTextActive: {
+    color: "#ffffff",
+    fontWeight: "600",
+  },
+
   button: {
     marginTop: 8,
     backgroundColor: "#111827",
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: "center",
   },
-  buttonText: { color: "#fff", fontWeight: "600" },
+
+  buttonText: {
+    color: "#ffffff",
+    fontWeight: "600",
+    fontSize: 15,
+  },
+
   success: { padding: 24, alignItems: "center" },
   successTitle: { fontSize: 18, fontWeight: "600", marginTop: 8 },
   muted: { color: "#6b7280", marginTop: 6 },
 });
+
 
 export default PreferencesUI;

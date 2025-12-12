@@ -28,7 +28,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     // Redux Hooks
     const userMain: any = useSelector((state: RootState) => state.user);
     const userTypee = userMain.userType;
-
+    const membershipTier = useSelector((state: RootState) => state.membershipTier);
 
     const dispatch = useDispatch<AppDispatch>();
     const count = useSelector((state: RootState) => state.notifications.notifications.length);
