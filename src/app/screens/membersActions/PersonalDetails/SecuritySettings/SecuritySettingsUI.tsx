@@ -37,49 +37,33 @@ const SecuritySettingsUI: React.FC<SecuritySettingsUIProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-  try {
-    throw new Error("Security Test Error Breakpoint");
-  } catch (e) {
-    console.log("Component renders OK:", e);
-  }
-}, []);
+    const load = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        if (!currentUser?.uid) return;
 
+        const ref = doc(db, "securitySettings", currentUser.uid);
+        const snap = await getDoc(ref);
 
-  // WHY: keep original fetch pattern, show RN loader.
-
-
-  useEffect(() => {
-
-  const load = async () => {
-    try {
-
-      const currentUser = await authService.getCurrentUser();
-
-      const ref = doc(db, "securitySettings", currentUser.uid);
-
-      const snap = await getDoc(ref);
-
-      if (!snap.exists()) {
-      } else {
-        console.log("No security settings doc found — using defaults");
+        if (snap.exists()) {
+          setSecuritySettings(snap.data() as SecuritySettings);
+        }
+      } catch (error) {
+        console.log("Error loading security settings:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log("Error inside securitySettings load():", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  load();
-}, []);
+    load();
+  }, []);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // persist changes as needed
       onChange(
         user
-          ? ({ ...user, securitySettings } as any)
+          ? ({ ...user, securitySettings } as UserType)
           : ({ securitySettings } as any)
       );
       setSubmitted(true);
@@ -124,6 +108,7 @@ const SecuritySettingsUI: React.FC<SecuritySettingsUIProps> = ({
             setSecuritySettings((s) => ({ ...s, twoFactorEnabled: v }))
           }
         />
+
         <RowToggle
           icon={<Mail size={18} />}
           title="Login Alerts"
@@ -173,53 +158,130 @@ const RowToggle = ({
   <View style={sStyles.row}>
     <View style={sStyles.rowLeft}>
       {icon}
-      <View style={{ marginLeft: 10 }}>
+      <View style={sStyles.textWrap}>
         <Text style={sStyles.rowTitle}>{title}</Text>
         {!!subtitle && <Text style={sStyles.rowSubtitle}>{subtitle}</Text>}
       </View>
     </View>
-    <Switch value={value} onValueChange={onValueChange} />
+
+    <View style={sStyles.switchWrapper}>
+      <Switch value={value} onValueChange={onValueChange} />
+    </View>
   </View>
 );
 
 const sStyles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 20, fontWeight: "600", marginBottom: 12 },
-  card: {
-    backgroundColor: "#fff",
-    // borderRadius: 12,
+  container: {
+    flex: 1,
     padding: 16,
-    elevation: 2,
+    backgroundColor: "#f8fafc",
   },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+
+  card: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 16,
+
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+  },
+
   row: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
-  rowLeft: { flexDirection: "row", alignItems: "center" },
-  rowTitle: { fontWeight: "600" },
-  rowSubtitle: { color: "#6b7280", marginTop: 2 },
-  divider: { height: 1, backgroundColor: "#e5e7eb", marginVertical: 12 },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  infoText: { marginLeft: 8, color: "#374151" },
+
+  rowLeft: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    flex: 1,
+  },
+
+  textWrap: {
+    marginLeft: 12,
+    flex: 1,
+    paddingRight: 12, // ensures space before toggle
+  },
+
+  switchWrapper: {
+    paddingTop: 2,
+  },
+
+  rowTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    lineHeight: 20,
+  },
+
+  rowSubtitle: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#6b7280",
+    marginTop: 4,
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: "#f1f5f9",
+    marginVertical: 12,
+  },
+
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  infoText: {
+    marginLeft: 8,
+    color: "#374151",
+    fontSize: 13,
+  },
+
   button: {
     marginTop: 16,
     backgroundColor: "#111827",
-    // borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
+    borderRadius: 10,
   },
-  buttonText: { color: "#fff", fontWeight: "600" },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
   },
-  muted: { color: "#6b7280", marginTop: 8 },
-  success: { padding: 24, alignItems: "center" },
-  successTitle: { fontSize: 18, fontWeight: "600", marginTop: 8 },
+
+  muted: {
+    color: "#6b7280",
+    marginTop: 8,
+  },
+
+  success: {
+    padding: 24,
+    alignItems: "center",
+  },
+
+  successTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginTop: 8,
+  },
 });
 
 export default SecuritySettingsUI;

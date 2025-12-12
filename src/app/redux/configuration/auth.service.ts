@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { LocationState, UserType } from "../../constants/TypesAndInerface";
 import { setEvents } from "../slice/eventSlice";
+import { setConnectedApps } from "../slice/affiliatedAppsSlice";
 
 
 
@@ -627,6 +628,84 @@ export class AuthService {
     return { success: false, error: error.message };
   }
 }
+async updateAffiliatesData(
+  partialAffiliates: {
+    knowledgeCity?: { user: boolean };
+    nerves?: { user: boolean };
+    muzik?: { user: boolean };
+  }
+) {
+  try {
+    const currentUser = await this.getCurrentUser();
+    const userId = currentUser.uid;
+
+    const userDocRef = doc(db, "droidaccount", userId);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      Toast.show({
+        type: "error",
+        text1: "Update Failed",
+        text2: "User record not found.",
+      });
+      return null;
+    }
+
+    const currentData = userSnapshot.data();
+    const currentAffiliates = currentData?.user?.affiliates || {};
+
+    // Merge the updates with existing data
+    const updatedAffiliates = {
+      knowledgeCity: {
+        ...currentAffiliates.knowledgeCity,
+        ...partialAffiliates.knowledgeCity,
+      },
+      nerves: {
+        ...currentAffiliates.nerves,
+        ...partialAffiliates.nerves,
+      },
+      muzik: {
+        ...currentAffiliates.muzik,
+        ...partialAffiliates.muzik,
+      },
+    };
+
+    // 🔥 Firestore update (single source of truth)
+    await updateDoc(userDocRef, {
+      "user.affiliates": updatedAffiliates,
+    });
+
+    // ✅ Transform to Redux format (flat boolean structure)
+    const reduxFormat = {
+      knowledgeCity: updatedAffiliates.knowledgeCity?.user || false,
+      nerves: updatedAffiliates.nerves?.user || false,
+      muzik: updatedAffiliates.muzik?.user || false,
+    };
+
+    // Sync Redux (projection only)
+    store.dispatch(setConnectedApps(reduxFormat));
+
+    // 🎉 UX feedback
+    Toast.show({
+      type: "success",
+      text1: "Apps Updated",
+      text2: "Your affiliated apps were updated successfully.",
+    });
+
+    return updatedAffiliates;
+  } catch (error: any) {
+    console.error("Affiliate update error:", error);
+
+    Toast.show({
+      type: "error",
+      text1: "Update Failed",
+      text2: error.message || "Unable to update affiliated apps.",
+    });
+
+    throw error;
+  }
+}
+
 
     async handleForgotPassword(email: string) {
         try {

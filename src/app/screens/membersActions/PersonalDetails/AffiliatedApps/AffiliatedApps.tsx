@@ -11,7 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import { Check } from "lucide-react-native";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../../../firebase"; // keep your existing path if different
+import { db } from "../../../../../firebase";
 import { authService } from "../../../../redux/configuration/auth.service";
 import {
   setConnectedApps,
@@ -27,51 +27,97 @@ interface ConnectedAppsState {
 
 const AffiliatedApps: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [connectedApps, setConnectedAppsState] = useState<ConnectedAppsState>({
-    knowledgeCity: false,
-    nerves: false,
-    muzik: false,
-  });
+
+  const [connectedApps, setConnectedAppsState] =
+    useState<ConnectedAppsState>({
+      knowledgeCity: false,
+      nerves: false,
+      muzik: false,
+    });
+
+  const [initialLoad, setInitialLoad] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
 
-  // WHY: mirror web logic, but use RN feedback + keep Firebase read.
+  /**
+   * Load from Firestore (from droidaccount collection, user.affiliates path)
+   */
   useEffect(() => {
-    const loadAffiliatesData = async () => {
+    const load = async () => {
       try {
         const currentUser = await authService.getCurrentUser();
         if (!currentUser?.uid) return;
-        const ref = doc(db, "affiliatedApps", currentUser.uid);
+
+        const ref = doc(db, "droidaccount", currentUser.uid);
         const snap = await getDoc(ref);
+
         if (snap.exists()) {
-          const data = snap.data() as ConnectedAppsState;
-          setConnectedAppsState((prev) => ({ ...prev, ...data }));
-          dispatch(setConnectedApps(data));
+          const userData = snap.data();
+          const affiliates = userData?.user?.affiliates || {};
+          
+          // Transform from Firestore format { knowledgeCity: { user: boolean } }
+          // to component state format { knowledgeCity: boolean }
+          const transformedData: ConnectedAppsState = {
+            knowledgeCity: affiliates.knowledgeCity?.user || false,
+            nerves: affiliates.nerves?.user || false,
+            muzik: affiliates.muzik?.user || false,
+          };
+          
+          setConnectedAppsState(transformedData);
+          dispatch(setConnectedApps(transformedData));
         }
-      } catch (e) {
+      } catch (error) {
+        console.error("Failed to load affiliated apps:", error);
         Alert.alert("Error", "Failed to load affiliated apps.");
       } finally {
         setInitialLoad(false);
       }
     };
-    loadAffiliatesData();
+
+    load();
   }, [dispatch]);
 
-  const handleToggle = (key: keyof ConnectedAppsState) => {
-    const next = { ...connectedApps, [key]: !connectedApps[key] };
-    setConnectedAppsState(next);
-    dispatch(toggleApp(key));
+  /**
+   * Mirror WEB handleToggle:
+   * - Update local state
+   * - Update Redux
+   * - Persist immediately
+   */
+  const handleToggle = async (app: keyof ConnectedAppsState) => {
+    const nextValue = !connectedApps[app];
+
+    // optimistic UI
+    setConnectedAppsState((prev) => ({
+      ...prev,
+      [app]: nextValue,
+    }));
+
+    dispatch(toggleApp(app));
+
+    try {
+      await authService.updateAffiliatesData({
+        [app]: { user: nextValue },
+      });
+    } catch {
+      // rollback on failure
+      setConnectedAppsState((prev) => ({
+        ...prev,
+        [app]: !nextValue,
+      }));
+      Alert.alert("Error", `Failed to update ${app}`);
+    }
   };
 
+  /**
+   * Save / confirmation (matches web success flow)
+   */
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // keep your backend update here (omitted in original snippet)
       setSubmitted(true);
       Alert.alert("Saved", "Affiliated apps updated.");
     } catch {
-      Alert.alert("Error", "Unable to update affiliates.");
+      Alert.alert("Error", "Unable to save changes.");
     } finally {
       setIsSubmitting(false);
     }
@@ -90,7 +136,7 @@ const AffiliatedApps: React.FC = () => {
     return (
       <View style={styles.successWrap}>
         <Check size={48} />
-        <Text style={styles.successTitle}>Preferences Updated</Text>
+        <Text style={styles.successTitle}>Settings Updated</Text>
         <Text style={styles.muted}>
           Your affiliated apps were saved successfully.
         </Text>
@@ -101,22 +147,24 @@ const AffiliatedApps: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Affiliated Apps</Text>
+
       <View style={styles.card}>
         <RowToggle
-          label="KnowledgeCity"
+          label="Knowledge City"
           value={connectedApps.knowledgeCity}
-          onValueChange={() => handleToggle("knowledgeCity")}
+          onToggle={() => handleToggle("knowledgeCity")}
         />
         <RowToggle
           label="Nerves"
           value={connectedApps.nerves}
-          onValueChange={() => handleToggle("nerves")}
+          onToggle={() => handleToggle("nerves")}
         />
         <RowToggle
           label="Muzik"
           value={connectedApps.muzik}
-          onValueChange={() => handleToggle("muzik")}
+          onToggle={() => handleToggle("muzik")}
         />
+
         <TouchableOpacity
           disabled={isSubmitting}
           style={styles.button}
@@ -134,50 +182,84 @@ const AffiliatedApps: React.FC = () => {
 const RowToggle = ({
   label,
   value,
-  onValueChange,
+  onToggle,
 }: {
   label: string;
   value: boolean;
-  onValueChange: () => void;
+  onToggle: () => void;
 }) => (
   <View style={styles.row}>
     <Text style={styles.rowLabel}>{label}</Text>
-    <Switch value={value} onValueChange={onValueChange} />
+    <Switch value={value} onValueChange={onToggle} />
   </View>
 );
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 20, fontWeight: "600", marginBottom: 12 },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
+  container: {
+    flex: 1,
     padding: 16,
-    elevation: 2,
+    backgroundColor: "#f8fafc",
   },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+
+  card: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 16,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+  },
+
   row: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: 14,
   },
-  rowLabel: { fontSize: 16 },
+
+  rowLabel: {
+    fontSize: 15,
+    fontWeight: "500",
+  },
+
   button: {
     marginTop: 16,
-    borderRadius: 10,
-    paddingVertical: 12,
+    borderRadius: 12,
+    paddingVertical: 14,
     alignItems: "center",
     backgroundColor: "#111827",
   },
-  buttonText: { color: "#fff", fontWeight: "600" },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 15,
+  },
+
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
   },
-  muted: { color: "#6b7280", marginTop: 8 },
-  successWrap: { padding: 24, alignItems: "center" },
+
+  muted: {
+    color: "#6b7280",
+    marginTop: 8,
+  },
+
+  successWrap: {
+    padding: 24,
+    alignItems: "center",
+  },
+
   successTitle: {
     fontSize: 18,
     fontWeight: "600",
