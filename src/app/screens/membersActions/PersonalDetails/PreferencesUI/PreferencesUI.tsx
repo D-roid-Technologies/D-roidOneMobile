@@ -1,7 +1,15 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Globe, Palette, Bell, Clock, Check } from "lucide-react-native";
 import type { UserType } from "../../../../utils/Types";
+const PRIMARY = "#21349a";
 
 interface PreferencesUIProps {
   user: UserType | null;
@@ -15,235 +23,307 @@ const PreferencesUI: React.FC<PreferencesUIProps> = ({ user, onChange }) => {
     notificationPreference: "email",
     timeZone: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const options = useMemo(
-    () => ({
-      languages: ["English", "French", "Spanish", "German"],
-      themes: ["light", "dark", "system"],
-      notifications: ["email", "push", "sms", "none"],
-      timeZones: ["Africa/Lagos", "UTC", "Europe/London", "America/New_York"],
-    }),
-    []
-  );
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setIsSubmitting(true);
-    try {
-      // Persist to your backend as needed.
+    setTimeout(() => {
       onChange(
         user
-          ? { ...user, preferences: { ...preferences } as any }
+          ? ({ ...user, preferences } as any)
           : ({ preferences } as any)
       );
       setSubmitted(true);
-      Alert.alert("Saved", "Preferences updated.");
-    } catch {
-      Alert.alert("Error", "Failed to update preferences.");
-    } finally {
       setIsSubmitting(false);
-    }
+    }, 500);
   };
 
   if (submitted) {
     return (
-      <View style={pStyles.success}>
-        <Check size={48} />
-        <Text style={pStyles.successTitle}>Preferences Updated</Text>
-        <Text style={pStyles.muted}>Your changes have been saved.</Text>
+      <View style={styles.successContainer}>
+        <View style={styles.successIcon}>
+          <Check size={36} color="#fff" />
+        </View>
+
+        <Text style={styles.successTitle}>Preferences Updated!</Text>
+        <Text style={styles.successMessage}>
+          Your account preferences have been saved successfully.
+        </Text>
+
+        <View style={styles.summaryBox}>
+          <SummaryRow label="Language" value={preferences.language} />
+          <SummaryRow label="Theme" value={preferences.theme} />
+          <SummaryRow label="Notifications" value={preferences.notificationPreference} />
+          <SummaryRow label="Time Zone" value={preferences.timeZone || "Not set"} />
+        </View>
+
+        <Pressable style={styles.backBtn} onPress={() => setSubmitted(false)}>
+          <Text style={styles.backBtnText}>Modify Preferences</Text>
+        </Pressable>
       </View>
     );
   }
 
   return (
-  <View style={pStyles.screen}>
-    <View style={pStyles.card}>
-      <Text style={pStyles.title}>Preferences</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Account Preferences</Text>
+      <Text style={styles.subtitle}>
+        Customize your account to suit your needs.
+      </Text>
 
-      <Section title="Language" icon={<Globe size={18} />}>
-        <Chips
-          values={options.languages}
-          selected={preferences.language}
-          onSelect={(v) => setPreferences((s) => ({ ...s, language: v }))}
-        />
-      </Section>
-
-      <Section title="Theme" icon={<Palette size={18} />}>
-        <Chips
-          values={options.themes}
-          selected={preferences.theme}
-          onSelect={(v) => setPreferences((s) => ({ ...s, theme: v }))}
-        />
-      </Section>
-
-      <Section title="Notifications" icon={<Bell size={18} />}>
-        <Chips
-          values={options.notifications}
-          selected={preferences.notificationPreference}
-          onSelect={(v) =>
-            setPreferences((s) => ({ ...s, notificationPreference: v }))
-          }
-        />
-      </Section>
-
-      <Section title="Time Zone" icon={<Clock size={18} />}>
-        <Chips
-          values={options.timeZones}
-          selected={preferences.timeZone}
-          onSelect={(v) => setPreferences((s) => ({ ...s, timeZone: v }))}
-        />
-      </Section>
-
-      <TouchableOpacity
-        style={pStyles.button}
-        onPress={handleSubmit}
-        disabled={isSubmitting}
+      <PreferenceCard
+        icon={<Globe color="#fff" />}
+        title="Preferred Language"
+        description="Choose the language for your account interface"
       >
-        <Text style={pStyles.buttonText}>
-          {isSubmitting ? "Saving…" : "Save Preferences"}
+        <Picker
+          selectedValue={preferences.language}
+          onValueChange={(v) =>
+            setPreferences((p) => ({ ...p, language: v }))
+          }
+        >
+          <Picker.Item label="English" value="English" />
+          <Picker.Item label="French" value="French" />
+          <Picker.Item label="Spanish" value="Spanish" />
+        </Picker>
+      </PreferenceCard>
+
+      <PreferenceCard
+        icon={<Palette color="#fff" />}
+        title="Theme Mode"
+        description="Select your preferred visual theme"
+      >
+        <Picker
+          selectedValue={preferences.theme}
+          onValueChange={(v) =>
+            setPreferences((p) => ({ ...p, theme: v }))
+          }
+        >
+          <Picker.Item label="Light" value="light" />
+          <Picker.Item label="Dark" value="dark" />
+          <Picker.Item label="System Default" value="system" />
+        </Picker>
+      </PreferenceCard>
+
+      <PreferenceCard
+        icon={<Bell color="#fff" />}
+        title="Notification Preference"
+        description="How would you like to receive notifications?"
+      >
+        <Picker
+          selectedValue={preferences.notificationPreference}
+          onValueChange={(v) =>
+            setPreferences((p) => ({
+              ...p,
+              notificationPreference: v,
+            }))
+          }
+        >
+          <Picker.Item label="Email" value="email" />
+          <Picker.Item label="SMS" value="sms" />
+          <Picker.Item label="Push Notification" value="push" />
+        </Picker>
+      </PreferenceCard>
+
+      <PreferenceCard
+        icon={<Clock color="#fff" />}
+        title="Time Zone"
+        description="Set your local time zone for accurate scheduling"
+      >
+        <Picker
+          selectedValue={preferences.timeZone}
+          onValueChange={(v) =>
+            setPreferences((p) => ({ ...p, timeZone: v }))
+          }
+        >
+          <Picker.Item label="Select Time Zone" value="" />
+          <Picker.Item label="Africa/Lagos" value="Africa/Lagos" />
+          <Picker.Item label="UTC" value="UTC" />
+          <Picker.Item label="Europe/London" value="Europe/London" />
+        </Picker>
+      </PreferenceCard>
+
+      <Pressable
+        style={[styles.submitBtn, isSubmitting && { opacity: 0.6 }]}
+        disabled={isSubmitting}
+        onPress={handleSubmit}
+      >
+        <Text style={styles.submitText}>
+          {isSubmitting ? "Saving..." : "Save Preferences"}
         </Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
-
+      </Pressable>
+    </ScrollView>
+  );
 };
-
-const Section = ({
-  title,
+const PreferenceCard = ({
   icon,
+  title,
+  description,
   children,
 }: {
-  title: string;
   icon: React.ReactNode;
+  title: string;
+  description: string;
   children: React.ReactNode;
 }) => (
-  <View style={pStyles.section}>
-    <View style={pStyles.sectionHeader}>
-      {icon}
-      <Text style={pStyles.sectionTitle}>{title}</Text>
+  <View style={styles.card}>
+    <View style={styles.cardHeader}>
+      <View style={styles.iconBox}>{icon}</View>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardDesc}>{description}</Text>
+      </View>
     </View>
-    {children}
+
+    <View style={styles.pickerWrapper}>{children}</View>
   </View>
 );
 
-const Chips = ({
-  values,
-  selected,
-  onSelect,
-}: {
-  values: string[];
-  selected?: string;
-  onSelect: (val: string) => void;
-}) => (
-  <View style={pStyles.chipsWrap}>
-    {values.map((v) => {
-      const active = selected === v;
-      return (
-        <TouchableOpacity
-          key={v}
-          onPress={() => onSelect(v)}
-          style={[pStyles.chip, active && pStyles.chipActive]}
-        >
-          <Text style={[pStyles.chipText, active && pStyles.chipTextActive]}>
-            {v}
-          </Text>
-        </TouchableOpacity>
-      );
-    })}
+const SummaryRow = ({ label, value }: { label: string; value: string }) => (
+  <View style={styles.summaryRow}>
+    <Text style={styles.summaryLabel}>{label}</Text>
+    <Text style={styles.summaryValue}>{value}</Text>
   </View>
 );
 
-const pStyles = StyleSheet.create({
-  screen: {
-    flex: 1,
+const styles = StyleSheet.create({
+  container: {
     padding: 16,
-    backgroundColor: "#f8fafc",
-  },
-
-  card: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    padding: 16,
-
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    backgroundColor: "#f5f5f5",
   },
 
   title: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: "700",
+    color: "#555",
+  },
+
+  subtitle: {
+    color: "#555",
+    marginBottom: 20,
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#e0e0e0",
+    padding: 16,
     marginBottom: 16,
   },
 
-  section: {
-    marginBottom: 20, // more breathing room
-  },
-
-  sectionHeader: {
+  cardHeader: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
+    gap: 16,
+    marginBottom: 12,
   },
 
-  sectionTitle: {
-    marginLeft: 10,
-    fontSize: 15,
-    fontWeight: "600",
-  },
-
-  chipsWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-
-  chip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-    backgroundColor: "#fff",
-  },
-
-  chipActive: {
-    backgroundColor: "#111827",
-    borderColor: "#111827",
-  },
-
-  chipText: {
-    fontSize: 14,
-    color: "#111827",
-  },
-
-  chipTextActive: {
-    color: "#ffffff",
-    fontWeight: "600",
-  },
-
-  button: {
-    marginTop: 8,
-    backgroundColor: "#111827",
-    paddingVertical: 14,
+  iconBox: {
+    width: 48,
+    height: 48,
     borderRadius: 12,
+    backgroundColor: PRIMARY,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+
+  cardDesc: {
+    fontSize: 13,
+    color: "#666",
+    marginTop: 4,
+  },
+
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+
+  submitBtn: {
+    marginTop: 12,
+    backgroundColor: PRIMARY,
+    paddingVertical: 14,
+    borderRadius: 8,
     alignItems: "center",
   },
 
-  buttonText: {
-    color: "#ffffff",
+  submitText: {
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "600",
-    fontSize: 15,
   },
 
-  success: { padding: 24, alignItems: "center" },
-  successTitle: { fontSize: 18, fontWeight: "600", marginTop: 8 },
-  muted: { color: "#6b7280", marginTop: 6 },
+  successContainer: {
+    padding: 24,
+    alignItems: "center",
+  },
+
+  successIcon: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: PRIMARY,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+
+  successTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+  },
+
+  successMessage: {
+    color: "#6b7280",
+    textAlign: "center",
+    marginVertical: 12,
+  },
+
+  summaryBox: {
+    width: "100%",
+    backgroundColor: "#f3f4f6",
+    borderRadius: 8,
+    padding: 16,
+  },
+
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+
+  summaryLabel: {
+    fontWeight: "600",
+    color: "#333",
+  },
+
+  summaryValue: {
+    color: PRIMARY,
+    fontWeight: "600",
+  },
+
+  backBtn: {
+    marginTop: 20,
+    backgroundColor: PRIMARY,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+
+  backBtnText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
 });
 
-
 export default PreferencesUI;
+

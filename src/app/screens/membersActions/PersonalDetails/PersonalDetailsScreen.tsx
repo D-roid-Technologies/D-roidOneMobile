@@ -47,11 +47,10 @@ export interface ValidationErrors {
 type SubmitStatus = "success" | "error" | null;
 
 type TabKey =
-  | "Profile"
+  | "Edit Profile"
+  | "Affiliate App"
   | "Security"
-  | "Preferences"
-  | "Affiliated Apps"
-  | "Documents";
+  | "Preference";
 
 const securityQuestionOptions = [
   { value: "mother_maiden", label: "What is your mother's maiden name?" },
@@ -111,7 +110,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null);
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
-  const [activeTab, setActiveTab] = useState<TabKey>("Profile");
+  const [activeTab, setActiveTab] = useState<TabKey>("Edit Profile");
 
   const scrollRef = useRef<ScrollView | null>(null);
 
@@ -671,30 +670,24 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
 
   const renderActiveTab = () => {
     switch (activeTab) {
-      case "Profile":
+      case "Edit Profile":
         return renderProfileTab();
+      case "Affiliate App":
+        return (
+          <View style={{ marginTop: 16 }}>
+            <AffiliatedApps />
+          </View>
+        );
       case "Security":
         return (
           <View style={{ marginTop: 16 }}>
             <SecuritySettingsUI user={formData} onChange={setFormData} />
           </View>
         );
-      case "Preferences":
+      case "Preference":
         return (
           <View style={{ marginTop: 16 }}>
             <PreferencesUI user={formData} onChange={setFormData} />
-          </View>
-        );
-      case "Affiliated Apps":
-        return (
-          <View style={{ marginTop: 16 }}>
-            <AffiliatedApps />
-          </View>
-        );
-      case "Documents":
-        return (
-          <View style={{ marginTop: 16 }}>
-            <DocumentUploadUI />
           </View>
         );
       default:
@@ -703,11 +696,10 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   };
 
   const tabs: TabKey[] = [
-    "Profile",
+    "Edit Profile",
+    "Affiliate App",
     "Security",
-    "Preferences",
-    "Affiliated Apps",
-    "Documents",
+    "Preference",
   ];
 
   return (
