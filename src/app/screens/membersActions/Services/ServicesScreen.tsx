@@ -1,139 +1,315 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React, { useMemo, useState } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 
-const ServicesScreen: React.FC = () => {
-    const navigation = useNavigation<any>();
+import type {
+  ServicesScreenProps,
+  ViewState,
+  ServiceItem,
+  ClassItem,
+  TechItem,
+  TrainingItem,
+  ConsultingItem,
+  StoryItem,
+  TechCategoryKey,
+} from "./types";
 
-    const services = [
-        { id: 1, title: 'Web Development', icon: 'code', color: '#3B82F6', description: 'Custom web applications and websites' },
-        { id: 2, title: 'Mobile Apps', icon: 'mobile-alt', color: '#10B981', description: 'iOS and Android development' },
-        { id: 3, title: 'UI/UX Design', icon: 'paint-brush', color: '#F59E0B', description: 'User interface and experience design' },
-        { id: 4, title: 'Consulting', icon: 'lightbulb', color: '#8B5CF6', description: 'Technical consulting services' },
-        { id: 5, title: 'Training', icon: 'graduation-cap', color: '#EC4899', description: 'Tech training and workshops' },
-        { id: 6, title: 'Support', icon: 'headset', color: '#06B6D4', description: '24/7 technical support' },
-    ];
+import {
+  SERVICES,
+  CLASSES,
+  TECH_STACKS,
+  TRAININGS,
+  CONSULTING,
+  ANIMATION_ITEMS,
+  STORIES,
+} from "./data";
 
-    return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Our Services</Text>
-                <View style={styles.placeholder} />
-            </View>
+import ServiceCard from "./ServiceCard";
+import BackButton from "./components/BackButton";
+import DetailPage from "./components/DetailPage";
+import TrainingDetail from "./components/TrainingDetail";
+import StoryDetail from "./components/StoryDetail";
+import WhatsAppButton from "./WhatsAppButton";
 
-            <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.subtitle}>
-                    Explore our comprehensive range of technology services
-                </Text>
+const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
+  const [view, setView] = useState<ViewState>("HOME");
 
-                {services.map((service) => (
-                    <TouchableOpacity key={service.id} style={styles.serviceCard}>
-                        <View style={[styles.iconWrapper, { backgroundColor: service.color + '20' }]}>
-                            <FontAwesome5 name={service.icon} size={24} color={service.color} />
-                        </View>
-                        <View style={styles.serviceContent}>
-                            <Text style={styles.serviceTitle}>{service.title}</Text>
-                            <Text style={styles.serviceDescription}>{service.description}</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color="#666" />
-                    </TouchableOpacity>
-                ))}
+  const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(null);
+  const [activeTech, setActiveTech] = useState<TechItem | null>(null);
 
-                <TouchableOpacity style={styles.contactButton}>
-                    <Ionicons name="mail-outline" size={20} color="#fff" />
-                    <Text style={styles.contactButtonText}>Request a Service</Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </View>
-    );
+  const [activeTraining, setActiveTraining] = useState<TrainingItem | null>(null);
+
+  const [activeConsulting, setActiveConsulting] = useState<ConsultingItem | null>(null);
+
+  const [activeStory, setActiveStory] = useState<StoryItem | null>(null);
+
+  const openContact = () => {
+    if (onOpenSayIt) return onOpenSayIt();
+    // If no in-app modal, WhatsApp FAB is always available.
+  };
+
+  const title = useMemo(() => {
+    switch (view) {
+      case "HOME":
+        return "What We Do";
+      case "SOFTWARE_CLASSES":
+        return "Software Development";
+      case "TECH_STACKS":
+        return "Tech Stacks";
+      case "TECH_DETAIL":
+        return "Tech Detail";
+      case "TRAININGS":
+        return "Training Programs";
+      case "TRAINING_DETAIL":
+        return "Training Detail";
+      case "ANIMATION":
+        return "Animation / Stories";
+      case "ANIMATION_DETAIL":
+        return "Story";
+      case "CONSULTING":
+        return "Consulting";
+      case "CONSULTING_DETAIL":
+        return "Consulting Detail";
+      default:
+        return "Services";
+    }
+  }, [view]);
+
+  const goBack = () => {
+    switch (view) {
+      case "SOFTWARE_CLASSES":
+      case "TRAININGS":
+      case "ANIMATION":
+      case "CONSULTING":
+        setView("HOME");
+        break;
+
+      case "TECH_STACKS":
+        setActiveCategory(null);
+        setView("SOFTWARE_CLASSES");
+        break;
+
+      case "TECH_DETAIL":
+        setActiveTech(null);
+        setView("TECH_STACKS");
+        break;
+
+      case "TRAINING_DETAIL":
+        setActiveTraining(null);
+        setView("TRAININGS");
+        break;
+
+      case "CONSULTING_DETAIL":
+        setActiveConsulting(null);
+        setView("CONSULTING");
+        break;
+
+      case "ANIMATION_DETAIL":
+        setActiveStory(null);
+        setView("ANIMATION");
+        break;
+
+      default:
+        setView("HOME");
+    }
+  };
+
+  const renderHome = () => (
+    <FlatList
+      data={SERVICES}
+      keyExtractor={(i) => i.id}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      renderItem={({ item }) => (
+        <ServiceCard
+          title={item.title}
+          description={item.description}
+          onPress={() => {
+            if (item.key === "software") setView("SOFTWARE_CLASSES");
+            if (item.key === "training") setView("TRAININGS");
+            if (item.key === "animation") setView("ANIMATION");
+            if (item.key === "consulting") setView("CONSULTING");
+          }}
+        />
+      )}
+    />
+  );
+
+  const renderSoftwareClasses = () => (
+    <>
+      <Text style={styles.subtitle}>
+        Select a category to view available tech stacks.
+      </Text>
+      <FlatList
+        data={CLASSES}
+        keyExtractor={(i) => i.id}
+        numColumns={2}
+        contentContainerStyle={styles.list}
+        renderItem={({ item }) => (
+          <ServiceCard
+            title={item.title}
+            description={item.description}
+            onPress={() => {
+              setActiveCategory(item.category);
+              setView("TECH_STACKS");
+            }}
+          />
+        )}
+      />
+    </>
+  );
+
+  const techList: TechItem[] = useMemo(() => {
+    if (!activeCategory) return [];
+    return TECH_STACKS[activeCategory] ?? [];
+  }, [activeCategory]);
+
+  const renderTechStacks = () => (
+    <>
+      <Text style={styles.subtitle}>
+        Tap a card to open details and contact.
+      </Text>
+      <FlatList
+        data={techList}
+        keyExtractor={(i) => i.id}
+        numColumns={2}
+        contentContainerStyle={styles.list}
+        renderItem={({ item }) => (
+          <ServiceCard
+            title={item.title}
+            description={item.description}
+            onPress={() => {
+              setActiveTech(item);
+              setView("TECH_DETAIL");
+            }}
+          />
+        )}
+      />
+    </>
+  );
+
+  const renderTechDetail = () =>
+    activeTech ? (
+      <DetailPage
+        title={activeTech.title}
+        description={activeTech.description}
+        bullets={activeTech.bullets}
+        onContact={openContact}
+        contactLabel="Contact about this Tech Stack"
+      />
+    ) : null;
+
+  const renderTrainings = () => (
+    <FlatList
+      data={TRAININGS}
+      keyExtractor={(i) => i.id}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      renderItem={({ item }) => (
+        <ServiceCard
+          title={item.title}
+          description={item.description}
+          onPress={() => {
+            setActiveTraining(item);
+            setView("TRAINING_DETAIL");
+          }}
+        />
+      )}
+    />
+  );
+
+  const renderTrainingDetail = () =>
+    activeTraining ? (
+      <TrainingDetail item={activeTraining} onContact={openContact} />
+    ) : null;
+
+  const renderConsulting = () => (
+    <FlatList
+      data={CONSULTING}
+      keyExtractor={(i) => i.id}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      renderItem={({ item }) => (
+        <ServiceCard
+          title={item.title}
+          description={item.description}
+          onPress={() => {
+            setActiveConsulting(item);
+            setView("CONSULTING_DETAIL");
+          }}
+        />
+      )}
+    />
+  );
+
+  const renderConsultingDetail = () =>
+    activeConsulting ? (
+      <DetailPage
+        title={activeConsulting.title}
+        description={activeConsulting.description}
+        bullets={activeConsulting.bullets}
+        onContact={openContact}
+        contactLabel="Contact about Consulting"
+      />
+    ) : null;
+
+  const renderAnimation = () => (
+    <FlatList
+      data={ANIMATION_ITEMS}
+      keyExtractor={(i) => i.id}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      renderItem={({ item }) => (
+        <ServiceCard
+          title={item.title}
+          description={item.description}
+          onPress={() => {
+            const found = STORIES.find((s) => s.id === item.id);
+            if (found) {
+              setActiveStory(found);
+              setView("ANIMATION_DETAIL");
+            }
+          }}
+        />
+      )}
+    />
+  );
+
+  const renderAnimationDetail = () =>
+    activeStory ? <StoryDetail story={activeStory} /> : null;
+
+  const shouldShowBack = view !== "HOME";
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
+
+      {shouldShowBack && <BackButton onPress={goBack} />}
+
+      {view === "HOME" && renderHome()}
+
+      {view === "SOFTWARE_CLASSES" && renderSoftwareClasses()}
+      {view === "TECH_STACKS" && renderTechStacks()}
+      {view === "TECH_DETAIL" && renderTechDetail()}
+
+      {view === "TRAININGS" && renderTrainings()}
+      {view === "TRAINING_DETAIL" && renderTrainingDetail()}
+
+      {view === "CONSULTING" && renderConsulting()}
+      {view === "CONSULTING_DETAIL" && renderConsultingDetail()}
+
+      {view === "ANIMATION" && renderAnimation()}
+      {view === "ANIMATION_DETAIL" && renderAnimationDetail()}
+
+      <WhatsAppButton phone={whatsappPhone} />
+    </View>
+  );
 };
 
 export default ServicesScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#000105',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingTop: 50,
-        paddingBottom: 16,
-        backgroundColor: '#000c3a',
-    },
-    backButton: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#fff',
-    },
-    placeholder: {
-        width: 40,
-    },
-    content: {
-        padding: 16,
-    },
-    subtitle: {
-        fontSize: 14,
-        color: '#999',
-        textAlign: 'center',
-        marginBottom: 24,
-    },
-    serviceCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#000c3a',
-        padding: 16,
-        borderRadius: 12,
-        marginBottom: 12,
-    },
-    iconWrapper: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 12,
-    },
-    serviceContent: {
-        flex: 1,
-    },
-    serviceTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#fff',
-        marginBottom: 4,
-    },
-    serviceDescription: {
-        fontSize: 13,
-        color: '#999',
-    },
-    contactButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#10B981',
-        paddingVertical: 14,
-        borderRadius: 12,
-        gap: 8,
-        marginTop: 12,
-    },
-    contactButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#fff',
-    },
+  container: { flex: 1, paddingTop: 16, paddingHorizontal: 14, backgroundColor: "#FFFFFF" },
+  title: { fontSize: 22, fontWeight: "900", color: "#111827", marginBottom: 10 },
+  subtitle: { fontSize: 13, color: "#6B7280", marginBottom: 10 },
+  list: { paddingBottom: 120 },
 });
