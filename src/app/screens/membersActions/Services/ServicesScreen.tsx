@@ -30,7 +30,7 @@ import TrainingDetail from "./components/TrainingDetail";
 import StoryDetail from "./components/StoryDetail";
 import WhatsAppButton from "./WhatsAppButton";
 
-const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
+const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone, navigation }) => {
   const [view, setView] = useState<ViewState>("HOME");
 
   const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(null);
@@ -76,6 +76,12 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const goBack = () => {
     switch (view) {
+      case "HOME":
+        if (navigation && navigation.canGoBack()) {
+          navigation.goBack();
+        }
+        break;
+
       case "SOFTWARE_CLASSES":
       case "TRAININGS":
       case "ANIMATION":
@@ -113,12 +119,21 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     }
   };
 
+  // ... render methods ...
+
+  // Always show back button, or specific logic if needed. 
+  // User asked for back button to default homescreen.
+  // If we are at HOME, back button goes to previous screen (HomeScreen).
+  // If we are deep in stack, it goes up one level in local state.
+  const shouldShowBack = true; 
+
   const renderHome = () => (
     <FlatList
       data={SERVICES}
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
         <ServiceCard
           title={item.title}
@@ -144,6 +159,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
         keyExtractor={(i) => i.id}
         numColumns={2}
         contentContainerStyle={styles.list}
+        columnWrapperStyle={styles.columnWrapper}
         renderItem={({ item }) => (
           <ServiceCard
             title={item.title}
@@ -173,6 +189,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
         keyExtractor={(i) => i.id}
         numColumns={2}
         contentContainerStyle={styles.list}
+        columnWrapperStyle={styles.columnWrapper}
         renderItem={({ item }) => (
           <ServiceCard
             title={item.title}
@@ -204,6 +221,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
         <ServiceCard
           title={item.title}
@@ -228,6 +246,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
         <ServiceCard
           title={item.title}
@@ -258,6 +277,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
         <ServiceCard
           title={item.title}
@@ -277,13 +297,14 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
   const renderAnimationDetail = () =>
     activeStory ? <StoryDetail story={activeStory} /> : null;
 
-  const shouldShowBack = view !== "HOME";
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
 
-      {shouldShowBack && <BackButton onPress={goBack} />}
+      {/* Always show back button now, handling both internal and external nav */}
+      <BackButton onPress={goBack} />
 
       {view === "HOME" && renderHome()}
 
@@ -312,4 +333,5 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "900", color: "#111827", marginBottom: 10 },
   subtitle: { fontSize: 13, color: "#6B7280", marginBottom: 10 },
   list: { paddingBottom: 120 },
+  columnWrapper: { justifyContent: "space-between" },
 });

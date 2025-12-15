@@ -26,9 +26,9 @@ export default ServiceCard;
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
+    width: "48%",
+    marginBottom: 16,
     padding: 14,
-    margin: 8,
     borderRadius: 14,
     backgroundColor: "#FFFFFF",
     // Android shadow

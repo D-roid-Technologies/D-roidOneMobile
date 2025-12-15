@@ -57,6 +57,8 @@ export interface ServicesScreenProps {
   /**
    * Optional WhatsApp phone number in international format (no +), e.g. "2348012345678"
    * Used by the floating WhatsApp button.
+   * Used by the floating WhatsApp button.
    */
   whatsappPhone?: string;
+  navigation?: any;
 }
