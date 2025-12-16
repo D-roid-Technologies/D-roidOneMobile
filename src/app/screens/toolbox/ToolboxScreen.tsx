@@ -13,9 +13,9 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 const tools = [
     { id: "1", title: "Crop Tool", icon: "crop", color: "#3B82F6" },
     { id: "2", title: "Word Counter", icon: "font", color: "#10B981" },
-    { id: "3", title: "Color Converter", icon: "eyedropper", color: "#F59E0B" },
-    { id: "4", title: "JSON Formatter", icon: "code", color: "#8B5CF6" },
-    { id: "5", title: "Image Resizer", icon: "image", color: "#EF4444" },
+    // { id: "3", title: "Color Converter", icon: "eyedropper", color: "#F59E0B" },
+    // { id: "4", title: "JSON Formatter", icon: "code", color: "#8B5CF6" },
+    // { id: "5", title: "Image Resizer", icon: "image", color: "#EF4444" },
 ];
 
 const ToolboxsScreen: React.FC = () => {
