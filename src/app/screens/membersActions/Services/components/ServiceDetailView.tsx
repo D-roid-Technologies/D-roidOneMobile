@@ -1,28 +1,52 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, LayoutAnimation, Platform, UIManager, ScrollView } from "react-native";
-import { ChevronDown, ChevronUp, Code, Clock, Users, Award, MessageCircle } from "lucide-react-native";
-import type { TrainingItem } from "../types";
-import { trainingPrograms } from "../data/trainingPrograms";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  ScrollView,
+} from "react-native";
+import {
+  ChevronDown,
+  ChevronUp,
+  MessageCircle,
+} from "lucide-react-native";
 
 // Enable LayoutAnimation on Android
-if (Platform.OS === 'android') {
+if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 }
 
-interface Props {
-  item: TrainingItem;
-  onContact?: () => void;
+export interface ServiceDetailData {
+  title: string;
+  subTitle?: string;
+  summary: string;
+  icon?: React.ReactNode;
+  stats?: { icon: React.ReactNode; text: string }[];
+  tags?: string[]; // Tools & Technologies
+  tagsLabel?: string;
+  benefits?: string[]; // What you'll gain / Bullets
+  benefitsLabel?: string;
+  price?: string[];
 }
 
-const TrainingDetail: React.FC<Props> = ({ item, onContact }) => {
+interface Props {
+  data: ServiceDetailData;
+  onContact?: () => void;
+  contactLabel?: string;
+}
+
+const ServiceDetailView: React.FC<Props> = ({
+  data,
+  onContact,
+  contactLabel = "Contact Us",
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
-
-  const programData = trainingPrograms.find((p) => p.id === item.program);
-
-  // Fallback if no matching program found
-  if (!programData) return null;
 
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -36,27 +60,24 @@ const TrainingDetail: React.FC<Props> = ({ item, onContact }) => {
   };
 
   return (
-    <ScrollView 
-      style={{ flex: 1 }} 
-      contentContainerStyle={{ paddingBottom: 40 }} 
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ paddingBottom: 40 }}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity
         activeOpacity={0.9}
-        style={[
-          styles.container,
-          isExpanded && styles.containerExpanded
-        ]}
+        style={[styles.container, isExpanded && styles.containerExpanded]}
         onPress={toggleExpand}
       >
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <View style={styles.titleWrapper}>
-              {programData.icon}
-              <Text style={styles.title}>{programData.title}</Text>
+              {data.icon && <View style={styles.iconContainer}>{data.icon}</View>}
+              <Text style={styles.title}>{data.title}</Text>
             </View>
-            <Text style={styles.subTitle}>{programData.subTitle}</Text>
+            {!!data.subTitle && <Text style={styles.subTitle}>{data.subTitle}</Text>}
           </View>
 
           <View style={styles.iconWrapper}>
@@ -69,65 +90,69 @@ const TrainingDetail: React.FC<Props> = ({ item, onContact }) => {
         </View>
 
         {/* Quick Stats */}
-        <View style={styles.statsGrid}>
-          <View style={styles.statItem}>
-            <Clock color="#2667cc" size={16} />
-            <Text style={styles.statText}>{programData.duration}</Text>
+        {!!data.stats && data.stats.length > 0 && (
+          <View style={styles.statsGrid}>
+            {data.stats.map((stat, idx) => (
+              <View key={idx} style={styles.statItem}>
+                {stat.icon}
+                <Text style={styles.statText}>{stat.text}</Text>
+              </View>
+            ))}
           </View>
-
-          <View style={styles.statItem}>
-            <Users color="#2667cc" size={16} />
-            <Text style={styles.statText}>{programData.level}</Text>
-          </View>
-
-          <View style={styles.statItem}>
-            <Award color="#2667cc" size={16} />
-            <Text style={styles.statText}>Certificate</Text>
-          </View>
-        </View>
+        )}
 
         {/* Summary */}
         <Text style={[styles.summary, isExpanded && styles.summaryExpanded]}>
-          {programData.summary}
+          {data.summary}
         </Text>
 
         {/* Expanded Content */}
         {isExpanded && (
           <View style={styles.expandedContent}>
-            {/* Tools & Technologies */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Tools & Technologies</Text>
-              <View style={styles.toolsWrapper}>
-                {programData.tools.map((tool, index) => (
-                  <View key={index} style={styles.toolBadge}>
-                    <Text style={styles.toolBadgeText}>{tool}</Text>
-                  </View>
-                ))}
+            {/* Tags / Tools */}
+            {!!data.tags && data.tags.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {data.tagsLabel || "Tools & Technologies"}
+                </Text>
+                <View style={styles.toolsWrapper}>
+                  {data.tags.map((tag, index) => (
+                    <View key={index} style={styles.toolBadge}>
+                      <Text style={styles.toolBadgeText}>{tag}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
 
             {/* Benefits */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>What You'll Gain</Text>
-              <View style={styles.benefitsList}>
-                {programData.benefits.map((benefit, index) => (
-                  <View key={index} style={styles.benefitItem}>
-                    <View style={styles.benefitBullet} />
-                    <Text style={styles.benefitText}>{benefit}</Text>
-                  </View>
-                ))}
+            {!!data.benefits && data.benefits.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {data.benefitsLabel || "Key Benefits"}
+                </Text>
+                <View style={styles.benefitsList}>
+                  {data.benefits.map((benefit, index) => (
+                    <View key={index} style={styles.benefitItem}>
+                      <View style={styles.benefitBullet} />
+                      <Text style={styles.benefitText}>{benefit}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
 
             {/* Pricing */}
-            <View style={styles.pricingBox}>
-              <Text style={styles.sectionTitle}>Investment Options</Text>
-              {programData.price.map((price, index) => (
-                <Text key={index} style={styles.priceItem}>
-                  {price}
-                </Text>
-              ))}
-            </View>
+            {!!data.price && data.price.length > 0 && (
+              <View style={styles.pricingBox}>
+                <Text style={styles.sectionTitle}>Investment Options</Text>
+                {data.price.map((price, index) => (
+                  <Text key={index} style={styles.priceItem}>
+                    {price}
+                  </Text>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
@@ -139,20 +164,20 @@ const TrainingDetail: React.FC<Props> = ({ item, onContact }) => {
           }}
         >
           <MessageCircle color="white" size={18} />
-          <Text style={styles.contactButtonText}>Contact Us</Text>
+          <Text style={styles.contactButtonText}>{contactLabel}</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     </ScrollView>
   );
 };
 
-export default TrainingDetail;
+export default ServiceDetailView;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     borderRadius: 16,
-    padding: 20, // 2rem approx 32, but 20 is safer for mobile density
+    padding: 20,
     shadowColor: "#071d6a",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
@@ -166,10 +191,10 @@ const styles = StyleSheet.create({
     borderColor: "#2667cc",
   },
   header: {
-    flexDirection: "row", // display: flex
+    flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    marginBottom: 24, // 1.5rem
+    marginBottom: 24,
   },
   headerContent: {
     flex: 1,
@@ -178,17 +203,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,
+    flexWrap: "wrap",
+  },
+  iconContainer: {
+    marginRight: 12,
   },
   title: {
-    fontSize: 20, // 1.5rem
+    fontSize: 20,
     fontWeight: "700",
     color: "#071d6a",
-    marginLeft: 8,
-    flex: 1, // Wrap text if long
+    flex: 1,
   },
   subTitle: {
     color: "#64748b",
-    fontSize: 14, // 1rem
+    fontSize: 14,
     marginBottom: 16,
     lineHeight: 20,
   },
@@ -203,7 +231,7 @@ const styles = StyleSheet.create({
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 12, // Gap support in newer RN or use margin
+    gap: 12,
     marginBottom: 24,
   },
   statItem: {
@@ -212,11 +240,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#f8fafc",
     borderRadius: 8,
-    marginRight: 8, // fallback for gap
+    marginRight: 8,
     marginBottom: 8,
   },
   statText: {
-    fontSize: 13, // 0.9rem
+    fontSize: 13,
     color: "#475569",
     fontWeight: "500",
     marginLeft: 6,
@@ -239,7 +267,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 16, // 1.1rem
+    fontSize: 16,
     fontWeight: "600",
     color: "#071d6a",
     marginBottom: 16,

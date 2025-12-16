@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Clock, Users, Award } from "lucide-react-native";
 
 import type {
   ServicesScreenProps,
@@ -22,18 +24,20 @@ import {
   ANIMATION_ITEMS,
   STORIES,
 } from "./data";
+import { trainingPrograms } from "./data/trainingPrograms";
 
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
-import DetailPage from "./components/DetailPage";
-import TrainingDetail from "./components/TrainingDetail";
 import StoryDetail from "./components/StoryDetail";
 import WhatsAppButton from "./WhatsAppButton";
+import ServiceDetailView, { ServiceDetailData } from "./components/ServiceDetailView";
 
-const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone, navigation }) => {
+const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
+  const navigation = useNavigation();
   const [view, setView] = useState<ViewState>("HOME");
 
   const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(null);
+  const [activeClass, setActiveClass] = useState<ClassItem | null>(null);
   const [activeTech, setActiveTech] = useState<TechItem | null>(null);
 
   const [activeTraining, setActiveTraining] = useState<TrainingItem | null>(null);
@@ -44,7 +48,9 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const openContact = () => {
     if (onOpenSayIt) return onOpenSayIt();
-    // If no in-app modal, WhatsApp FAB is always available.
+    // Navigate to Contact screen if available, otherwise fallback
+    // @ts-ignore
+    navigation.navigate("Contact");
   };
 
   const title = useMemo(() => {
@@ -74,58 +80,56 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     }
   }, [view]);
 
+  // Handle back navigation
   const goBack = () => {
-    switch (view) {
-      case "HOME":
-        if (navigation && navigation.canGoBack()) {
-          navigation.goBack();
-        }
-        break;
-
-      case "SOFTWARE_CLASSES":
-      case "TRAININGS":
-      case "ANIMATION":
-      case "CONSULTING":
-        setView("HOME");
-        break;
-
-      case "TECH_STACKS":
-        setActiveCategory(null);
-        setView("SOFTWARE_CLASSES");
-        break;
-
-      case "TECH_DETAIL":
-        setActiveTech(null);
-        setView("TECH_STACKS");
-        break;
-
-      case "TRAINING_DETAIL":
-        setActiveTraining(null);
-        setView("TRAININGS");
-        break;
-
-      case "CONSULTING_DETAIL":
-        setActiveConsulting(null);
-        setView("CONSULTING");
-        break;
-
-      case "ANIMATION_DETAIL":
-        setActiveStory(null);
-        setView("ANIMATION");
-        break;
-
-      default:
-        setView("HOME");
+    if (view === "HOME") {
+      navigation.goBack();
+      return;
     }
+    if (view === "SOFTWARE_CLASSES") {
+      setView("HOME");
+      return;
+    }
+    if (view === "TECH_STACKS") {
+      setActiveClass(null);
+      setView("SOFTWARE_CLASSES");
+      return;
+    }
+    if (view === "TECH_DETAIL") {
+      setActiveTech(null);
+      setView("TECH_STACKS");
+      return;
+    }
+    if (view === "TRAININGS") {
+      setView("HOME");
+      return;
+    }
+    if (view === "TRAINING_DETAIL") {
+      setActiveTraining(null);
+      setView("TRAININGS");
+      return;
+    }
+    if (view === "CONSULTING") {
+      setView("HOME");
+      return;
+    }
+    if (view === "CONSULTING_DETAIL") {
+      setActiveConsulting(null);
+      setView("CONSULTING");
+      return;
+    }
+    if (view === "ANIMATION") {
+      setView("HOME");
+      return;
+    }
+    if (view === "ANIMATION_DETAIL") {
+      setActiveStory(null);
+      setView("ANIMATION");
+      return;
+    }
+    // Default fallback
+    setView("HOME");
   };
-
-  // ... render methods ...
-
-  // Always show back button, or specific logic if needed. 
-  // User asked for back button to default homescreen.
-  // If we are at HOME, back button goes to previous screen (HomeScreen).
-  // If we are deep in stack, it goes up one level in local state.
-  const shouldShowBack = true; 
 
   const renderHome = () => (
     <FlatList
@@ -150,70 +154,77 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
   );
 
   const renderSoftwareClasses = () => (
-    <>
-      <Text style={styles.subtitle}>
-        Select a category to view available tech stacks.
-      </Text>
-      <FlatList
-        data={CLASSES}
-        keyExtractor={(i) => i.id}
-        numColumns={2}
-        contentContainerStyle={styles.list}
-        columnWrapperStyle={styles.columnWrapper}
-        renderItem={({ item }) => (
-          <ServiceCard
-            title={item.title}
-            description={item.description}
-            onPress={() => {
-              setActiveCategory(item.category);
-              setView("TECH_STACKS");
-            }}
-          />
-        )}
-      />
-    </>
+    <FlatList
+      data={CLASSES}
+      keyExtractor={(i) => i.id}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.columnWrapper}
+      renderItem={({ item }) => (
+        <ServiceCard
+          title={item.title}
+          description={item.description}
+          icon={item.icon}
+          onPress={() => {
+            setActiveClass(item);
+            setView("TECH_STACKS");
+          }}
+        />
+      )}
+    />
   );
 
-  const techList: TechItem[] = useMemo(() => {
-    if (!activeCategory) return [];
-    return TECH_STACKS[activeCategory] ?? [];
-  }, [activeCategory]);
+  const renderTechStacks = () => {
+    if (!activeClass) return null;
+    const stacks = TECH_STACKS[activeClass.category] || [];
+    return (
+      <View style={styles.sectionWrap}>
+        <Text style={styles.subHeader}>
+          {activeClass.title} Capabilities
+        </Text>
+        <FlatList
+          data={stacks}
+          keyExtractor={(i) => i.id}
+          numColumns={2}
+          contentContainerStyle={styles.list}
+          columnWrapperStyle={styles.columnWrapper}
+          renderItem={({ item }) => (
+            <ServiceCard
+              title={item.title}
+              description={item.description}
+              icon={item.icon}
+              onPress={() => {
+                setActiveTech(item);
+                setView("TECH_DETAIL");
+              }}
+            />
+          )}
+        />
+      </View>
+    );
+  };
 
-  const renderTechStacks = () => (
-    <>
-      <Text style={styles.subtitle}>
-        Tap a card to open details and contact.
-      </Text>
-      <FlatList
-        data={techList}
-        keyExtractor={(i) => i.id}
-        numColumns={2}
-        contentContainerStyle={styles.list}
-        columnWrapperStyle={styles.columnWrapper}
-        renderItem={({ item }) => (
-          <ServiceCard
-            title={item.title}
-            description={item.description}
-            onPress={() => {
-              setActiveTech(item);
-              setView("TECH_DETAIL");
-            }}
-          />
-        )}
-      />
-    </>
-  );
+  const renderTechDetail = () => {
+    if (!activeTech) return null;
+    
+    // Transform TechItem to ServiceDetailData
+    const detailData: ServiceDetailData = {
+      title: activeTech.title,
+      subTitle: activeClass?.title, // e.g. "Frontend Development"
+      summary: activeTech.description,
+      icon: activeTech.icon,
+      benefits: activeTech.bullets,
+      benefitsLabel: "Key Capabilities",
+    };
 
-  const renderTechDetail = () =>
-    activeTech ? (
-      <DetailPage
-        title={activeTech.title}
-        description={activeTech.description}
-        bullets={activeTech.bullets}
-        onContact={openContact}
+    return (
+      <ServiceDetailView
+        data={detailData}
         contactLabel="Contact about this Tech Stack"
+        onContact={openContact}
       />
-    ) : null;
+    );
+  };
 
   const renderTrainings = () => (
     <FlatList
@@ -235,10 +246,37 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     />
   );
 
-  const renderTrainingDetail = () =>
-    activeTraining ? (
-      <TrainingDetail item={activeTraining} onContact={openContact} />
-    ) : null;
+  const renderTrainingDetail = () => {
+    if (!activeTraining) return null;
+    const program = trainingPrograms.find((p) => p.id === activeTraining.program);
+    
+    // Fallback data if program details missing
+    if (!program) return null;
+
+    const detailData: ServiceDetailData = {
+      title: program.title,
+      subTitle: program.subTitle,
+      summary: program.summary,
+      icon: program.icon,
+      stats: [
+        { icon: <Clock color="#2667cc" size={16} />, text: program.duration },
+        { icon: <Users color="#2667cc" size={16} />, text: program.level },
+        { icon: <Award color="#2667cc" size={16} />, text: "Certificate" },
+      ],
+      tags: program.tools,
+      tagsLabel: "Tools & Technologies",
+      benefits: program.benefits,
+      benefitsLabel: "What You'll Gain",
+      price: program.price,
+    };
+
+    return (
+      <ServiceDetailView
+        data={detailData}
+        onContact={openContact}
+      />
+    );
+  };
 
   const renderConsulting = () => (
     <FlatList
@@ -260,16 +298,24 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     />
   );
 
-  const renderConsultingDetail = () =>
-    activeConsulting ? (
-      <DetailPage
-        title={activeConsulting.title}
-        description={activeConsulting.description}
-        bullets={activeConsulting.bullets}
-        onContact={openContact}
+  const renderConsultingDetail = () => {
+    if (!activeConsulting) return null;
+
+    const detailData: ServiceDetailData = {
+      title: activeConsulting.title,
+      summary: activeConsulting.description,
+      benefits: activeConsulting.bullets,
+      benefitsLabel: "Focus Areas",
+    };
+
+    return (
+      <ServiceDetailView
+        data={detailData}
         contactLabel="Contact about Consulting"
+        onContact={openContact}
       />
-    ) : null;
+    );
+  };
 
   const renderAnimation = () => (
     <FlatList
@@ -297,13 +343,11 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
   const renderAnimationDetail = () =>
     activeStory ? <StoryDetail story={activeStory} /> : null;
 
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
 
-      {/* Always show back button now, handling both internal and external nav */}
+      {/* Always show back button */}
       <BackButton onPress={goBack} />
 
       {view === "HOME" && renderHome()}
@@ -331,7 +375,8 @@ export default ServicesScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 16, paddingHorizontal: 14, backgroundColor: "#FFFFFF" },
   title: { fontSize: 22, fontWeight: "900", color: "#111827", marginBottom: 10 },
-  subtitle: { fontSize: 13, color: "#6B7280", marginBottom: 10 },
+  sectionWrap: { flex: 1 },
+  subHeader: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 16 },
   list: { paddingBottom: 120 },
   columnWrapper: { justifyContent: "space-between" },
 });
