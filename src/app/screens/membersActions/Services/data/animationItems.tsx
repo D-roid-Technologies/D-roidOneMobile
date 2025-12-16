@@ -8,19 +8,19 @@ export const animationItems = [
     description: "A story of loyalty and courage among siblings facing adversity.",
   },
   {
-    id: "Cityboy",
+    id: "cityBoys",
     icon: <Building2 color="#2667cc" size={24} />,
     title: "Cityboy",
     description: "An animated journey of a boy discovering life in a bustling city.",
   },
   {
-    id: "Resilience",
+    id: "resilience",
     icon: <Flame color="#2667cc" size={24} />,
     title: "Resilience",
     description: "An inspiring tale of bouncing back after life’s challenges.",
   },
   {
-    id: "Warriors",
+    id: "warriors",
     icon: <Sword color="#2667cc" size={24} />,
     title: "Warriors",
     description: "Animated chronicles of warriors defending honor and justice.",

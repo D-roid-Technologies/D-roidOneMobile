@@ -68,21 +68,21 @@ export const STORIES: StoryItem[] = [
       "In a world where bonds are tested, two brothers stand against the odds. Through trials and tribulations, they discover that blood is thicker than water, but loyalty is the strongest force of all.\n\nJoin them on their journey of self-discovery, sacrifice, and the unyielding power of brotherhood.",
   },
   {
-    id: "Cityboy",
+    id: "cityBoys",
     title: "Cityboy",
     description: "An animated journey of a boy discovering life in a bustling city.",
     content:
       "Lost in the neon lights and towering skyscrapers, a young boy navigates the complexities of urban life. Every corner holds a new secret, every interaction a lesson.\n\nFrom the underground subways to the rooftop gardens, 'Cityboy' explores the rhythm of the city and finding one's place within the chaos.",
   },
   {
-    id: "Resilience",
+    id: "resilience",
     title: "Resilience",
     description: "An inspiring tale of bouncing back after life’s challenges.",
     content:
       "Fall down seven times, stand up eight. This is the story of a protagonist who faces insurmountable failures yet refuses to give in.\n\nIt is a testament to the human spirit—a reminder that our greatest glory is not in never falling, but in rising every time we fall.",
   },
   {
-    id: "Warriors",
+    id: "warriors",
     title: "Warriors",
     description: "Animated chronicles of warriors defending honor and justice.",
     content:
