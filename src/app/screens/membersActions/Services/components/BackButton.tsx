@@ -1,16 +1,17 @@
 import React from "react";
-import { Pressable, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { ChevronLeft } from "lucide-react-native";
 
 interface Props {
-  label?: string;
   onPress: () => void;
+  style?: ViewStyle;
 }
 
-const BackButton: React.FC<Props> = ({ label = "Back", onPress }) => {
+const BackButton: React.FC<Props> = ({ onPress, style }) => {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.btn, pressed && styles.pressed]}>
-      <Text style={styles.text}>← {label}</Text>
-    </Pressable>
+    <TouchableOpacity onPress={onPress} style={[styles.btn, style]}>
+      <ChevronLeft size={26} color="#111827" />
+    </TouchableOpacity>
   );
 };
 
@@ -18,13 +19,11 @@ export default BackButton;
 
 const styles = StyleSheet.create({
   btn: {
-    alignSelf: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-    backgroundColor: "#F3F4F6",
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: "#F3F4F6", // Light gray to match light theme vs Progression's dark theme
+    justifyContent: "center",
+    alignItems: "center",
   },
-  pressed: { opacity: 0.85 },
-  text: { fontSize: 14, fontWeight: "600", color: "#111827" },
 });

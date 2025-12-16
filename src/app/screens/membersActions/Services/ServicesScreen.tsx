@@ -372,10 +372,11 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-
-      {/* Always show back button */}
-      <BackButton onPress={goBack} />
+      {/* Header Row */}
+      <View style={styles.header}>
+        <BackButton onPress={goBack} />
+        <Text style={styles.title}>{title}</Text>
+      </View>
 
       {view === "HOME" && renderHome()}
 
@@ -400,8 +401,14 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 export default ServicesScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 16, paddingHorizontal: 14, backgroundColor: "#FFFFFF" },
-  title: { fontSize: 22, fontWeight: "900", color: "#111827", marginBottom: 10 },
+  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16, backgroundColor: "#FFFFFF" },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    gap: 16, // Space between back button and title
+  },
+  title: { fontSize: 24, fontWeight: "900", color: "#111827" },
   sectionWrap: { flex: 1 },
   subHeader: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 16 },
   list: { paddingBottom: 120 },
