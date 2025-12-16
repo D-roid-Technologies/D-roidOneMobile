@@ -17,15 +17,16 @@ import type {
 
 import {
   SERVICES,
-  CLASSES,
-  TECH_STACKS,
-  TRAININGS,
-  CONSULTING,
   STORIES,
 } from "./data";
-import { trainingPrograms } from "./data/trainingPrograms";
-import { animationItems } from "./data/animationItems";
-import { consultingItems } from "./data/consultingItems";
+import {
+  classes as CLASSES,
+  techStacks as TECH_STACKS,
+  trainingList as TRAININGS,
+  consultingItems as CONSULTING,
+  animationItems,
+  trainingPrograms,
+} from "./data/index";
 
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
@@ -281,7 +282,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderConsulting = () => (
     <FlatList
-      data={consultingItems}
+      data={CONSULTING}
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}

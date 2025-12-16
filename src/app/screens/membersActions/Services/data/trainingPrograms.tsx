@@ -8,6 +8,7 @@ import {
   Award,
   MessageCircle,
 } from "lucide-react-native";
+import { TrainingItem } from "../types";
 
 export interface TrainingProgram {
   id: string;
@@ -21,6 +22,27 @@ export interface TrainingProgram {
   tools: string[];
   benefits: string[];
 }
+
+export const trainingList: TrainingItem[] = [
+  {
+    id: "tr_frontend",
+    title: "Frontend Developer Training",
+    description:
+      "Hands-on frontend training: React fundamentals to advanced architecture, with projects and mentorship.",
+    program: "frontend",
+    duration: "6–10 weeks",
+    level: "Beginner → Intermediate",
+  },
+  {
+    id: "tr_skill",
+    title: "Skill Acquisition Training",
+    description:
+      "Practical skill acquisition training: structured learning, guided projects, and career preparation.",
+    program: "skill",
+    duration: "4–8 weeks",
+    level: "All levels",
+  },
+];
 
 export const trainingPrograms: TrainingProgram[] = [
   {
