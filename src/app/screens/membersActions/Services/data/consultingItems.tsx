@@ -14,6 +14,12 @@ export const consultingItems = [
     title: "Tech Stack Evaluation & Recommendation",
     description:
       "We conduct deep-dive audits of your existing technology landscape, analyzing performance metrics, cost efficiency, and future scalability. Our experts provide actionable recommendations with ROI projections, migration timelines, and risk assessments.",
+    bullets: [
+      "Deep-dive technology audits",
+      "Performance & cost analysis",
+      "Actionable ROI projections",
+      "Migration strategies",
+    ],
   },
   {
     id: "consulting_roadmap",
@@ -21,6 +27,12 @@ export const consultingItems = [
     title: "Digital Transformation Roadmapping",
     description:
       "We craft comprehensive digital transformation strategies that align cutting-edge technology with your business objectives. From legacy system modernization to cloud migration and process automation.",
+    bullets: [
+      "Legacy system modernization",
+      "Cloud migration planning",
+      "Process automation",
+      "Business objective alignment",
+    ],
   },
   {
     id: "consulting_cto",
@@ -28,6 +40,12 @@ export const consultingItems = [
     title: "CTO-as-a-Service for Startups",
     description:
       "Access seasoned technical leadership without the full-time commitment. Our fractional CTOs bring 15+ years of experience scaling startups from MVP to IPO.",
+    bullets: [
+      "Fractional technical leadership",
+      "MVP to IPO scaling expertise",
+      "Team structure & hiring",
+      "Technical architecture review",
+    ],
   },
   {
     id: "consulting_security",
@@ -35,6 +53,12 @@ export const consultingItems = [
     title: "Security & Infrastructure Review",
     description:
       "We perform a thorough audit of your infrastructure, identifying vulnerabilities and offering remediation strategies for long-term resilience.",
+    bullets: [
+      "Infrastructure vulnerability audit",
+      "Remediation strategies",
+      "Long-term resilience planning",
+      "Compliance readiness",
+    ],
   },
   {
     id: "consulting_perf",
@@ -42,6 +66,12 @@ export const consultingItems = [
     title: "Scalability & Performance Optimization",
     description:
       "Our cybersecurity experts perform comprehensive penetration testing, vulnerability assessments, and compliance audits across your entire digital infrastructure.",
+    bullets: [
+      "Penetration testing",
+      "Vulnerability assessment",
+      "Digital infrastructure audit",
+      "Performance tuning",
+    ],
   },
   {
     id: "consulting_arch",
@@ -49,5 +79,11 @@ export const consultingItems = [
     title: "Custom Software Strategy & Architecture",
     description:
       "We design enterprise-grade software architectures tailored to your unique business processes and growth projections. From microservices and API-first designs to event-driven architectures.",
+    bullets: [
+      "Enterprise software architecture",
+      "Microservices design",
+      "API-first strategy",
+      "Event-driven architecture",
+    ],
   },
 ];

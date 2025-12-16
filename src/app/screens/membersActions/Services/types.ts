@@ -1,4 +1,4 @@
-export type ServiceKey = "software" | "training" | "animation" | "consulting";
+import { ReactNode } from "react";
 
 export type ViewState =
   | "HOME"
@@ -7,59 +7,102 @@ export type ViewState =
   | "TECH_DETAIL"
   | "TRAININGS"
   | "TRAINING_DETAIL"
-  | "ANIMATION"
-  | "ANIMATION_DETAIL"
   | "CONSULTING"
-  | "CONSULTING_DETAIL";
+  | "CONSULTING_DETAIL"
+  | "ANIMATION"
+  | "ANIMATION_DETAIL";
+
+export interface ServiceItem {
+  id: string;
+  key: string;
+  title: string;
+  description: string;
+}
+
+export interface ClassItem {
+  id: string;
+  category: TechCategoryKey;
+  title: string;
+  description: string;
+  icon?: ReactNode;
+}
 
 export type TechCategoryKey = "frontend" | "backend" | "cloud" | "crossPlatform";
+
+export interface TechItem {
+  id: string;
+  category: TechCategoryKey;
+  title: string;
+  description: string;
+  icon: ReactNode;
+  bullets: string[];
+}
+
+export interface TrainingItem {
+  id: string;
+  program: string;
+  title: string;
+  description: string;
+}
+
+export interface ProgramDetail {
+  id: string; // e.g., 'mobile_dev'
+  title: string;
+  subTitle: string;
+  summary: string;
+  duration: string;
+  level: string;
+  price: string;
+  icon?: ReactNode;
+  tools: string[];
+  benefits: string[];
+}
+
+export interface ConsultingItem {
+  id: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  icon?: ReactNode; // Added optional icon for consistency
+}
+
+export interface StoryItem {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+}
 
 export interface CardItemBase {
   id: string;
   title: string;
   description: string;
-  icon?: React.ReactNode;
-}
-
-export interface ServiceItem extends CardItemBase {
-  key: ServiceKey;
-}
-
-export interface ClassItem extends CardItemBase {
-  category: TechCategoryKey;
-}
-
-export interface TechItem extends CardItemBase {
-  category: TechCategoryKey;
-  // Optional: list of bullet points for the detail page
-  bullets?: string[];
-}
-
-export interface TrainingItem extends CardItemBase {
-  program: "frontend" | "skill";
-  duration?: string;
-  level?: string;
-}
-
-export interface ConsultingItem extends CardItemBase {
-  bullets?: string[];
-}
-
-export interface StoryItem extends CardItemBase {
-  content: string;
 }
 
 export interface ServicesScreenProps {
-  /**
-   * Optional callback if you want to open your in-app "SayIt" modal.
-   * If not provided, we will fall back to WhatsApp linking.
-   */
   onOpenSayIt?: () => void;
-  /**
-   * Optional WhatsApp phone number in international format (no +), e.g. "2348012345678"
-   * Used by the floating WhatsApp button.
-   * Used by the floating WhatsApp button.
-   */
   whatsappPhone?: string;
-  navigation?: any;
 }
+
+// --- Story Reader Types ---
+
+export type Chapter = {
+  id: number;
+  title: string;
+  content: string[]; // paragraphs
+};
+
+export type Story = {
+  id: string;
+  title: string;
+  genre: string;
+  runtime: string;
+  releaseDate: string;
+  rating?: string;
+  views?: string;
+  likes?: string;
+  description: string;
+  synopsis: string;
+  themes: string[];
+  chapters: Chapter[];
+};

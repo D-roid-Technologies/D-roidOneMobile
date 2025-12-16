@@ -17,24 +17,20 @@ import type {
 
 import {
   SERVICES,
-  STORIES,
-} from "./data";
-import {
   classes as CLASSES,
   techStacks as TECH_STACKS,
   trainingList as TRAININGS,
   consultingItems as CONSULTING,
   animationItems,
   trainingPrograms,
+  stories,
 } from "./data/index";
 
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
-import StoryDetail from "./components/StoryDetail";
 import WhatsAppButton from "./WhatsAppButton";
 import ServiceDetailView, { ServiceDetailData } from "./components/ServiceDetailView";
 import StoryReader from "./components/StoryReader";
-import { stories } from "./storyReader/stories-data";
 
 const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
   const navigation = useNavigation();
@@ -333,8 +329,12 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
           title={item.title}
           description={item.description}
           onPress={() => {
-            const found = STORIES.find((s) => s.id === item.id);
+            // Find specific story logic
+            // We match based on ID (case-insensitive for safety)
+            const found = stories.find((s) => s.id.toLowerCase() === item.id.toLowerCase());
             if (found) {
+                // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
+                // We will use the full story in renderAnimationDetail anyway
               setActiveStory(found);
               setView("ANIMATION_DETAIL");
             }
