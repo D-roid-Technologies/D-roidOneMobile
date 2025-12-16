@@ -25,6 +25,7 @@ import {
 } from "./data";
 import { trainingPrograms } from "./data/trainingPrograms";
 import { animationItems } from "./data/animationItems";
+import { consultingItems } from "./data/consultingItems";
 
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
@@ -280,7 +281,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderConsulting = () => (
     <FlatList
-      data={CONSULTING}
+      data={consultingItems}
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}
