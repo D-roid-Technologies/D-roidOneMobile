@@ -33,6 +33,8 @@ import BackButton from "./components/BackButton";
 import StoryDetail from "./components/StoryDetail";
 import WhatsAppButton from "./WhatsAppButton";
 import ServiceDetailView, { ServiceDetailData } from "./components/ServiceDetailView";
+import StoryReader from "./components/StoryReader";
+import { stories } from "./storyReader/stories-data";
 
 const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
   const navigation = useNavigation();
@@ -342,8 +344,31 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     />
   );
 
-  const renderAnimationDetail = () =>
-    activeStory ? <StoryDetail story={activeStory} /> : null;
+  const renderAnimationDetail = () => {
+    if (!activeStory) return null;
+    
+    // Find the full story object from our rich data source that matches the active ID
+    // The IDs in animationItems are like 'brothers', 'Cityboy', etc.
+    // The match was fixed in data.tsx, so activeStory.id should strictly match.
+    const fullStory = stories.find(s => s.id.toLowerCase() === activeStory.id.toLowerCase());
+
+    if (!fullStory) {
+        // Fallback or error handling if somehow data is missing
+        return (
+            <View style={{padding: 20}}>
+                <Text>Story data not found for {activeStory.title}</Text>
+                <BackButton onPress={() => setView("ANIMATION")} />
+            </View>
+        )
+    }
+
+    return (
+        <StoryReader 
+            story={fullStory} 
+            onClose={() => setView("ANIMATION")} 
+        />
+    );
+  }
 
   return (
     <View style={styles.container}>
