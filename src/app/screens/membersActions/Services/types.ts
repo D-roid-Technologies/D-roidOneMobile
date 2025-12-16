@@ -18,6 +18,7 @@ export interface CardItemBase {
   id: string;
   title: string;
   description: string;
+  icon?: React.ReactNode;
 }
 
 export interface ServiceItem extends CardItemBase {
