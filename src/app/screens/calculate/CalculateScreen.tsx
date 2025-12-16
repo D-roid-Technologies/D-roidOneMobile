@@ -14,9 +14,9 @@ import ScientificCalculator from "../calculate/tools/sc"
 const tools = [
     { id: "1", title: "Basic Calculator", icon: "calculator", color: "#3B82F6" },
     { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981" },
-    { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B" },
-    { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6" },
-    { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444" },
+    // { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B" },
+    // { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6" },
+    // { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444" },
 ];
 
 const CalculatorsScreen: React.FC = () => {

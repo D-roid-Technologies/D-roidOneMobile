@@ -21,10 +21,10 @@ import {
   TECH_STACKS,
   TRAININGS,
   CONSULTING,
-  ANIMATION_ITEMS,
   STORIES,
 } from "./data";
 import { trainingPrograms } from "./data/trainingPrograms";
+import { animationItems } from "./data/animationItems";
 
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
@@ -319,7 +319,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderAnimation = () => (
     <FlatList
-      data={ANIMATION_ITEMS}
+      data={animationItems}
       keyExtractor={(i) => i.id}
       numColumns={2}
       contentContainerStyle={styles.list}

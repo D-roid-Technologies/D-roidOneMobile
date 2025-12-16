@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MonitorSmartphone,
   Server,
@@ -11,6 +10,8 @@ import {
   Webhook,
   Globe,
   ArrowRight,
+  Cloud,
+  ShieldCheck,
 } from "lucide-react-native";
 import type {
   ServiceItem,
@@ -148,20 +149,58 @@ export const TECH_STACKS: Record<string, TechItem[]> = {
   ],
   backend: [
     {
-      id: "tech_node",
+      id: "tech_node_express",
       category: "backend",
-      title: "Node.js / NestJS",
+      title: "Node.js & Express Development",
       description:
-        "Robust API design, guards, interceptors, queues, and service boundaries with clean architecture.",
-      bullets: ["JWT + RBAC", "Validation pipes", "Queues (BullMQ)", "Testing"],
+        "At D'roid Technologies, we specialize in building robust and scalable backend applications using Node.js and Express. Our team leverages the power of JavaScript on the server-side to create high-performance APIs, real-time applications, and microservices. We implement best practices in asynchronous programming, error handling, and middleware integration to ensure your backend is both powerful and maintainable. From RESTful APIs to WebSocket implementations, we create backend solutions that can handle high traffic loads while maintaining optimal performance.",
+      icon: <Server color="#2667cc" size={24} />,
+      bullets: ["High-performance APIs", "Real-time applications", "Microservices architecture"],
     },
     {
-      id: "tech_prisma",
+      id: "tech_python",
       category: "backend",
-      title: "Prisma ORM",
+      title: "Python Backend Development",
       description:
-        "Schema-first modeling, migrations, relational integrity, and performant queries.",
-      bullets: ["Migrations", "Relations", "Indexes", "Transactions"],
+        "Our Python backend development services harness the versatility and power of Python frameworks like Django and Flask to create sophisticated backend systems. We develop secure, scalable, and maintainable applications that can handle complex business logic, data processing, and API integrations. Whether you need a full-featured web application with Django's built-in admin interface or a lightweight API with Flask, our team ensures your Python backend is optimized for performance and security.",
+      icon: <Code color="#2667cc" size={24} />,
+      bullets: ["Django & Flask frameworks", "Complex business logic", "Scalable systems"],
+    },
+    {
+      id: "tech_db_design",
+      category: "backend",
+      title: "Database Design & Optimization",
+      description:
+        "Database design and optimization is a critical component of our backend development services. We work with both SQL (PostgreSQL, MySQL) and NoSQL (MongoDB, Redis) databases to create efficient data storage solutions. Our team focuses on proper schema design, query optimization, indexing strategies, and caching mechanisms to ensure your database performs optimally under any load. We implement best practices in data modeling, normalization, and security to protect your valuable information while maintaining fast access times.",
+      icon: <Database color="#2667cc" size={24} />,
+      bullets: ["SQL & NoSQL solutions", "Query optimization", "Secure data modeling"],
+    },
+    {
+      id: "tech_api_dev",
+      category: "backend",
+      title: "API Development & Integration",
+      description:
+        "Our API development and integration services focus on creating robust, well-documented, and secure APIs that serve as the backbone of your application. We design RESTful and GraphQL APIs that follow industry best practices and standards. Our team ensures proper authentication, rate limiting, error handling, and versioning while maintaining comprehensive API documentation. We also specialize in integrating third-party APIs and services, ensuring seamless communication between different systems and platforms.",
+      icon: <Webhook color="#2667cc" size={24} />,
+      bullets: ["RESTful & GraphQL APIs", "Secure authentication", "Third-party integration"],
+    },
+    {
+      id: "tech_cloud_infra",
+      category: "backend",
+      title: "Cloud Infrastructure & Deployment",
+      description:
+        "We provide comprehensive cloud infrastructure and deployment services using leading cloud providers like AWS, Azure, and Google Cloud. Our team designs scalable and resilient cloud architectures, implements containerization with Docker and Kubernetes, and sets up CI/CD pipelines for automated deployment. We ensure your backend services are properly configured for high availability, load balancing, and auto-scaling while maintaining security best practices and cost optimization.",
+      icon: <Cloud color="#2667cc" size={24} />,
+      bullets: ["AWS / Azure / GCP", "Docker & Kubernetes", "CI/CD pipelines"],
+    },
+    {
+      id: "tech_security",
+      category: "backend",
+      title: "Security & Performance Optimization",
+      description:
+        "Security and performance optimization are fundamental to our backend development approach. We implement robust security measures including authentication, authorization, data encryption, and protection against common vulnerabilities. Our performance optimization strategies include code profiling, caching implementation, load balancing, and database query optimization. We conduct regular security audits and performance testing to ensure your backend remains secure and efficient as it scales.",
+      icon: <ShieldCheck color="#2667cc" size={24} />,
+      bullets: ["Robust security measures", "Performance auditing", "Scalable architecture"],
     },
   ],
   cloud: [
