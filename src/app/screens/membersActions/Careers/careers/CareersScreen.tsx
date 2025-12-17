@@ -12,7 +12,8 @@ import { useSelector } from "react-redux";
 import { Briefcase, GraduationCap, ArrowLeft } from "lucide-react-native";
 import { DashboardCard } from "./components/DashboardCard";
 import { MobileTrainingApplicationForm } from "./components/MobileTrainingApplicationForm";
-// Adjust import path based on actual project structure relative to this file
+import { useNavigation } from "@react-navigation/native";
+import BackButton from "../../../../components/BackButton";
 import { RootState } from "../../../../redux/store";
 
 type Job = {
@@ -38,6 +39,7 @@ const CareersScreen: React.FC = () => {
   const [showContent, setShowContent] = useState<boolean>(false);
   const [showTitle, setShowTitle] = useState<string>("");
   const [showDesc, setShowDesc] = useState<string>("");
+  const navigation = useNavigation();
 
   const isUserLoggedIn = useSelector(
     (state: RootState) => state.user.isLoggedIn
@@ -101,13 +103,25 @@ const CareersScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
+
+
         {showContentMain && (
-          <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={{ flex: 1 }}>
             <View style={styles.header}>
+              <BackButton 
+                onPress={() => navigation.goBack()} 
+                iconColor="#FFFFFF"
+                backgroundColor="rgba(255, 255, 255, 0.2)"
+              />
               <Text style={styles.headerTitle}>Careers</Text>
-              <Text style={styles.headerSubtitle}>
-                Join our team and help shape the future.
-              </Text>
+              <View style={{ width: 40 }} />
+            </View>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+            
+            <View style={{ paddingBottom: 16 }}>
+               <Text style={styles.pageSubtitle}>
+                  Join our team and help shape the future.
+               </Text>
             </View>
 
             <View style={styles.grid}>
@@ -121,16 +135,17 @@ const CareersScreen: React.FC = () => {
                 />
               ))}
             </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         )}
 
         {showContent && (
           <View style={styles.detailContainer}>
             <View style={styles.detailHeader}>
-              <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-                <ArrowLeft size={20} color="#374151" />
+              <View style={styles.backButtonRow}>
+                <BackButton onPress={handleBack} />
                 <Text style={styles.backButtonText}>Back to Careers</Text>
-              </TouchableOpacity>
+              </View>
             </View>
             
             <View style={{ flex: 1 }}>
@@ -152,26 +167,39 @@ const CareersScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
+    backgroundColor: "#071D6A", // Match header color for safe area top
   },
   content: {
     flex: 1,
+    backgroundColor: "#f9fafb", // Restore background for body
   },
   scrollContent: {
     padding: 16,
   },
   header: {
-    marginBottom: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#071D6A",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    textAlign: 'center',
+    flex: 1,
   },
-  headerSubtitle: {
+  pageSubtitle: {
     fontSize: 16,
     color: "#6b7280",
+    marginBottom: 8,
   },
   grid: {
     gap: 16,
@@ -186,9 +214,10 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e5e7eb",
     backgroundColor: "#ffffff",
   },
-  backButton: {
+  backButtonRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 12,
   },
   backButtonText: {
     marginLeft: 8,
