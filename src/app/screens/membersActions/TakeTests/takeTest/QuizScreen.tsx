@@ -239,11 +239,16 @@ const QuizScreen: React.FC = () => {
                 </ScrollView>
 
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate('TestListScreen')}>
-                        <Text style={styles.secondaryButtonText}>Back to Tests</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.primaryButton} onPress={handleRetake}>
-                        <Text style={styles.primaryButtonText}>Retake Quiz</Text>
+                    <View style={{ flexDirection: 'row', gap: 12, marginBottom: 12 }}>
+                        <TouchableOpacity style={[styles.secondaryButton, { flex: 1 }]} onPress={() => navigation.navigate('TestListScreen')}>
+                            <Text style={styles.secondaryButtonText}>Back to Tests</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.primaryButton, { flex: 1 }]} onPress={handleRetake}>
+                            <Text style={styles.primaryButtonText}>Retake Quiz</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate('BottomTabs')}>
+                        <Text style={styles.secondaryButtonText}>Go to Homepage</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>

@@ -3,6 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from 'r
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
+import ContactForm from './ContactForm';
+
+const SERVICE_ID = "service_o1jbklr";
+const TEMPLATE_ID = "template_p8h58ur";
+const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
+
 const ContactUsScreen: React.FC = () => {
     const navigation = useNavigation<any>();
 
@@ -38,17 +44,18 @@ const ContactUsScreen: React.FC = () => {
             </View>
 
             <ScrollView contentContainerStyle={styles.content}>
-                {/* Banner */}
-                <View style={styles.banner}>
-                    <Ionicons name="chatbubbles" size={50} color="#06B6D4" />
-                    <Text style={styles.bannerTitle}>Get in Touch</Text>
-                    <Text style={styles.bannerText}>
-                        We'd love to hear from you. Choose your preferred method below.
-                    </Text>
+                
+                {/* Contact Form */}
+                <View style={{ marginBottom: 24 }}>
+                    <ContactForm 
+                        serviceId={SERVICE_ID} 
+                        templateId={TEMPLATE_ID} 
+                        publicKey={PUBLIC_KEY} 
+                    />
                 </View>
 
                 {/* Contact Methods */}
-                <Text style={styles.sectionTitle}>Contact Methods</Text>
+                <Text style={styles.sectionTitle}>Other Ways to Reach Us</Text>
                 {contactMethods.map((method) => (
                     <TouchableOpacity
                         key={method.id}
