@@ -210,11 +210,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Send us a Message</Text>
-        <Text style={styles.subHeaderText}>kindly fill the form below to send us your message.</Text>
-      </View>
-
       <View style={styles.formCard}>
         <Text style={styles.sectionTitle}>Contact Information</Text>
 
