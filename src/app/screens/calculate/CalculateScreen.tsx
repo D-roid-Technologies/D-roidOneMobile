@@ -96,20 +96,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#000105",
         padding: 16,
+        paddingTop: 60
     },
-    title: {
-        fontSize: 22,
-        fontWeight: "700",
-        color: "#ffffff",
-        textAlign: "center",
-        marginBottom: 4,
-    },
-    subtitle: {
-        fontSize: 14,
-        color: "#555",
-        textAlign: "center",
-        marginBottom: 20,
-    },
+    title: { fontSize: 28, fontWeight: "900", color: "#ffffff", textAlign: "left" },
+    subtitle: { fontSize: 14, color: "#64748b", textAlign: "left", marginBottom: 30 },
     grid: {
         flexDirection: "row",
         flexWrap: "wrap",

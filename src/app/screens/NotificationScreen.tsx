@@ -12,8 +12,6 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
         (state: RootState) => state.notifications.notifications
     );
 
-
-    // Load saved notifications from AsyncStorage
     useEffect(() => {
         const loadFromStorage = async () => {
             try {

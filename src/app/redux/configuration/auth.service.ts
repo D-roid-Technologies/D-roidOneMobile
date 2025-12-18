@@ -171,9 +171,7 @@ export class AuthService {
                 Toast.show({
                     type: 'success', // Uses the library's predefined success styling (which is usually green)
                     text1: 'Login Successful', // A title for the toast
-                    text2: "Your D'roid Account has been successfully created", // The main message
-                    // You typically don't pass raw style objects like background/color here, 
-                    // as the library handles it for the 'success' type.
+                    text2: "Your D'roid Account has been successfully created",
                 });
 
                 return { success: true };
@@ -220,89 +218,21 @@ export class AuthService {
                     userType?.toLowerCase() === "staff" ||
                     userType?.toLowerCase() === "admin";
 
-                // if (isUserActuallyStaff !== isStaff) {
-                //     await auth.signOut();
-                //     throw new Error(
-                //         isStaff
-                //             ? "This account is not a staff account. Please use the member login."
-                //             : "Staff accounts must log in through the Staff Login portal."
-                //     );
-                // }
-
-                // const updatedEntries =
-                //   updatedData?.user?.staff?.staffSignInAndOut || [];
-                // const updatedStaffDetails = {
-                //   staffGrossPay:
-                //     updatedData?.user?.staff?.staffDetails?.staffGrossPay || "",
-                //   staffTax: updatedData?.user?.staff?.staffDetails?.staffTax || "",
-                //   staffPosition:
-                //     updatedData?.user?.staff?.staffDetails?.staffPosition || "",
-                //   staffBank: updatedData?.user?.staff?.staffDetails?.staffBank || "",
-                //   staffAccountNmber:
-                //     updatedData?.user?.staff?.staffDetails?.staffAccountNmber || "",
-                //   staffAccountName:
-                //     updatedData?.user?.staff?.staffDetails?.staffAccountName || "",
-                //   staffStartDate:
-                //     updatedData?.user?.staff?.staffDetails?.staffStartDate || "",
-                // };
-                // const updatedStaffDocuments = updatedData?.user?.staff?.staffDoc || {};
-                // const updatedStaffLeave = updatedData?.user?.staff?.staffLeave || [];
-                // const updatedKnowledgeCity = updatedData?.user?.knowledgeCity || {};
-                // const updatedOnboarding = updatedData?.user?.onboard?.onboarding || [];
-                // const updatedMemberStatus =
-                //   updatedData?.user?.onboard?.memberStatus || [];
-                // const updatedTrainings = updatedData?.user?.trainings || [];
-                // const updatedPayslips = updatedData?.user?.payslips?.paySlip || [];
-                // const updatedProgressions = updatedData?.user?.progressions || [];
-                // const schedleData = updatedData?.schedules?.mySchedules || [];
-                // const toolBoxData = updatedData?.toolBox?.toolBoxInfo || [];
-                // const calculateData = updatedData?.calculate?.calculators || [];
-
-                // FIXED: Get notifications from correct path
+                const schedleData = fetchedUserData?.schedules?.mySchedles || [];;
                 const firestoreNotifications =
                     fetchedUserData.user?.onboard?.notifications || [];
 
-                // Update all Redux states
-                // store.dispatch(setPayslipData(updatedPayslips));
-                // store.dispatch(setKnowledgeCity(updatedKnowledgeCity));
-                // store.dispatch(setTrainings(updatedTrainings));
-                // store.dispatch(setAllMilestones(updatedProgressions));
-                // store.dispatch(setSignInAndOutData(updatedEntries));
-                // store.dispatch(setStaffDetails(updatedStaffDetails));
-
                 // Set notifications from Firestore to Redux
-                // store.dispatch(setNotifications(firestoreNotifications));
-
-                // try {
-                //   const { setStaffInfo } = await import("../slices/onboarding");
-                //   store.dispatch(setStaffInfo(updatedStaffDetails));
-                // } catch (_) {}
-
-                // store.dispatch(setStaffDocuments(updatedStaffDocuments));
-                // store.dispatch(setToolBox(toolBoxData));
-                // store.dispatch(setCalculate(calculateData));
-                // store.dispatch(setSchedules(schedleData));
+                store.dispatch(setEvents(schedleData))
                 // store.dispatch(setStaffLeave(updatedStaffLeave));
                 store.dispatch(
                     setUser({ ...primaryInformation, role: primaryInformation.role })
                 );
 
-                // Initialize notification service AFTER setting Firestore data
-                // try {
-                //   const { notificationsService } = await import(
-                //     "../../ui/notificationService/notifications.service"
-                //   );
-                //   await notificationsService.initializeNotifications();
-                // } catch (error) {
-                //   console.error("Failed to initialize notifications:", error);
-                // }
-
                 Toast.show({
                     type: 'success', // Uses the library's predefined success styling (which is usually green)
                     text1: 'Login Successful', // A title for the toast
-                    text2: 'We have successfully logged you into your account.', // The main message
-                    // You typically don't pass raw style objects like background/color here, 
-                    // as the library handles it for the 'success' type.
+                    text2: 'We have successfully logged you into your account.',
                 });
 
                 return userCredential;
@@ -540,32 +470,32 @@ export class AuthService {
         }
     }
     async getCurrentUser(): Promise<any> {
-  console.log("authService.getCurrentUser() called…");
+//   console.log("authService.getCurrentUser() called…");
 
   return new Promise((resolve, reject) => {
     try {
       const unsubscribe = onAuthStateChanged(
         auth,
         (user) => {
-          console.log("onAuthStateChanged fired. User =", user);
+        //   console.log("onAuthStateChanged fired. User =", user);
 
           unsubscribe();
 
           if (user) {
-            console.log("User authenticated. UID:", user.uid);
+            // console.log("User authenticated. UID:", user.uid);
             resolve(user);
           } else {
-            console.log("No authenticated user found!");
+            // console.log("No authenticated user found!");
             reject(new Error("User not authenticated"));
           }
         },
         (error) => {
-          console.log("onAuthStateChanged ERROR:", error);
+        //   console.log("onAuthStateChanged ERROR:", error);
           reject(error);
         }
       );
     } catch (err) {
-      console.log("getCurrentUser() unexpected error:", err);
+    //   console.log("getCurrentUser() unexpected error:", err);
       reject(err);
     }
   });
