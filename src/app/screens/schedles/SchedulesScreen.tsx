@@ -63,6 +63,49 @@ const CalendarScreen: React.FC = () => {
     setSelectedDate(newDate.toISOString().split("T")[0]);
   };
 
+  // Build marked dates with red dots for event days
+  const getMarkedDates = () => {
+    const marks: any = {};
+
+    events.forEach((event) => {
+      let current = new Date(event.startDate);
+      const end = new Date(event.endDate);
+
+      while (current <= end) {
+        const dateString = current.toISOString().split("T")[0];
+
+        marks[dateString] = {
+          ...(marks[dateString] || {}),
+          marked: true,
+          dotColor: "red",
+        };
+
+        current.setDate(current.getDate() + 1);
+      }
+    });
+
+    // Selected date styling (overrides dot only visually)
+    marks[selectedDate] = {
+      ...(marks[selectedDate] || {}),
+      selected: true,
+      selectedColor: "#C7D2FE",
+      selectedTextColor: "#000c3a",
+      marked: true,
+      dotColor: "red",
+    };
+
+    // Today styling
+    const todayString = today.toISOString().split("T")[0];
+    marks[todayString] = {
+      ...(marks[todayString] || {}),
+      marked: true,
+      dotColor: "red",
+    };
+
+    return marks;
+  };
+
+
 
 
   return (
@@ -97,30 +140,21 @@ const CalendarScreen: React.FC = () => {
 
       {/* Calendar */}
       {viewMode === "month" && (
-        <Calendar
-          onDayPress={onDayPress}
-          markedDates={{
-            [selectedDate]: {
-              selected: true,
-              selectedColor: "#C7D2FE", // green background
-              selectedTextColor: "#000c3a", // yellow text
-            },
-            [today.toISOString().split("T")[0]]: {
-              selected: true,
-              selectedColor: "green", // optional: keep today a different color
-              selectedTextColor: "#ffffff",
-            },
-          }}
-          theme={{
-            backgroundColor: "#000105",
-            calendarBackground: "#000105",
-            textSectionTitleColor: "#ffffff",
-            dayTextColor: "#ffffff",
-            monthTextColor: "#ffffff",
-            arrowColor: "#C7D2FE",
-            todayTextColor: "#C7D2FE",
-          }}
-        />
+       <Calendar
+       onDayPress={onDayPress}
+       markedDates={getMarkedDates()}
+       theme={{
+         backgroundColor: "#000105",
+         calendarBackground: "#000105",
+         textSectionTitleColor: "#ffffff",
+         dayTextColor: "#ffffff",
+         monthTextColor: "#ffffff",
+         arrowColor: "#C7D2FE",
+         todayTextColor: "#C7D2FE",
+       }}
+     />
+     
+
 
       )}
 
@@ -145,10 +179,8 @@ const CalendarScreen: React.FC = () => {
           firstDay={1}
           hideExtraDays
           onDayPress={onDayPress}
-          markingType="period"
-          markedDates={{
-            [selectedDate]: { selected: true, selectedColor: "#C7D2FE" },
-          }}
+          markingType="dot"
+          markedDates={getMarkedDates()}
           theme={{
             backgroundColor: "#000105",
             calendarBackground: "#000105",
@@ -191,20 +223,9 @@ const CalendarScreen: React.FC = () => {
 export default CalendarScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000105", paddingTop: 20, paddingHorizontal: 16 },
-  title: {
-    fontSize: 22,
-    fontWeight: "900",
-    color: "#ffffff",
-    textAlign: "center",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#C7D2FE",
-    textAlign: "center",
-    marginBottom: 20,
-  },
+  container: { flex: 1, backgroundColor: "#000105", paddingTop: 60, paddingHorizontal: 16, },
+  title: { fontSize: 28, fontWeight: "900", color: "#ffffff", textAlign: "left" },
+  subtitle: { fontSize: 14, color: "#94A3B8", textAlign: "left", marginBottom: 30 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
   headerText: { color: "#fff", fontSize: 18, fontWeight: "700" },
   navButton: { padding: 8 },

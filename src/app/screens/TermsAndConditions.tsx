@@ -17,7 +17,7 @@ const TermsAndConditions: React.FunctionComponent = ({ navigation }: any) => {
             <View style={styles.header}>
                 <View style={styles.topLinksContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-                        <Text style={styles.loginLink}>Back to Signup</Text>
+                        <Text style={styles.loginLink}>Signup</Text>
                     </TouchableOpacity>
                 </View>
 

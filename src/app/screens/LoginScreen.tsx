@@ -72,7 +72,7 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
             >
                 <View style={styles.topLinksContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-                        <Text style={styles.loginLink}>Back to Signup</Text>
+                        <Text style={styles.loginLink}>Signup</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -174,8 +174,9 @@ const styles = StyleSheet.create({
     },
     loginLink: {
         color: '#C7D2FE',
-        fontSize: 14,
+        fontSize: 16,
         textDecorationLine: 'underline',
+        fontWeight: "300"
     },
     title: {
         fontSize: 28,

@@ -378,11 +378,14 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "#000105", padding: 16 },
     title: { fontSize: 22, fontWeight: "700", color: "#fff", marginBottom: 16, textAlign: "center" },
     input: {
-        backgroundColor: "#C7D2FE",
-        color: "#000000",
+        width: "100%",
         padding: 12,
-        // borderRadius: 8,
-        marginBottom: 16,
+        borderRadius: 5,
+        backgroundColor: "#C7D2FE", // Light blue input background
+        borderWidth: 1,
+        borderColor: "#C7D2FE",
+        color: "#000105", // Dark text in light input
+        marginBottom: 10
     },
     headerContainer: {
         flexDirection: "row",
@@ -392,12 +395,13 @@ const styles = StyleSheet.create({
     },
     pickerContainer: {
         backgroundColor: "#C7D2FE",
-        // borderRadius: 8,
+        borderRadius: 5,
         marginBottom: 16,
         overflow: "hidden",
     },
     picker: {
         color: "#000000",
+        borderRadius: 5
     },
     sectionTitle: { color: "#fff", marginBottom: 10, fontWeight: "600", fontSize: 16 },
     row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
@@ -420,7 +424,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#C7D2FE",
         width: 40,
         height: 40,
-        // borderRadius: 8,
         justifyContent: "center",
         alignItems: "center",
     },
@@ -428,7 +431,7 @@ const styles = StyleSheet.create({
     saveButton: {
         backgroundColor: "#C7D2FE",
         padding: 16,
-        // borderRadius: 12,
+        borderRadius: 5,
         alignItems: "center",
         marginTop: 24,
     },

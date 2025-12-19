@@ -6,7 +6,8 @@ export type MembershipTierState = {
   nextTier?: string;
   totalHours: number;
   progressPercentage: number;
-  status: string
+  status: string,
+  desc: string
 };
 
 const initialState: MembershipTierState = {
@@ -14,7 +15,8 @@ const initialState: MembershipTierState = {
   nextTier: "Gold",
   totalHours: 0,
   progressPercentage: 33,
-  status: "Active"
+  status: "Active",
+  desc: "You are making great progress on your membership journey."
 };
 
 export const membershipTierSlice = createSlice({
@@ -44,7 +46,8 @@ export const membershipTierSlice = createSlice({
         nextTier: "Gold",
         totalHours: 0,
         progressPercentage: 33,
-        status: "Active"
+        status: "Active",
+        desc: "You are making great progress on your membership journey."
       };
     },
   },

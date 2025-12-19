@@ -63,6 +63,7 @@ export const eventSlice = createSlice({
 
         // Replace all events (useful for initial load)
         setEvents: (state, action: PayloadAction<Event[]>) => {
+            // console.log(state.events)
             state.events = action.payload;
         },
     },

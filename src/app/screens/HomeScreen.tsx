@@ -33,7 +33,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const dispatch = useDispatch<AppDispatch>();
     const count = useSelector((state: RootState) => state.notifications.notifications.length);
 
-    console.log(count)
+    // console.log(count)
     const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
         dispatch(loadNotifications());
@@ -235,7 +235,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         { title: "Personal Details", icon: "user", color: "#3B82F6", type: "all" },
         { title: "Services", icon: "cogs", color: "#10B981", type: "all" },
         { title: "Careers", icon: "briefcase", color: "#F59E0B", type: "all" },
-        { title: "Take Tests", icon: "clipboard-check", color: "#8B5CF6", type: "all" },
+        { title: "Trainings / Tests", icon: "clipboard-check", color: "#8B5CF6", type: "all" },
         { title: "Tasks", icon: "tasks", color: "#4F46E5", type: "staff" },                // Indigo
         { title: "Payslip", icon: "money-bill-alt", color: "#14B8A6", type: "staff" },     // Teal
         { title: "Onboarding", icon: "user-plus", color: "#EAB308", type: "staff" },       // Yellow
@@ -586,7 +586,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingVertical: 20
-        // backgroundColor: "#000c3a"
     },
     statCard: {
         backgroundColor: "#000c3a",

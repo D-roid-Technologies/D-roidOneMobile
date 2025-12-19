@@ -316,11 +316,11 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
 
     const renderUserTypePicker = () => (
         <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Select User Type</Text>
+            <Text style={styles.inputLabel}>User Type</Text>
             <View style={[styles.input, { paddingHorizontal: 0, paddingVertical: 0, height: 48 }]}>
                 {/* Placeholder for Picker component */}
                 <TextInput
-                    placeholder="Select User Type (e.g., Member or Staff)"
+                    placeholder="User Type (e.g., Member or Staff)"
                     value={formData.userType}
                     onChangeText={(v) => handleChange('userType', v)}
                     style={{ flex: 1, paddingHorizontal: 12, color: formData.userType ? '#000' : '#BAB8B8' }}
@@ -357,9 +357,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
             <ScrollView
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
-            >
-
-                <View style={styles.contentBlock}>
+            >                <View style={styles.contentBlock}>
                     <View style={styles.topLinksContainer}>
                         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                             <Text style={styles.loginLink}>Login</Text>

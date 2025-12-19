@@ -65,13 +65,13 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="Progression" component={ProgressionScreen} />
                     <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
                     <Stack.Screen name="EventDetail" component={EventDetailScreen} />
-                    
+
                     {/* Quick Actions - Member Screens */}
                     <Stack.Screen name="Personal Details" component={PersonalDetailsScreen} />
                     <Stack.Screen name="Careers" component={CareersScreen} />
-                    <Stack.Screen name="Take Tests" component={TakeTestsScreen} />
+                    <Stack.Screen name="Trainings / Tests" component={TakeTestsScreen} />
                     <Stack.Screen name="Contact Us" component={ContactUsScreen} />
-                    
+
                     {/* Quick Actions - Staff Screens */}
                     <Stack.Screen name="Tasks" component={TasksScreen} />
                     <Stack.Screen name="Payslip" component={PayslipScreen} />
