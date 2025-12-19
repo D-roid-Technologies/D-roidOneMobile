@@ -1,46 +1,40 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { ChevronLeft } from "lucide-react-native";
 
-interface BackButtonProps {
-  navigation?: any;
-  navigateTo?: string;
-  color?: string;
-  size?: number;
-  onPress?: () => void;
+interface Props {
+  onPress: () => void;
+  style?: ViewStyle;
+  iconColor?: string;
+  backgroundColor?: string;
 }
 
-const BackButton: React.FC<BackButtonProps> = ({
-  navigation,
-  navigateTo = "BottomTabs", // Default navigation target
-  color = "#ffffff",
-  size = 24,
-  onPress,
+const BackButton: React.FC<Props> = ({ 
+  onPress, 
+  style, 
+  iconColor = "#111827", 
+  backgroundColor = "#F3F4F6" 
 }) => {
-  const handlePress = () => {
-    if (onPress) {
-      onPress();
-    } else if (navigation) {
-      navigation.navigate(navigateTo);
-    }
-  };
-
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={styles.backButton}
-      activeOpacity={0.7}
+    <TouchableOpacity 
+      onPress={onPress} 
+      style={[styles.btn, { backgroundColor }, style]}
     >
-      <Ionicons name="arrow-back" size={size} color={color} />
+      <ChevronLeft size={26} color={iconColor} />
     </TouchableOpacity>
   );
 };
 
+export default BackButton;
+
 const styles = StyleSheet.create({
-  backButton: {
-    padding: 8,
-    borderRadius: 8,
+  btn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
-export default BackButton;
+

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Clock, Users, Award } from "lucide-react-native";
 
@@ -27,7 +27,7 @@ import {
 } from "./data/index";
 
 import ServiceCard from "./ServiceCard";
-import BackButton from "./components/BackButton";
+import BackButton from "../../../components/BackButton";
 import WhatsAppButton from "./WhatsAppButton";
 import ServiceDetailView, { ServiceDetailData } from "./components/ServiceDetailView";
 import StoryReader from "./components/StoryReader";
@@ -371,46 +371,62 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
       {/* Header Row */}
       <View style={styles.header}>
-        <BackButton onPress={goBack} />
+        <BackButton 
+            onPress={goBack} 
+            backgroundColor="rgba(255,255,255,0.2)" 
+            iconColor="#FFFFFF" 
+        />
         <Text style={styles.title}>{title}</Text>
+        <View style={{ width: 40 }} /> {/* Placeholder to balance the header */}
       </View>
 
-      {view === "HOME" && renderHome()}
+      <View style={styles.contentContainer}>
+        {view === "HOME" && renderHome()}
 
-      {view === "SOFTWARE_CLASSES" && renderSoftwareClasses()}
-      {view === "TECH_STACKS" && renderTechStacks()}
-      {view === "TECH_DETAIL" && renderTechDetail()}
+        {view === "SOFTWARE_CLASSES" && renderSoftwareClasses()}
+        {view === "TECH_STACKS" && renderTechStacks()}
+        {view === "TECH_DETAIL" && renderTechDetail()}
 
-      {view === "TRAININGS" && renderTrainings()}
-      {view === "TRAINING_DETAIL" && renderTrainingDetail()}
+        {view === "TRAININGS" && renderTrainings()}
+        {view === "TRAINING_DETAIL" && renderTrainingDetail()}
 
-      {view === "CONSULTING" && renderConsulting()}
-      {view === "CONSULTING_DETAIL" && renderConsultingDetail()}
+        {view === "CONSULTING" && renderConsulting()}
+        {view === "CONSULTING_DETAIL" && renderConsultingDetail()}
 
-      {view === "ANIMATION" && renderAnimation()}
-      {view === "ANIMATION_DETAIL" && renderAnimationDetail()}
+        {view === "ANIMATION" && renderAnimation()}
+        {view === "ANIMATION_DETAIL" && renderAnimationDetail()}
 
-      <WhatsAppButton phone={whatsappPhone} />
-    </View>
+        <WhatsAppButton phone={whatsappPhone} />
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default ServicesScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16, backgroundColor: "#FFFFFF" },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-    gap: 16, // Space between back button and title
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#071D6A",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  title: { fontSize: 24, fontWeight: "900", color: "#111827" },
+  title: { fontSize: 20, fontWeight: "700", color: "#FFFFFF", textAlign: 'center', flex: 1 },
+  contentContainer: { flex: 1, backgroundColor: "#FFFFFF", paddingHorizontal: 16, paddingTop: 16 },
   sectionWrap: { flex: 1 },
   subHeader: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 16 },
   list: { paddingBottom: 120 },
   columnWrapper: { justifyContent: "space-between" },
+  // Keeping container in case it's referenced elsewhere, but unused now
+  container: { flex: 1 },
 });

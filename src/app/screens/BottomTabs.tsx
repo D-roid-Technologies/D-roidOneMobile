@@ -1,6 +1,5 @@
 // src/screens/UserDashboard.tsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import HomeScreen from "../../app/screens/HomeScreen";
@@ -9,14 +8,6 @@ import ToolboxsScreen from "../screens/toolbox/ToolboxScreen";
 import CalculatorsScreen from "../screens/calculate/CalculateScreen";
 
 const Tab = createBottomTabNavigator();
-
-const CalculateScreen = () => (
-    <View style={styles.center}>
-        <Text style={styles.title}>🧮 Calculate</Text>
-        <Text style={styles.subtitle}>Access tools for estimates and computations</Text>
-    </View>
-);
-
 
 export default function UserDashboard() {
     return (
@@ -60,24 +51,3 @@ export default function UserDashboard() {
         </Tab.Navigator>
     );
 }
-
-const styles = StyleSheet.create({
-    center: {
-        flex: 1,
-        backgroundColor: "#F9FAFB",
-        padding: 20,
-        justifyContent: "center",
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: "700",
-        color: "#071D6A",
-        textAlign: "center",
-        marginBottom: 8,
-    },
-    subtitle: {
-        fontSize: 14,
-        color: "#555",
-        textAlign: "center",
-    },
-});

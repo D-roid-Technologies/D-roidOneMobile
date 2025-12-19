@@ -706,7 +706,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
     <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
       {/* Custom Header with Back Button */}
       <View style={styles.header}>
-        <BackButton navigation={navigation} />
+        <BackButton onPress={() => navigation.goBack()} backgroundColor="rgba(255,255,255,0.2)" iconColor="#FFFFFF" />
         <Text style={styles.headerTitle}>Personal Details</Text>
         <View style={styles.headerPlaceholder} />
       </View>
