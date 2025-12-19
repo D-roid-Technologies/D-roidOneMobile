@@ -162,41 +162,13 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                     const geoApi = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
 
                     try {
-                        // Create a timeout promise
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-                        const response = await fetch(geoApi, { signal: controller.signal });
-                        clearTimeout(timeoutId);
-
-                        if (!response.ok) {
-                             throw new Error('Network response was not ok');
-                        }
-                        
+                        const response = await fetch(geoApi);
                         const data = await response.json();
+
                         store.dispatch(addLocation(data));
                         setLoadingLocation(false);
                     } catch (e) {
-                        console.warn("Geocoding API failed or timed out, using fallback:", e);
-                        // Fallback data for Los Angeles (matching the mocked coordinates)
-                        const fallbackData = {
-                            city: "Los Angeles",
-                            continent: "North America",
-                            continentCode: "NA",
-                            countryCode: "US",
-                            countryName: "United States",
-                            latitude: latitude,
-                            locality: "Los Angeles",
-                            localityInfo: { administrative: [], informative: [] },
-                            localityLanguageRequested: "en",
-                            longitude: longitude,
-                            lookupSource: "fallback",
-                            plusCode: "",
-                            postcode: "90012",
-                            principalSubdivision: "California",
-                            principalSubdivisionCode: "CA",
-                        };
-                        store.dispatch(addLocation(fallbackData));
+                        console.error("Geocoding API failed:", e);
                         setLoadingLocation(false);
                     }
                 },
@@ -385,8 +357,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
             <ScrollView
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.contentBlock}>
+            >                <View style={styles.contentBlock}>
                     <View style={styles.topLinksContainer}>
                         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                             <Text style={styles.loginLink}>Login</Text>
