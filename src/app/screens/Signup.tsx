@@ -164,7 +164,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                     try {
                         // Create a timeout promise
                         const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+                        const timeoutId = setTimeout(() => controller.abort(), 5000); 
 
                         const response = await fetch(geoApi, { signal: controller.signal });
                         clearTimeout(timeoutId);
@@ -178,7 +178,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                         setLoadingLocation(false);
                     } catch (e) {
                         console.warn("Geocoding API failed or timed out, using fallback:", e);
-                        // Fallback data for Los Angeles (matching the mocked coordinates)
                         const fallbackData = {
                             city: "Los Angeles",
                             continent: "North America",
