@@ -9,57 +9,103 @@ import {
     ScrollView,
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
-import ScientificCalculator from "../calculate/tools/sc"
+import { useSelector } from "react-redux";
+import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
 
-const tools = [
-    { id: "1", title: "Basic Calculator", icon: "calculator", color: "#3B82F6" },
-    { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981" },
-    // { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B" },
-    // { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6" },
-    // { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444" },
+export const tools = [
+    { id: "1", title: "Basic Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
+    { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981", requiredTier: "Silver" },
+    { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B", requiredTier: "Gold" },
+    { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6", requiredTier: "Silver" },
+    { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444", requiredTier: "Gold" },
+    { id: "6", title: "Unit Converter", icon: "ruler-combined", color: "#6366F1", requiredTier: "Silver" },
+    { id: "7", title: "Investment Calc", icon: "chart-line", color: "#EC4899", requiredTier: "Premium" },
+    { id: "8", title: "Discount Calc", icon: "percentage", color: "#14B8A6", requiredTier: "Silver" },
+    { id: "9", title: "Fuel Cost Calc", icon: "gas-pump", color: "#F43F5E", requiredTier: "Gold" },
+    { id: "10", title: "Mortgage Calc", icon: "home", color: "#8B5CF6", requiredTier: "Premium" },
 ];
 
 const CalculatorsScreen: React.FC = () => {
     const [selectedTool, setSelectedTool] = useState<string | null>(null);
+    const userMembership = useSelector(selectMembershipTier);
 
     const handleClose = () => setSelectedTool(null);
+
+    // Helper to determine if a tool is accessible based on tier hierarchy
+    const isTierAccessible = (required: string) => {
+        const tiers = ["Silver", "Gold", "Premium"];
+        return tiers.indexOf(userMembership.tier) >= tiers.indexOf(required);
+    };
 
     const renderToolContent = (toolName: string) => {
         switch (toolName) {
             case "Basic Calculator":
-                return <ScientificCalculator />;
+                return <Text style={styles.toolPlaceholder}>🔢 Basic Calculator UI</Text>;
             case "BMI Calculator":
-                return <Text style={styles.toolPlaceholder}>⚖️ BMI Calculator Tool</Text>;
+                return <Text style={styles.toolPlaceholder}>⚖️ BMI Calculator UI</Text>;
             case "Loan Calculator":
-                return <Text style={styles.toolPlaceholder}>🏦 Loan Calculator Tool</Text>;
+                return <Text style={styles.toolPlaceholder}>💰 Loan Calculator UI</Text>;
             case "Tip Calculator":
-                return <Text style={styles.toolPlaceholder}>💰 Tip Calculator Tool</Text>;
+                return <Text style={styles.toolPlaceholder}>💸 Tip Calculator UI</Text>;
             case "Currency Converter":
-                return <Text style={styles.toolPlaceholder}>💱 Currency Converter Tool</Text>;
+                return <Text style={styles.toolPlaceholder}>💱 Currency Converter UI</Text>;
+            case "Unit Converter":
+                return <Text style={styles.toolPlaceholder}>📏 Unit Converter UI</Text>;
+            case "Investment Calc":
+                return <Text style={styles.toolPlaceholder}>📈 Investment Calculator UI</Text>;
+            case "Discount Calc":
+                return <Text style={styles.toolPlaceholder}>🏷️ Discount Calculator UI</Text>;
+            case "Fuel Cost Calc":
+                return <Text style={styles.toolPlaceholder}>⛽ Fuel Cost Calculator UI</Text>;
+            case "Mortgage Calc":
+                return <Text style={styles.toolPlaceholder}>🏠 Mortgage Calculator UI</Text>;
             default:
-                return <Text style={styles.toolPlaceholder}>Tool Not Found</Text>;
+                return <Text style={styles.toolPlaceholder}>Tool Interface Coming Soon</Text>;
         }
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Calculation Tools</Text>
+            <Text style={styles.title}>Calculators</Text>
             <Text style={styles.subtitle}>
                 Access various calculators for your needs
             </Text>
 
-            <View style={styles.grid}>
-                {tools.map((tool) => (
-                    <TouchableOpacity
-                        key={tool.id}
-                        style={[styles.toolCard, { backgroundColor: tool.color }]}
-                        onPress={() => setSelectedTool(tool.title)}
-                    >
-                        <FontAwesome5 name={tool.icon as any} size={28} color="#fff" />
-                        <Text style={styles.toolText}>{tool.title}</Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+            {/* 1. Scrollable Tools List */}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+            >
+                <View style={styles.grid}>
+                    {tools.map((tool) => {
+                        const isLocked = !isTierAccessible(tool.requiredTier);
+
+                        return (
+                            <TouchableOpacity
+                                key={tool.id}
+                                style={[
+                                    styles.toolCard,
+                                    { backgroundColor: tool.color, opacity: isLocked ? 0.5 : 1 }
+                                ]}
+                                onPress={() => !isLocked && setSelectedTool(tool.title)}
+                                disabled={isLocked}
+                            >
+                                {/* 2. Membership Type Badge */}
+                                <View style={styles.tierBadge}>
+                                    <Text style={styles.tierBadgeText}>{tool.requiredTier}</Text>
+                                </View>
+
+                                <FontAwesome5 name={tool.icon as any} size={28} color="#fff" />
+                                <Text style={styles.toolText}>{tool.title}</Text>
+
+                                {isLocked && (
+                                    <Ionicons name="lock-closed" size={18} color="#fff" style={styles.lockIcon} />
+                                )}
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+            </ScrollView>
 
             {/* Fullscreen Modal for Tools */}
             <Modal visible={!!selectedTool} animationType="slide" transparent={false}>
@@ -108,25 +154,47 @@ const styles = StyleSheet.create({
     toolCard: {
         width: width / 2 - 24,
         height: 140,
-        borderRadius: 12,
+        borderRadius: 16, // Smoother corners
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 16,
         elevation: 3,
+        position: 'relative', // For absolute badge placement
     },
     toolText: {
         color: "#fff",
         fontWeight: "700",
-        fontSize: 16,
+        fontSize: 14,
         marginTop: 10,
         textAlign: "center",
+        paddingHorizontal: 5
+    },
+    tierBadge: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Darker for better contrast on colors
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 6,
+    },
+    tierBadgeText: {
+        color: '#fff',
+        fontSize: 9,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+    },
+    lockIcon: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
     },
     modalContainer: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#F8FAFC", // Light background for the actual tool interface
     },
     modalHeader: {
-        backgroundColor: "#203499",
+        backgroundColor: "#000c3a", // Matches theme
         paddingTop: 50,
         paddingBottom: 16,
         paddingHorizontal: 20,
@@ -144,11 +212,10 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         flex: 1,
-        padding: 20,
     },
     toolPlaceholder: {
         fontSize: 18,
-        color: "#071D6A",
+        color: "#000105",
         textAlign: "center",
     },
 });

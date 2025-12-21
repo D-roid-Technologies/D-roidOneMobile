@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     View,
     Text,
@@ -10,7 +10,9 @@ import {
     Platform,
     Modal, // <-- Added Modal
     Dimensions, // <-- Added Dimensions for calculating height
-    Alert, // Using Alert for the simple quick action notification as per existing code
+    Alert,
+    AppState,
+    AppStateStatus, // Using Alert for the simple quick action notification as per existing code
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { ASSETS } from "../constants/Assets";
@@ -21,11 +23,11 @@ import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
+import { addHours } from "../redux/slice/membershiptierslice";
 
 const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
 const HomeScreen: React.FC = ({ navigation }: any) => {
-    // Redux Hooks
     const userMain: any = useSelector((state: RootState) => state.user);
     const userTypee = userMain.userType;
     const membershipTier = useSelector((state: RootState) => state.membershipTier);
@@ -33,16 +35,43 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const dispatch = useDispatch<AppDispatch>();
     const count = useSelector((state: RootState) => state.notifications.notifications.length);
 
-    // console.log(count)
     const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
         dispatch(loadNotifications());
     }, []);
+    const [totalSeconds, setTotalSeconds] = useState(0);
+    const appState = useRef(AppState.currentState);
 
-    const memberStats = [
-        { title: "Membership", value: "Active", change: "Since 2023" },
-        { title: "Member Level", value: "Silver", change: "Next: Gold" },
-    ];
+    useEffect(() => {
+        const subscription = AppState.addEventListener("change", (nextAppState: AppStateStatus) => {
+            // If the app is going away (background/inactive), sync seconds to Redux
+            if (appState.current === "active" && nextAppState.match(/inactive|background/)) {
+                syncTimeToRedux();
+            }
+            appState.current = nextAppState;
+        });
+
+        const interval = setInterval(() => {
+            if (appState.current === "active") {
+                setTotalSeconds((prev) => prev + 1);
+            }
+        }, 1000);
+
+        return () => {
+            subscription.remove();
+            clearInterval(interval);
+            // Also sync when the component unmounts
+            syncTimeToRedux();
+        };
+    }, [totalSeconds]);
+
+    const syncTimeToRedux = () => {
+        if (totalSeconds > 0) {
+            const hoursToAdd = totalSeconds / 3600;
+            dispatch(addHours(hoursToAdd));
+            setTotalSeconds(0);
+        }
+    };
 
     const eventsPosts = [
         {
@@ -249,18 +278,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         (action) => action.type === "all" || action.type === userTypee.toLowerCase()
     );
 
-    const events = [
-        { title: "AI & Automation Expo", date: "Oct 20, 2025" },
-        { title: "Tech Careers Fair", date: "Nov 12, 2025" },
-        { title: "Mobile Dev Bootcamp", date: "Dec 05, 2025" },
-    ];
-
-    const analytics = [
-        { metric: "Projects", value: "15" },
-        { metric: "Completed Tasks", value: "68" },
-        { metric: "Active Teams", value: "4" },
-    ];
-
     const getGreeting = (): string => {
         const currentHour = new Date().getHours();
 
@@ -398,9 +415,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                     {/* Total Hours */}
                     <View style={styles.statCard}>
                         <Text style={styles.statTitle}>Total Hours</Text>
-                        <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours} Hours</Text>
+                        <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours.toFixed(3)} Hours</Text>
                         <Text style={styles.statChange}>
-                            Membership Progress: {membershipTier.progressPercentage}%
+                            Membership: {membershipTier.progressPercentage.toFixed(2)}%
                         </Text>
                     </View>
                 </View>

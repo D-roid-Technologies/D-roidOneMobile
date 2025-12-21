@@ -27,36 +27,6 @@ const ProgressionHeader: React.FunctionComponent = () => {
         desc
     } = useSelector(selectMembershipTier);
 
-    const [totalSeconds, setTotalSeconds] = useState(0);
-    const appState = useRef(AppState.currentState);
-
-    useEffect(() => {
-        // 1. Handle background/foreground transitions
-        const subscription = AppState.addEventListener("change", (nextAppState: AppStateStatus) => {
-            appState.current = nextAppState;
-        });
-
-        // 2. The Timer Logic
-        const interval = setInterval(() => {
-            if (appState.current === "active") {
-                setTotalSeconds((prev) => prev + 1);
-            }
-        }, 1000);
-
-        // 3. Clean up on unmount
-        return () => {
-            subscription.remove();
-            clearInterval(interval);
-        };
-    }, []);
-
-    const formatTime = (totalSeconds: number) => {
-        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-
-        return `${hours}-${minutes}-${seconds}`;
-    };
 
     return (
         <View style={styles.safeArea}>
@@ -107,7 +77,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     <View style={styles.timeBox}>
                         <Text style={styles.timeLabel}>Total Time in App</Text>
                         <Text style={styles.timeValue}>
-                            {totalHours} hours - {formatTime(totalSeconds)}
+                            {totalHours} hours
                         </Text>
                     </View>
                 </View>

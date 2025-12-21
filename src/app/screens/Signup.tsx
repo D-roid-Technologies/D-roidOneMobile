@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { authService } from "../redux/configuration/auth.service";
 import { RootState, store } from "../redux/store";
 import { addLocation } from "../redux/slice/location";
+import { Ionicons } from "@expo/vector-icons";
 
 // Placeholder for Redux RootState/LocationState (Simulated)
 interface UserLocation {
@@ -103,6 +104,8 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
     );
 
     const [loadingLocation, setLoadingLocation] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [formData, setFormData] = useState<any>({
         firstName: "",
@@ -305,12 +308,6 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
 
         } catch (error: any) {
             setText("Sign Up");
-            // Error Toast (RN style)
-            // Toast.show({
-            //     type: 'error',
-            //     text1: 'Registration Failed',
-            //     text2: error.message || "User registration failed.",
-            // });
         }
     };
 
@@ -318,36 +315,59 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
         <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>User Type</Text>
             <View style={[styles.input, { paddingHorizontal: 0, paddingVertical: 0, height: 48 }]}>
-                {/* Placeholder for Picker component */}
                 <TextInput
                     placeholder="User Type (e.g., Member or Staff)"
                     value={formData.userType}
                     onChangeText={(v) => handleChange('userType', v)}
                     style={{ flex: 1, paddingHorizontal: 12, color: formData.userType ? '#000' : '#BAB8B8' }}
                 />
-
             </View>
-            {formErrors.userType && (
-                <Text style={styles.errorText}>{formErrors.userType}</Text>
-            )}
+            {formErrors.userType && <Text style={styles.errorText}>{formErrors.userType}</Text>}
         </View>
     );
 
-    const renderTextInput = (name: keyof any, placeholder: string, secure: boolean = false, keyboardType: 'default' | 'email-address' | 'numeric' = 'default') => (
-        <View style={styles.inputContainer}>
-            <TextInput
-                style={styles.input}
-                placeholder={placeholder}
-                value={String(formData[name] || '')}
-                onChangeText={(v) => handleChange(name, v)}
-                secureTextEntry={secure}
-                keyboardType={keyboardType}
-            />
-            {formErrors[name as keyof FormErrors] && (
-                <Text style={styles.errorText}>{formErrors[name as keyof FormErrors]}</Text>
-            )}
-        </View>
-    );
+    const renderTextInput = (
+        name: keyof any,
+        placeholder: string,
+        isPasswordField: boolean = false,
+        keyboardType: 'default' | 'email-address' | 'numeric' = 'default'
+    ) => {
+
+        // Determine if we should show the toggle icon
+        const isConfirmPassword = name === 'confirmPassword';
+        const isVisible = isConfirmPassword ? showConfirmPassword : showPassword;
+        const toggleVisibility = isConfirmPassword
+            ? () => setShowConfirmPassword(!showConfirmPassword)
+            : () => setShowPassword(!showPassword);
+
+        return (
+            <View style={styles.inputContainer}>
+                <View style={styles.passwordWrapper}>
+                    <TextInput
+                        style={[styles.input, { flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 }]}
+                        placeholder={placeholder}
+                        value={String(formData[name] || '')}
+                        onChangeText={(v) => handleChange(name, v)}
+                        secureTextEntry={isPasswordField ? !isVisible : false}
+                        keyboardType={keyboardType}
+                        placeholderTextColor="#777"
+                    />
+                    {isPasswordField && (
+                        <TouchableOpacity style={styles.eyeIcon} onPress={toggleVisibility}>
+                            <Ionicons
+                                name={isVisible ? "eye-off-outline" : "eye-outline"}
+                                size={20}
+                                color="#000"
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View>
+                {formErrors[name as keyof FormErrors] && (
+                    <Text style={styles.errorText}>{formErrors[name as keyof FormErrors]}</Text>
+                )}
+            </View>
+        );
+    };
 
     return (
         <KeyboardAvoidingView
@@ -357,7 +377,8 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
             <ScrollView
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
-            >                <View style={styles.contentBlock}>
+            >
+                <View style={styles.contentBlock}>
                     <View style={styles.topLinksContainer}>
                         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                             <Text style={styles.loginLink}>Login</Text>
@@ -384,7 +405,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                     {renderTextInput('password', 'Password', true)}
                     {renderTextInput('confirmPassword', 'Confirm Password', true)}
 
-                    {/* Privacy section */}
+                    {/* FIXED PRIVACY SECTION */}
                     <View style={styles.policyRow}>
                         <View style={styles.checkboxContainer}>
                             <TouchableOpacity
@@ -399,24 +420,23 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                                 {formData.agreeToPolicy && AntDesign.name('check', 14, '#FFF')}
                             </TouchableOpacity>
 
-                            <View style={styles.policyText}>
-                                <Text style={styles.policyText}>
-                                    By clicking you accept our
-                                    <Text
-                                        style={styles.policyLink}
-                                        onPress={() => navigation.navigate("TAC")}
-                                    >
-                                        {" "}Terms and Condition
-                                    </Text>
-                                    {" "}and{" "}
-                                    <Text
-                                        style={styles.policyLink}
-                                        onPress={() => navigation.navigate("PAP")}
-                                    >
-                                        Privacy Policy
-                                    </Text>
+                            {/* FIX: Ensuring all nested strings are within <Text> and removing external strings */}
+                            <Text style={styles.policyText}>
+                                <Text>By clicking you accept our </Text>
+                                <Text
+                                    style={styles.policyLink}
+                                    onPress={() => navigation.navigate("TAC")}
+                                >
+                                    Terms and Condition
                                 </Text>
-                            </View>
+                                <Text> and </Text>
+                                <Text
+                                    style={styles.policyLink}
+                                    onPress={() => navigation.navigate("PAP")}
+                                >
+                                    Privacy Policy
+                                </Text>
+                            </Text>
                         </View>
 
                         {formErrors.agreeToPolicy && (
@@ -425,18 +445,20 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                             </Text>
                         )}
                     </View>
-
                 </View>
-                {/* FIXED BOTTOM BUTTON */}
+
+                {/* Submit button logic */}
                 <View style={styles.fixedButtonContainer}>
                     <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
                         <Text style={styles.submitButtonText}>{text}</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* Extra space at bottom to prevent keyboard overlap on ScrollView */}
+                <View style={{ height: 100 }} />
             </ScrollView>
         </KeyboardAvoidingView>
     );
-
 };
 
 const styles = StyleSheet.create({
@@ -494,6 +516,19 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         color: '#ffffff',
         marginBottom: 8,
+    },
+    passwordWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#C7D2FE',
+        borderRadius: 5,
+        overflow: 'hidden'
+    },
+    eyeIcon: {
+        paddingHorizontal: 12,
+        height: 48,
+        justifyContent: 'center',
+        backgroundColor: '#C7D2FE',
     },
     subtext: {
         fontSize: 16,
