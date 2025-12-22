@@ -80,7 +80,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const plan = selectedPlan || {
         id: "default",
         name: "Premium Tools Access",
-        price: 2999,
+        price: 3750,
         interval: "month",
         features: [
             "Access to all premium tools",

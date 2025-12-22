@@ -46,7 +46,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
     const goldPlan: Plan = {
         id: "gold",
         name: "Gold Tier",
-        price: 5000,
+        price: 6250,
         interval: "month",
         features: [
             "Increased rewards",
@@ -60,7 +60,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
     const platinumPlan: Plan = {
         id: "platinum",
         name: "Platinum Tier",
-        price: 15000,
+        price: 18750,
         interval: "month",
         features: [
             "All premium features",
@@ -140,7 +140,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     onPress={() => handlePlanSelect(goldPlan)}
                 >
                     <Text style={styles.tierTitle}>Gold Tier</Text>
-                    <Text style={styles.tierPrice}>₦5,000/month</Text>
+                    <Text style={styles.tierPrice}>₦6,250/month</Text>
                     <Text style={styles.tierDesc}>
                         Enjoy increased rewards, premium access, and more exclusive perks.
                     </Text>
@@ -151,7 +151,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     onPress={() => handlePlanSelect(platinumPlan)}
                 >
                     <Text style={styles.tierTitle}>Platinum Tier</Text>
-                    <Text style={styles.tierPrice}>₦15,000/month</Text>
+                    <Text style={styles.tierPrice}>₦18,750/month</Text>
                     <Text style={styles.tierDesc}>
                         Unlock every premium feature, VIP support, and elite membership benefits.
                     </Text>
