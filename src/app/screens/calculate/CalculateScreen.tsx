@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
 
 export const tools = [
-    { id: "1", title: "Basic Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
+    { id: "1", title: "Scientific Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
     { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981", requiredTier: "Silver" },
     { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B", requiredTier: "Gold" },
     { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6", requiredTier: "Silver" },
