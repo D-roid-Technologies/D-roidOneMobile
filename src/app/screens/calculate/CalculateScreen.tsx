@@ -73,7 +73,7 @@ const CalculatorsScreen: React.FC = () => {
                 Access various calculators for your needs
             </Text>
 
-            {/* 1. Scrollable Tools List */}
+            {/* Scrollable Tools List */}
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
@@ -92,7 +92,7 @@ const CalculatorsScreen: React.FC = () => {
                                 onPress={() => !isLocked && setSelectedTool(tool.title)}
                                 disabled={isLocked}
                             >
-                                {/* 2. Membership Type Badge */}
+                                {/* Membership Type Badge */}
                                 <View style={styles.tierBadge}>
                                     <Text style={styles.tierBadgeText}>{tool.requiredTier}</Text>
                                 </View>
@@ -119,16 +119,9 @@ const CalculatorsScreen: React.FC = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <ScrollView
-                        style={styles.modalContent}
-                        contentContainerStyle={{
-                            flexGrow: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
+                    <View style={styles.modalContent}>
                         {selectedTool && renderToolContent(selectedTool)}
-                    </ScrollView>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -214,6 +207,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         flex: 1,
+        backgroundColor: "#101828",
     },
     toolPlaceholder: {
         fontSize: 18,
