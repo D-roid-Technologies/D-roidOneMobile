@@ -24,6 +24,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
 import { addHours } from "../redux/slice/membershiptierslice";
+import BottomSheetModal from "../components/BottomSheetModal";
 
 const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
@@ -490,74 +491,59 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 </TouchableOpacity>
 
             </ScrollView>
-            <Modal
-                animationType="slide"
-                transparent={true}
+            
+            <BottomSheetModal
                 visible={isModalVisible}
-                onRequestClose={() => setIsModalVisible(false)}
+                onClose={() => setIsModalVisible(false)}
             >
-                {/* Background overlay that closes the modal */}
-                <TouchableOpacity
-                    style={styles.modalOverlay}
-                    activeOpacity={1}
-                    onPress={() => setIsModalVisible(false)} // Close when touching outside
-                >
-                    {/* Modal content container (stops event propagation) */}
-                    <View style={styles.modalContentContainer} onStartShouldSetResponder={() => true}>
-
-                        <View style={styles.modalHandle} />
-
-                        {/* User Info */}
-                        <View style={styles.modalUserInfo}>
-                            <View style={[styles.avatar, styles.modalAvatar]}>
-                                <Text style={styles.avatarText}>{userMain.initials}</Text>
-                            </View>
-                            <Text style={styles.modalUserName}>{userMain.firstName} {userMain.lastName}</Text>
-                            <Text style={styles.modalUserDetail}>{userMain.userType}</Text>
-                            <Text style={styles.modalUserDetail}>{userMain.email}</Text>
-                        </View>
-
-                        {/* Action Buttons */}
-                        <TouchableOpacity
-                            style={styles.modalButton}
-                            onPress={() => {
-                                setIsModalVisible(false);
-                                navigation.navigate('Profile');
-                            }}
-                        >
-                            <Ionicons name="person-circle-outline" size={24} color="#000c3a" />
-                            <Text style={styles.modalButtonText}>View Profile</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.modalButton}
-                            onPress={() => {
-                                setIsModalVisible(false);
-                                navigation.navigate('Settings');
-                            }}
-                        >
-                            <Ionicons name="settings-outline" size={24} color="#000c3a" />
-                            <Text style={styles.modalButtonText}>Settings</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[styles.modalButton, styles.signOutButton]}
-                            onPress={handleSignOut}
-                        >
-                            <Ionicons name="log-out-outline" size={24} color="#FF6F61" />
-                            <Text style={[styles.modalButtonText, styles.signOutButtonText]}>Sign Out</Text>
-                        </TouchableOpacity>
-
-                        {/* Close button (optional, but good for UX) */}
-                        <TouchableOpacity
-                            style={styles.modalCloseButton}
-                            onPress={() => setIsModalVisible(false)}
-                        >
-                            <Text style={styles.modalCloseButtonText}>Close</Text>
-                        </TouchableOpacity>
-
+                {/* User Info */}
+                <View style={styles.modalUserInfo}>
+                    <View style={[styles.avatar, styles.modalAvatar]}>
+                        <Text style={styles.avatarText}>{userMain.initials}</Text>
                     </View>
+                    <Text style={styles.modalUserName}>{userMain.firstName} {userMain.lastName}</Text>
+                    <Text style={styles.modalUserDetail}>{userMain.userType}</Text>
+                    <Text style={styles.modalUserDetail}>{userMain.email}</Text>
+                </View>
+
+                {/* Action Buttons */}
+                <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => {
+                        setIsModalVisible(false);
+                        navigation.navigate('Profile');
+                    }}
+                >
+                    <Ionicons name="person-circle-outline" size={24} color="#000c3a" />
+                    <Text style={styles.modalButtonText}>View Profile</Text>
                 </TouchableOpacity>
-            </Modal>
+                <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => {
+                        setIsModalVisible(false);
+                        navigation.navigate('Settings');
+                    }}
+                >
+                    <Ionicons name="settings-outline" size={24} color="#000c3a" />
+                    <Text style={styles.modalButtonText}>Settings</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.modalButton, styles.signOutButton]}
+                    onPress={handleSignOut}
+                >
+                    <Ionicons name="log-out-outline" size={24} color="#FF6F61" />
+                    <Text style={[styles.modalButtonText, styles.signOutButtonText]}>Sign Out</Text>
+                </TouchableOpacity>
+
+                {/* Close button (optional, but good for UX) */}
+                <TouchableOpacity
+                    style={styles.modalCloseButton}
+                    onPress={() => setIsModalVisible(false)}
+                >
+                    <Text style={styles.modalCloseButtonText}>Close</Text>
+                </TouchableOpacity>
+            </BottomSheetModal>
         </View>
     );
 };
@@ -706,29 +692,6 @@ const styles = StyleSheet.create({
         fontWeight: "300"
     },
     // --- MODAL STYLES (New) ---
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "flex-end", // Align content to the bottom
-    },
-    modalContentContainer: {
-        backgroundColor: "#000105",
-        paddingHorizontal: 20,
-        paddingTop: 10,
-        paddingBottom: Platform.OS === 'ios' ? 30 : 20, // Extra padding for safe area on iOS
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        width: '100%',
-        maxHeight: height * 0.7, // Limit max height
-    },
-    modalHandle: {
-        width: 40,
-        height: 5,
-        backgroundColor: '#ffffff',
-        borderRadius: 2.5,
-        alignSelf: 'center',
-        marginBottom: 15,
-    },
     modalUserInfo: {
         alignItems: 'center',
         paddingVertical: 10,

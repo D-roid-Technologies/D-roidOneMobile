@@ -15,7 +15,7 @@ import BottomTabs from "../screens/BottomTabs";
 import NotificationScreen from "../screens/NotificationScreen";
 import EventDescriptionScreen from "../screens/EventDescriptionScreen";
 // import ServicesScreen from "../screens/ServiceScreen";
-import ProgressionScreen from "../screens/ProgressionScreen";
+import ProgressionScreen from "../screens/Progression/ProgressionScreen";
 import CreateEventScreen from "../screens/schedles/CreateEventScreen";
 import EventDetailScreen from "../screens/schedles/EventDetailScreen";
 import ForgotPassword from "../screens/ForgotPassword";

@@ -7,17 +7,17 @@ const ContactUsScreen: React.FC = () => {
     const navigation = useNavigation<any>();
 
     const contactMethods = [
-        { id: 1, icon: 'mail', title: 'Email', value: 'info@droidtech.com', action: 'mailto:info@droidtech.com', color: '#3B82F6' },
-        { id: 2, icon: 'call', title: 'Phone', value: '+234 123 456 7890', action: 'tel:+2341234567890', color: '#10B981' },
-        { id: 3, icon: 'logo-whatsapp', title: 'WhatsApp', value: '+234 123 456 7890', action: 'https://wa.me/2341234567890', color: '#25D366' },
-        { id: 4, icon: 'location', title: 'Address', value: 'Calabar, Cross River State', action: null, color: '#F59E0B' },
+        { id: 1, icon: 'mail', title: 'Email', value: 'team@droidtechhq.com', action: 'mailto:team@droidtechhq.com', color: '#3B82F6' },
+        { id: 2, icon: 'call', title: 'Phone', value: '+234 916 527 5635', action: 'tel:+234 916 527 5635', color: '#10B981' },
+        { id: 3, icon: 'logo-whatsapp', title: 'WhatsApp', value: '+2349165275635', action: 'https://wa.me/2349165275635', color: '#25D366' },
+        { id: 4, icon: 'location', title: 'Address', value: 'Warri, Delta State, Nigeria', action: null, color: '#F59E0B' },
     ];
 
     const socialMedia = [
-        { id: 1, icon: 'logo-twitter', name: 'Twitter', color: '#1DA1F2', url: 'https://twitter.com/droidtech' },
-        { id: 2, icon: 'logo-facebook', name: 'Facebook', color: '#4267B2', url: 'https://facebook.com/droidtech' },
-        { id: 3, icon: 'logo-instagram', name: 'Instagram', color: '#E4405F', url: 'https://instagram.com/droidtech' },
-        { id: 4, icon: 'logo-linkedin', name: 'LinkedIn', color: '#0077B5', url: 'https://linkedin.com/company/droidtech' },
+        { id: 1, icon: 'logo-twitter', name: 'Twitter', color: '#1DA1F2', url: 'https://x.com/Droidtechn?t=LVFJ6SEetP5DD1BHdSK0rQ&s=09' },
+        { id: 2, icon: 'logo-facebook', name: 'Facebook', color: '#4267B2', url: 'https://web.facebook.com/droidtechltd/?locale=eo_EO&_rdc=1&_rdr#' },
+        { id: 3, icon: 'logo-instagram', name: 'Instagram', color: '#E4405F', url: 'https://www.instagram.com/droidtechn' },
+        { id: 4, icon: 'logo-linkedin', name: 'LinkedIn', color: '#0077B5', url: 'https://www.linkedin.com/company/d-roid-technologies-international/' },
     ];
 
     const handleContact = (action: string | null) => {
@@ -89,11 +89,11 @@ const ContactUsScreen: React.FC = () => {
                     <Text style={styles.hoursTitle}>Office Hours</Text>
                     <View style={styles.hoursRow}>
                         <Text style={styles.hoursDay}>Monday - Friday</Text>
-                        <Text style={styles.hoursTime}>9:00 AM - 6:00 PM</Text>
+                        <Text style={styles.hoursTime}>9:00 AM - 5:00 PM</Text>
                     </View>
                     <View style={styles.hoursRow}>
                         <Text style={styles.hoursDay}>Saturday</Text>
-                        <Text style={styles.hoursTime}>10:00 AM - 4:00 PM</Text>
+                        <Text style={styles.hoursTime}>Closed</Text>
                     </View>
                     <View style={styles.hoursRow}>
                         <Text style={styles.hoursDay}>Sunday</Text>

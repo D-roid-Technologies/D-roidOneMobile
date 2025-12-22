@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { selectMembershipTier } from "../redux/slice/membershiptierslice";
+import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
 
 const ProgressionHeader: React.FunctionComponent = () => {
     const navigation = useNavigation<any>();
