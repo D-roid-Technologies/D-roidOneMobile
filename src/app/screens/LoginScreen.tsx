@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
     View,
@@ -19,7 +20,10 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
         password?: string;
     }>({});
     const [text, setText] = useState<string>("Login");
-    const isStaff = false;
+
+    // 1. Add state to toggle visibility
+    const [showPassword, setShowPassword] = useState(false);
+
     const handleChange = (name: string, value: string) => {
         setFormData({ ...formData, [name]: value });
     };
@@ -27,17 +31,14 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
     const validate = () => {
         let errors: any = {};
         let isValid = true;
-
         if (!formData.email.trim()) {
             errors.email = "Member ID is required.";
             isValid = false;
         }
-
         if (!formData.password) {
             errors.password = "Password is required.";
             isValid = false;
         }
-
         setFormErrors(errors);
         return isValid;
     };
@@ -45,12 +46,8 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
     const handleSubmitMember = async () => {
         if (!validate()) return;
         setText("Verifying your credentials...");
-
         try {
-            await authService.handleUserLogin(
-                formData.email,
-                formData.password,
-            );
+            await authService.handleUserLogin(formData.email, formData.password);
             setText("Fetching your information...");
             navigation.navigate("BottomTabs");
         } catch {
@@ -65,11 +62,7 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             style={{ flex: 1, backgroundColor: styles.container.backgroundColor }}
         >
-            {/* Scrollable top content */}
-            <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                keyboardShouldPersistTaps="handled"
-            >
+            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <View style={styles.topLinksContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
                         <Text style={styles.loginLink}>Signup</Text>
@@ -79,13 +72,10 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
                 <Text style={styles.h2}>Let's Log you back in</Text>
                 <Text style={styles.subtext}>Please login to your D'roid One account.</Text>
 
-                {/* Email */}
+                {/* Email Field */}
                 <View style={styles.fieldContainer}>
                     <TextInput
-                        style={[
-                            styles.input,
-                            formErrors.email && { borderColor: '#FF6F61' }
-                        ]}
+                        style={[styles.input, formErrors.email && { borderColor: '#FF6F61' }]}
                         placeholder="Email"
                         keyboardType="email-address"
                         autoCapitalize="none"
@@ -97,20 +87,34 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
                     {formErrors.email && <Text style={styles.errorText}>{formErrors.email}</Text>}
                 </View>
 
-                {/* Password */}
+                {/* Password Field with Toggle */}
                 <View style={styles.fieldContainer}>
-                    <TextInput
-                        style={[
-                            styles.input,
-                            formErrors.password && { borderColor: '#FF6F61' }
-                        ]}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        placeholderTextColor="#777"
-                        value={formData.password}
-                        onChangeText={(value) => handleChange("password", value)}
-                        editable={!isSubmitting}
-                    />
+                    <View style={[
+                        styles.passwordInputWrapper,
+                        formErrors.password && { borderColor: '#FF6F61' }
+                    ]}>
+                        <TextInput
+                            style={styles.passwordTextInput}
+                            placeholder="Password"
+                            // 2. Set secureTextEntry based on state
+                            secureTextEntry={!showPassword}
+                            placeholderTextColor="#777"
+                            value={formData.password}
+                            onChangeText={(value) => handleChange("password", value)}
+                            editable={!isSubmitting}
+                        />
+                        {/* 3. Eye Icon Toggle */}
+                        <TouchableOpacity
+                            onPress={() => setShowPassword(!showPassword)}
+                            style={styles.eyeIcon}
+                        >
+                            <Ionicons
+                                name={showPassword ? "eye-off-outline" : "eye-outline"}
+                                size={22}
+                                color="#000105"
+                            />
+                        </TouchableOpacity>
+                    </View>
                     {formErrors.password && <Text style={styles.errorText}>{formErrors.password}</Text>}
                 </View>
 
@@ -119,7 +123,6 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
                 </TouchableOpacity>
             </ScrollView>
 
-            {/* Fixed bottom login button */}
             <View style={styles.bottomButtonContainer}>
                 <TouchableOpacity
                     style={[styles.button, isSubmitting && { opacity: 0.6 }]}
@@ -135,7 +138,6 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
             </View>
         </KeyboardAvoidingView>
     );
-
 };
 
 const styles = StyleSheet.create({
@@ -235,6 +237,23 @@ const styles = StyleSheet.create({
         color: "#479BE8",
         fontSize: 15,
         textDecorationLine: "underline",
+    },
+    passwordInputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: "#C7D2FE",
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "#C7D2FE",
+        width: "100%",
+    },
+    passwordTextInput: {
+        flex: 1, // Take up remaining space
+        padding: 12,
+        color: "#000105",
+    },
+    eyeIcon: {
+        paddingHorizontal: 12,
     },
 });
 

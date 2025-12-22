@@ -5,6 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Modal,
+  Platform,
+  Dimensions,
 } from "react-native";
 import { Calendar, Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,7 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Event } from "../../redux/slice/eventSlice";
-import { authService } from "../../redux/configuration/auth.service";
+
+const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
 const CalendarScreen: React.FC = () => {
   const navigation = useNavigation<any>();
@@ -23,8 +27,10 @@ const CalendarScreen: React.FC = () => {
   const [viewMode, setViewMode] = useState<"month" | "week" | "agenda">(
     "month"
   );
+
   const [currentDate, setCurrentDate] = useState(today);
   const events = useSelector((state: RootState) => state.events.events);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const renderEventItem = ({ item }: { item: Event }) => (
     <TouchableOpacity
@@ -105,15 +111,13 @@ const CalendarScreen: React.FC = () => {
     return marks;
   };
 
-
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Scheduler</Text>
       <Text style={styles.subtitle}>
         Access, Create and Manage all your Events and Tasks in one place.
       </Text>
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={goToPrevious} style={styles.navButton}>
@@ -138,59 +142,30 @@ const CalendarScreen: React.FC = () => {
         ))}
       </View>
 
-      {/* Calendar */}
+      {/* Calendar Views */}
       {viewMode === "month" && (
-       <Calendar
-       onDayPress={onDayPress}
-       markedDates={getMarkedDates()}
-       theme={{
-         backgroundColor: "#000105",
-         calendarBackground: "#000105",
-         textSectionTitleColor: "#ffffff",
-         dayTextColor: "#ffffff",
-         monthTextColor: "#ffffff",
-         arrowColor: "#C7D2FE",
-         todayTextColor: "#C7D2FE",
-       }}
-     />
-     
-
-
-      )}
-
-      {viewMode === "agenda" && (
-        <Agenda
-          selected={selectedDate}
+        <Calendar
           onDayPress={onDayPress}
-          theme={{
-            backgroundColor: "#000105",
-            calendarBackground: "#000105",
-            agendaKnobColor: "#C7D2FE",
-            dayTextColor: "#fff",
-            monthTextColor: "#fff",
-            todayTextColor: "#C7D2FE",
-          }}
+          markedDates={getMarkedDates()}
+          theme={calendarTheme}
         />
       )}
 
       {viewMode === "week" && (
-        <Calendar
-          current={selectedDate}
-          firstDay={1}
-          hideExtraDays
-          onDayPress={onDayPress}
-          markingType="dot"
-          markedDates={getMarkedDates()}
-          theme={{
-            backgroundColor: "#000105",
-            calendarBackground: "#000105",
-            textSectionTitleColor: "#fff",
-            dayTextColor: "#fff",
-            monthTextColor: "#fff",
-            arrowColor: "#C7D2FE",
-            todayTextColor: "#C7D2FE",
-          }}
-        />
+        <View style={styles.weekCalendarWrapper}>
+          <Calendar
+            current={selectedDate}
+            // Correct props to hide the header area
+            hideArrows={true}
+            renderHeader={() => <View />}
+            hideExtraDays={true}
+            firstDay={1}
+            onDayPress={onDayPress}
+            markedDates={getMarkedDates()}
+            theme={calendarTheme}
+            style={styles.weekCalendarStyle}
+          />
+        </View>
       )}
 
       {/* Event List */}
@@ -203,21 +178,80 @@ const CalendarScreen: React.FC = () => {
         renderItem={renderEventItem}
         contentContainerStyle={{ paddingBottom: 100 }}
         ListEmptyComponent={
-          <Text style={{ textAlign: "center", color: "#fff", marginTop: 20 }}>
+          <Text style={{ textAlign: "center", color: "#64748b", marginTop: 20 }}>
             No events for this day
           </Text>
         }
       />
 
-      {/* Floating Button */}
+      {/* Bottom Sheet Style Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalContentContainer} onStartShouldSetResponder={() => true}>
+            <View style={styles.modalHandle} />
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                setIsModalVisible(false);
+                navigation.navigate("CreateEvent", { date: selectedDate });
+              }}
+            >
+              <Ionicons name="calendar-outline" size={24} color="#000c3a" />
+              <Text style={styles.modalButtonText}>Create Event</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                setIsModalVisible(false);
+                navigation.navigate('Settings'); // Or 'Find Someone' screen
+              }}
+            >
+              <Ionicons name="search-outline" size={24} color="#000c3a" />
+              <Text style={styles.modalButtonText}>Find Someone</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setIsModalVisible(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Floating Button - Now opens Modal */}
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => navigation.navigate("CreateEvent", { date: selectedDate })}
+        onPress={() => setIsModalVisible(true)}
       >
-        <Ionicons name="add" size={28} color="#000105" />
+        <Ionicons name="add" size={32} color="#000105" />
       </TouchableOpacity>
     </View>
   );
+};
+
+const calendarTheme = {
+  backgroundColor: "#000105",
+  calendarBackground: "#000105",
+  textSectionTitleColor: "#ffffff",
+  dayTextColor: "#ffffff",
+  monthTextColor: "#ffffff",
+  arrowColor: "#C7D2FE",
+  todayTextColor: "#C7D2FE",
+  selectedDayBackgroundColor: "#C7D2FE",
+  selectedDayTextColor: "#000c3a",
 };
 
 export default CalendarScreen;
@@ -256,4 +290,92 @@ const styles = StyleSheet.create({
   eventTitle: { color: "#ffffff", fontSize: 16, fontWeight: "900" },
   eventDescription: { color: "#ffffff", fontSize: 14, marginVertical: 4, fontWeight: "300" },
   eventDate: { color: "#D1D5DB", fontSize: 12, fontWeight: "300" },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end", // Align content to the bottom
+  },
+  modalContentContainer: {
+    backgroundColor: "#000105",
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: '100%',
+    maxHeight: height * 0.7
+  },
+  modalHandle: {
+    width: 40,
+    height: 5,
+    backgroundColor: '#ffffff',
+    borderRadius: 2.5,
+    alignSelf: 'center',
+    marginBottom: 15,
+  },
+  modalUserInfo: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginBottom: 15,
+  },
+  modalAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginBottom: 10,
+    backgroundColor: '#C7D2FE',
+  },
+  modalUserName: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  modalUserDetail: {
+    fontSize: 14,
+    color: '#ffffff',
+    marginTop: 4,
+  },
+  modalButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderRadius: 10,
+    backgroundColor: '#F3F4F6', // Light gray background
+    marginBottom: 10,
+    paddingHorizontal: 15,
+  },
+  modalButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000c3a',
+  },
+  signOutButton: {
+    backgroundColor: '#FFEBEE', // Light red for sign out context
+    marginTop: 10,
+  },
+  signOutButtonText: {
+    color: '#FF6F61', // Red text
+  },
+  modalCloseButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    fontSize: 16,
+    color: '#999',
+  },
+
+  weekCalendarWrapper: {
+    height: 80, // Restrict height to show only one row
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  weekCalendarStyle: {
+    marginTop: -40, // Pull up to hide the header/days label if needed
+  },
+
 });

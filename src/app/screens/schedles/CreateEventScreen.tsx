@@ -75,7 +75,7 @@ const CreateEventScreen: React.FC = () => {
     const [participantsText, setParticipantsText] = useState(
         editingEvent?.participants?.join(", ") || ""
     );
-    const [text, setText] = useState<string>("Create Event")
+    const [text, setText] = useState<string>("Create Event");
     // const statuses: any = ["pending", "in-progress", "completed"];
     const TASK_STATUSES = [
         "pending",
