@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
+import { CheckoutPage } from "./CheckoutPage";
+import type { Plan } from "../../utils/Types";
 
 const ProgressionHeader: React.FunctionComponent = () => {
     const navigation = useNavigation<any>();
@@ -27,6 +29,48 @@ const ProgressionHeader: React.FunctionComponent = () => {
         desc
     } = useSelector(selectMembershipTier);
 
+    const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<Plan | undefined>(undefined);
+
+    const handlePlanSelect = (plan: Plan) => {
+        setSelectedPlan(plan);
+        setCheckoutModalVisible(true);
+    };
+
+    const handlePaymentSuccess = () => {
+        console.log("Payment successful! User upgraded to:", selectedPlan?.name);
+        setCheckoutModalVisible(false);
+        // You can add additional logic here, like updating Redux state or navigating
+    };
+
+    const goldPlan: Plan = {
+        id: "gold",
+        name: "Gold Tier",
+        price: 5000,
+        interval: "month",
+        features: [
+            "Increased rewards",
+            "Premium access",
+            "Exclusive perks",
+            "Priority support",
+            "Advanced analytics",
+        ],
+    };
+
+    const platinumPlan: Plan = {
+        id: "platinum",
+        name: "Platinum Tier",
+        price: 15000,
+        interval: "month",
+        features: [
+            "All premium features",
+            "VIP support",
+            "Elite membership benefits",
+            "Unlimited access",
+            "Personal account manager",
+            "Early access to new features",
+        ],
+    };
 
     return (
         <View style={styles.safeArea}>
@@ -91,7 +135,10 @@ const ProgressionHeader: React.FunctionComponent = () => {
                 </View>
 
                 {/* 3. UPGRADE CARDS */}
-                <TouchableOpacity style={styles.tierCard}>
+                <TouchableOpacity 
+                    style={styles.tierCard}
+                    onPress={() => handlePlanSelect(goldPlan)}
+                >
                     <Text style={styles.tierTitle}>Gold Tier</Text>
                     <Text style={styles.tierPrice}>₦5,000/month</Text>
                     <Text style={styles.tierDesc}>
@@ -99,7 +146,10 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.tierCard}>
+                <TouchableOpacity 
+                    style={styles.tierCard}
+                    onPress={() => handlePlanSelect(platinumPlan)}
+                >
                     <Text style={styles.tierTitle}>Platinum Tier</Text>
                     <Text style={styles.tierPrice}>₦15,000/month</Text>
                     <Text style={styles.tierDesc}>
@@ -111,6 +161,15 @@ const ProgressionHeader: React.FunctionComponent = () => {
                 <View style={{ height: 40 }} />
 
             </ScrollView>
+
+            {/* Checkout Modal */}
+            <CheckoutPage
+                visible={checkoutModalVisible}
+                selectedPlan={selectedPlan}
+                onClose={() => setCheckoutModalVisible(false)}
+                onPaymentSuccess={handlePaymentSuccess}
+                onPaymentInitiated={() => console.log("Payment initiated for:", selectedPlan?.name)}
+            />
         </View>
     );
 };
