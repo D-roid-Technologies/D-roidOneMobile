@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
 import {
     View,
     Text,
@@ -9,14 +9,28 @@ import {
     KeyboardAvoidingView,
     Platform,
     ActivityIndicator,
+    Modal,
+    Dimensions,
 } from "react-native";
 import { Shield, User } from "lucide-react-native";
-import Paystack from "react-native-paystack-webview";
 import Toast from "react-native-toast-message";
 import emailjs from "emailjs-com";
 import type { Plan } from "../../utils/Types";
 import { formatCurrency } from "../../utils/paystack";
 import BottomSheetModal from "../../components/BottomSheetModal";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// Type definition for Paystack ref
+interface PaystackRef {
+    startTransaction: () => void;
+}
+
+interface PaystackResponse {
+    transactionRef?: string;
+    status?: string;
+    message?: string;
+}
 
 interface CheckoutPageProps {
     visible: boolean;
@@ -25,6 +39,36 @@ interface CheckoutPageProps {
     onPaymentSuccess?: () => void;
     onPaymentInitiated?: () => void;
 }
+
+// Paystack Component wrapper to handle the webview
+const PaystackPayment: React.FC<{
+    paystackKey: string;
+    amount: number;
+    email: string;
+    name: string;
+    phone: string;
+    reference: string;
+    onSuccess: (response: any) => void;
+    onCancel: () => void;
+}> = ({ paystackKey, amount, email, name, phone, reference, onSuccess, onCancel }) => {
+    // Dynamically require PaystackWebView only when needed
+    const PaystackWebView = require("react-native-paystack-webview").default;
+    
+    return (
+        <PaystackWebView
+            paystackKey={paystackKey}
+            amount={amount}
+            billingEmail={email}
+            billingName={name}
+            billingMobile={phone}
+            channels={["card", "bank", "ussd", "mobile_money"]}
+            refNumber={reference}
+            onCancel={onCancel}
+            onSuccess={onSuccess}
+            autoStart={false}
+        />
+    );
+};
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     visible,
@@ -60,17 +104,30 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         phone: "",
     });
 
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [referenceNumber, setReferenceNumber] = useState<string | null>(null);
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [referenceNumber, setReferenceNumber] = useState<string>("");
+    const [showPaystackModal, setShowPaystackModal] = useState(false);
+
+    // Debug logging
+    useEffect(() => {
+        console.log("=== CheckoutPage State ===");
+        console.log("Visible:", visible);
+        console.log("Selected Plan:", selectedPlan?.name);
+        console.log("Form Submitted:", isFormSubmitted);
+    }, [visible, selectedPlan, isFormSubmitted]);
 
     const handleInputChange = (field: string, value: string) => {
-        setCustomerInfo({
-            ...customerInfo,
+        setCustomerInfo(prev => ({
+            ...prev,
             [field]: value,
-        });
+        }));
     };
 
-    const isFormValid = customerInfo.name && customerInfo.email && customerInfo.phone;
+    const isFormValid = Boolean(
+        customerInfo.name.trim() && 
+        customerInfo.email.trim() && 
+        customerInfo.phone.trim()
+    );
 
     const generateReferenceNumber = (): string => {
         const prefix = "PT";
@@ -79,42 +136,65 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         return `${prefix}-${timestamp}-${random}`;
     };
 
-    const handlePayment = () => {
-        if (!customerInfo.email) {
+    const isValidEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const handleValidateAndProceed = () => {
+        console.log("=== Validate Form Clicked ===");
+
+        if (!customerInfo.name.trim()) {
             Toast.show({
                 type: "error",
-                text1: "Validation Error",
-                text2: "Please enter a valid email!",
+                text1: "Missing Information",
+                text2: "Please enter your full name",
             });
             return;
         }
 
-        const generatedRef = generateReferenceNumber();
-        setReferenceNumber(generatedRef);
+        if (!customerInfo.email.trim() || !isValidEmail(customerInfo.email.trim())) {
+            Toast.show({
+                type: "error",
+                text1: "Invalid Email",
+                text2: "Please enter a valid email address",
+            });
+            return;
+        }
 
-        // Log checkout form data
-        console.log("=== CHECKOUT FORM DATA ===");
-        console.log("Customer Info:", customerInfo);
-        console.log("Selected Plan:", plan);
-        console.log("Reference Number:", generatedRef);
-        console.log("Amount (Kobo):", plan.price * 100);
-        console.log("========================");
+        if (!customerInfo.phone.trim()) {
+            Toast.show({
+                type: "error",
+                text1: "Missing Information",
+                text2: "Please enter your phone number",
+            });
+            return;
+        }
+
+        const newRef = generateReferenceNumber();
+        console.log("Generated Reference:", newRef);
+        
+        setReferenceNumber(newRef);
+        setIsFormSubmitted(true);
+        
+        // Open Paystack in a separate modal
+        setShowPaystackModal(true);
 
         if (onPaymentInitiated) {
             onPaymentInitiated();
         }
-
-        setIsProcessing(true);
     };
 
-    const handlePaymentSuccess = async (response: any) => {
-        console.log("Payment success:", response);
+    const handlePaymentSuccess = useCallback(async (response: PaystackResponse) => {
+        console.log("=== Payment Success ===", response);
+
+        setShowPaystackModal(false);
 
         const templateParams = {
             name: customerInfo.name,
             title: `Thank You for Your Purchase!
 
-Your subscription to ${plan.name} has been successfully activated. We're excited to have you on board!
+Your subscription to ${plan.name} has been successfully activated.
 
 Your Details:
 • Name: ${customerInfo.name}
@@ -123,10 +203,6 @@ Your Details:
 • Plan: ${plan.name}
 • Amount Paid: ${formatCurrency(plan.price)}
 • Reference: ${referenceNumber}
-
-Your premium features are now available! Log in to access all the tools and features included in your plan.
-
-If you have any questions or need assistance, our support team is available 24/7.
 
 Thank you for choosing us!`,
             email: customerInfo.email,
@@ -137,60 +213,80 @@ Thank you for choosing us!`,
             Toast.show({
                 type: "success",
                 text1: "Payment Successful!",
-                text2: `Welcome ${customerInfo.name}. Check your email for confirmation.`,
+                text2: `Welcome ${customerInfo.name}!`,
+                visibilityTime: 4000,
             });
-
-            if (onPaymentSuccess) {
-                onPaymentSuccess();
-            }
-
-            setCustomerInfo({
-                name: "",
-                email: "",
-                phone: "",
-            });
-
-            // Close modal after success
-            setTimeout(() => {
-                onClose();
-            }, 1500);
         } catch (error) {
-            console.error("Error sending email:", error);
+            console.error("Email error:", error);
             Toast.show({
-                type: "warning",
-                text1: "Payment Successful",
-                text2: "But we couldn't send the confirmation email. Please contact support.",
+                type: "success",
+                text1: "Payment Successful!",
+                text2: "Confirmation email may be delayed",
+                visibilityTime: 4000,
             });
         }
 
-        setIsProcessing(false);
-    };
+        if (onPaymentSuccess) {
+            onPaymentSuccess();
+        }
 
-    const handlePaymentCancel = () => {
-        console.log("Payment cancelled");
+        // Reset state
+        setCustomerInfo({ name: "", email: "", phone: "" });
+        setIsFormSubmitted(false);
+        setReferenceNumber("");
+
+        setTimeout(() => {
+            onClose();
+        }, 2000);
+    }, [customerInfo, plan, referenceNumber, onPaymentSuccess, onClose]);
+
+    const handlePaymentCancel = useCallback(() => {
+        console.log("=== Payment Cancelled ===");
+        
+        setShowPaystackModal(false);
+        
         Toast.show({
             type: "error",
             text1: "Payment Cancelled",
-            text2: "Your payment was cancelled.",
+            text2: "You cancelled the payment",
         });
-        setIsProcessing(false);
+
+        setIsFormSubmitted(false);
+        setReferenceNumber("");
+    }, []);
+
+    const handleClose = () => {
+        setCustomerInfo({ name: "", email: "", phone: "" });
+        setIsFormSubmitted(false);
+        setReferenceNumber("");
+        setShowPaystackModal(false);
+        onClose();
     };
+
+    // Reset state when modal visibility changes
+    useEffect(() => {
+        if (!visible) {
+            setIsFormSubmitted(false);
+            setReferenceNumber("");
+            setShowPaystackModal(false);
+        }
+    }, [visible]);
 
     return (
         <>
             <BottomSheetModal
                 visible={visible}
-                onClose={onClose}
+                onClose={handleClose}
                 maxHeight={Platform.OS === "ios" ? 700 : 650}
                 showHandle={true}
             >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={{ flex: 1 }}
                 >
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollContent}
+                        keyboardShouldPersistTaps="handled"
                     >
                         <Text style={styles.mainTitle}>Complete Your Order</Text>
 
@@ -198,17 +294,15 @@ Thank you for choosing us!`,
                         <View style={styles.card}>
                             <Text style={styles.cardTitle}>Order Summary</Text>
 
-                            <View style={styles.orderSummary}>
-                                <View style={styles.orderItem}>
-                                    <Text style={styles.orderItemName}>{plan.name}</Text>
-                                    <Text style={styles.orderItemPrice}>
-                                        {formatCurrency(plan.price)}
-                                    </Text>
-                                </View>
-                                <Text style={styles.billingInterval}>
-                                    Billed {plan.interval}ly
+                            <View style={styles.orderItem}>
+                                <Text style={styles.orderItemName}>{plan.name}</Text>
+                                <Text style={styles.orderItemPrice}>
+                                    {formatCurrency(plan.price)}
                                 </Text>
                             </View>
+                            <Text style={styles.billingInterval}>
+                                Billed {plan.interval}ly
+                            </Text>
 
                             <View style={styles.divider} />
 
@@ -220,132 +314,141 @@ Thank you for choosing us!`,
                             </View>
 
                             <View style={styles.guarantees}>
-                                <Text style={styles.guaranteeText}>
-                                    ✓ 30-day money-back guarantee
-                                </Text>
-                                <Text style={styles.guaranteeText}>
-                                    ✓ Instant account activation
-                                </Text>
+                                <Text style={styles.guaranteeText}>✓ 30-day money-back guarantee</Text>
+                                <Text style={styles.guaranteeText}>✓ Instant account activation</Text>
                                 <Text style={styles.guaranteeText}>✓ 24/7 customer support</Text>
-                                <Text style={styles.guaranteeText}>
-                                    ✓ Secure payment processing
-                                </Text>
                             </View>
                         </View>
 
-                        {/* Customer Information */}
+                        {/* Customer Information Form */}
                         <View style={styles.formSection}>
                             <View style={styles.sectionHeader}>
                                 <User size={20} color="#fff" />
-                                <Text style={styles.sectionTitle}>Customer Information</Text>
+                                <Text style={styles.sectionTitle}>Your Information</Text>
                             </View>
 
                             <TextInput
                                 style={styles.input}
-                                placeholder="Full Name"
-                                placeholderTextColor="#888"
+                                placeholder="Full Name *"
+                                placeholderTextColor="#666"
                                 value={customerInfo.name}
                                 onChangeText={(value) => handleInputChange("name", value)}
+                                autoCorrect={false}
                             />
 
                             <TextInput
                                 style={styles.input}
-                                placeholder="Email Address"
-                                placeholderTextColor="#888"
+                                placeholder="Email Address *"
+                                placeholderTextColor="#666"
                                 keyboardType="email-address"
                                 autoCapitalize="none"
+                                autoCorrect={false}
                                 value={customerInfo.email}
                                 onChangeText={(value) => handleInputChange("email", value)}
                             />
 
                             <TextInput
                                 style={styles.input}
-                                placeholder="Phone Number"
-                                placeholderTextColor="#888"
+                                placeholder="Phone Number *"
+                                placeholderTextColor="#666"
                                 keyboardType="phone-pad"
                                 value={customerInfo.phone}
                                 onChangeText={(value) => handleInputChange("phone", value)}
                             />
                         </View>
 
-                        {/* Payment Information */}
+                        {/* Payment Section */}
                         <View style={styles.formSection}>
                             <View style={styles.sectionHeader}>
                                 <Shield size={20} color="#fff" />
-                                <Text style={styles.sectionTitle}>Payment Information</Text>
+                                <Text style={styles.sectionTitle}>Payment</Text>
                             </View>
 
                             <View style={styles.paymentInfo}>
                                 <Text style={styles.paymentInfoText}>
-                                    Click the button below to proceed with secure payment via
-                                    Paystack.
+                                    Secure payment via Paystack
                                 </Text>
-                                <Text style={styles.paymentInfoText}>You can pay with:</Text>
-                                <View style={styles.paymentMethods}>
-                                    <Text style={styles.paymentMethod}>• Debit/Credit Card</Text>
-                                    <Text style={styles.paymentMethod}>• Bank Transfer</Text>
-                                    <Text style={styles.paymentMethod}>• USSD</Text>
-                                    <Text style={styles.paymentMethod}>• Mobile Money</Text>
-                                </View>
+                                <Text style={styles.paymentMethod}>
+                                    Pay with: Card • Bank • USSD • Mobile Money
+                                </Text>
                             </View>
+
+                            {/* Proceed Button */}
+                            <TouchableOpacity
+                                style={[
+                                    styles.proceedButton,
+                                    !isFormValid && styles.proceedButtonDisabled,
+                                ]}
+                                onPress={handleValidateAndProceed}
+                                disabled={!isFormValid}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.proceedButtonText}>
+                                    Pay {formatCurrency(plan.price)}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
 
-                        {/* Submit Button */}
-                        <TouchableOpacity
-                            style={[
-                                styles.submitButton,
-                                (!isFormValid || isProcessing) && styles.submitButtonDisabled,
-                            ]}
-                            onPress={handlePayment}
-                            disabled={!isFormValid || isProcessing}
-                        >
-                            {isProcessing ? (
-                                <View style={styles.processingContainer}>
-                                    <ActivityIndicator color="#fff" size="small" />
-                                    <Text style={styles.submitButtonText}>
-                                        Initializing Payment...
-                                    </Text>
-                                </View>
-                            ) : (
-                                <Text style={styles.submitButtonText}>
-                                    Proceed to Payment - {formatCurrency(plan.price)}
-                                </Text>
-                            )}
-                        </TouchableOpacity>
-
                         <Text style={styles.disclaimer}>
-                            🔒 Secured by Paystack. Your payment information is encrypted and
-                            secure.
+                            🔒 Secured by Paystack
                         </Text>
                     </ScrollView>
                 </KeyboardAvoidingView>
             </BottomSheetModal>
 
-            {/* Paystack WebView - Only render when processing */}
-            {isProcessing && referenceNumber && (
-                <Paystack
-                    paystackKey={PAYSTACK_PUBLIC_KEY}
-                    amount={plan.price * 100}
-                    billingEmail={customerInfo.email}
-                    billingName={customerInfo.name}
-                    billingMobile={customerInfo.phone}
-                    channels={["card", "bank", "ussd", "mobile_money"]}
-                    refNumber={referenceNumber}
-                    onCancel={handlePaymentCancel}
-                    onSuccess={handlePaymentSuccess}
-                    autoStart={true}
-                />
-            )}
+            {/* Separate Modal for Paystack Payment */}
+            <Modal
+                visible={showPaystackModal}
+                animationType="slide"
+                transparent={false}
+                onRequestClose={handlePaymentCancel}
+            >
+                <View style={styles.paystackModalContainer}>
+                    <View style={styles.paystackHeader}>
+                        <Text style={styles.paystackHeaderText}>Complete Payment</Text>
+                        <TouchableOpacity 
+                            onPress={handlePaymentCancel}
+                            style={styles.cancelButton}
+                        >
+                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    {referenceNumber ? (
+                        <View style={styles.paystackContent}>
+                            <PaystackPayment
+                                paystackKey={PAYSTACK_PUBLIC_KEY}
+                                amount={plan.price * 100}
+                                email={customerInfo.email.trim()}
+                                name={customerInfo.name.trim()}
+                                phone={customerInfo.phone.trim()}
+                                reference={referenceNumber}
+                                onSuccess={handlePaymentSuccess}
+                                onCancel={handlePaymentCancel}
+                            />
+                            
+                            <Text style={styles.paystackInstructions}>
+                                Tap the button above to proceed with payment
+                            </Text>
+                        </View>
+                    ) : (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#3B82F6" />
+                            <Text style={styles.loadingText}>Preparing payment...</Text>
+                        </View>
+                    )}
+                </View>
+            </Modal>
         </>
     );
 };
 
 const styles = StyleSheet.create({
     scrollContent: {
-        paddingBottom: 20,
+        paddingBottom: 40,
     },
     mainTitle: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: "700",
         color: "#fff",
         marginBottom: 20,
@@ -357,19 +460,16 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     cardTitle: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "700",
         color: "#fff",
-        marginBottom: 16,
-    },
-    orderSummary: {
         marginBottom: 12,
     },
     orderItem: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 8,
+        marginBottom: 4,
     },
     orderItemName: {
         fontSize: 16,
@@ -382,7 +482,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     billingInterval: {
-        fontSize: 14,
+        fontSize: 13,
         color: "#888",
     },
     divider: {
@@ -394,25 +494,24 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 16,
     },
     totalLabel: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "700",
         color: "#fff",
     },
     totalAmount: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "700",
         color: "#34D399",
     },
     guarantees: {
-        marginTop: 8,
+        marginTop: 12,
     },
     guaranteeText: {
-        fontSize: 13,
+        fontSize: 12,
         color: "#888",
-        marginBottom: 4,
+        marginBottom: 2,
     },
     formSection: {
         marginBottom: 20,
@@ -424,7 +523,7 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     sectionTitle: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: "600",
         color: "#fff",
     },
@@ -432,55 +531,98 @@ const styles = StyleSheet.create({
         backgroundColor: "#1a1a2e",
         borderWidth: 1,
         borderColor: "#333",
-        borderRadius: 8,
-        padding: 12,
+        borderRadius: 10,
+        padding: 14,
         fontSize: 16,
         color: "#fff",
         marginBottom: 12,
     },
     paymentInfo: {
         backgroundColor: "#1a1a2e",
-        padding: 12,
-        borderRadius: 8,
+        padding: 14,
+        borderRadius: 10,
+        marginBottom: 16,
     },
     paymentInfoText: {
         fontSize: 14,
         color: "#ccc",
-        marginBottom: 8,
-    },
-    paymentMethods: {
-        marginTop: 4,
+        marginBottom: 6,
     },
     paymentMethod: {
-        fontSize: 14,
+        fontSize: 13,
         color: "#888",
-        marginBottom: 4,
     },
-    submitButton: {
-        backgroundColor: "#3B82F6",
+    proceedButton: {
+        backgroundColor: "#34D399",
         padding: 16,
         borderRadius: 12,
         alignItems: "center",
-        marginTop: 8,
-        marginBottom: 12,
     },
-    submitButtonDisabled: {
-        backgroundColor: "#555",
-        opacity: 0.6,
+    proceedButtonDisabled: {
+        backgroundColor: "#1a1a2e",
+        opacity: 0.5,
     },
-    submitButtonText: {
+    proceedButtonText: {
         fontSize: 16,
         fontWeight: "700",
         color: "#fff",
     },
-    processingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-    },
     disclaimer: {
         fontSize: 12,
+        color: "#666",
+        textAlign: "center",
+        marginTop: 8,
+    },
+    // Paystack Modal Styles
+    paystackModalContainer: {
+        flex: 1,
+        backgroundColor: "#000105",
+    },
+    paystackHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 16,
+        paddingTop: Platform.OS === "ios" ? 60 : 16,
+        backgroundColor: "#0a0a1a",
+        borderBottomWidth: 1,
+        borderBottomColor: "#1a1a2e",
+    },
+    paystackHeaderText: {
+        fontSize: 18,
+        fontWeight: "700",
+        color: "#fff",
+    },
+    cancelButton: {
+        padding: 8,
+    },
+    cancelButtonText: {
+        color: "#ff6b6b",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    paystackContent: {
+        flex: 1,
+        padding: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    paystackInstructions: {
+        marginTop: 20,
         color: "#888",
+        fontSize: 14,
         textAlign: "center",
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    loadingText: {
+        marginTop: 12,
+        color: "#888",
+        fontSize: 14,
+    },
 });
+
+export default CheckoutPage;
