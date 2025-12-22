@@ -11,6 +11,8 @@ import {
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
+import ScientificCalculatorScreen from "./ScientificCalculatorScreen";
+import BMICalculatorScreen from "./BMICalculatorScreen";
 
 export const tools = [
     { id: "1", title: "Scientific Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
@@ -39,10 +41,10 @@ const CalculatorsScreen: React.FC = () => {
 
     const renderToolContent = (toolName: string) => {
         switch (toolName) {
-            case "Basic Calculator":
-                return <Text style={styles.toolPlaceholder}>🔢 Basic Calculator UI</Text>;
+            case "Scientific Calculator":
+                return <ScientificCalculatorScreen />;
             case "BMI Calculator":
-                return <Text style={styles.toolPlaceholder}>⚖️ BMI Calculator UI</Text>;
+                return <BMICalculatorScreen />;
             case "Loan Calculator":
                 return <Text style={styles.toolPlaceholder}>💰 Loan Calculator UI</Text>;
             case "Tip Calculator":

@@ -1,0 +1,38 @@
+[33mc1aadd7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlivinus[m[33m)[m Change name basic calculator to scientific calculator
+[33m2f8c60b[m Merge branch 'dev' of https://github.com/D-roid-Technologies/D-roidOneMobile into livinus
+[33m24056de[m[33m ([m[1;32ma-[m[33m)[m clearn up
+[33m0925f2d[m[33m ([m[1;31morigin/livinus[m[33m)[m adjust signup
+[33m0b7ac89[m Merge branch 'dev' of https://github.com/D-roid-Technologies/D-roidOneMobile into livinus
+[33m8918955[m fix and improve contact us
+[33m6c49d62[m WIP:tools box
+[33mb007f90[m turn calculate item  modale to screen
+[33m3cd2acd[m feat: implement career page and start working on test questions
+[33mf23617e[m wip:test
+[33m910ce18[m adjust cereer header
+[33mf30ac61[m WIP:cerrer page
+[33m1bc67ff[m fix icon
+[33m278611f[m fix service icon button
+[33mdd40914[m refeactor service folder structure
+[33mbd52526[m fix story
+[33m15f7a0e[m WIP:storyReader
+[33mba193b3[m story WIP
+[33m11da203[m fix consulting
+[33m647b7f2[m WIP:animations
+[33m703efac[m fix fronted UI
+[33m6bcaa43[m improving the software layout
+[33m0aa76b3[m improveing service page
+[33m8fcdfca[m WIO service detail page
+[33mc1dc683[m Implement Services screen with unified state flow and mobile-optimized detail views
+[33mcf13d54[m WIP of service section
+[33mf3c2cf7[m fix personal Details WIP: services section
+[33ma3694c5[m fix personal Details sections
+[33m2478067[m fix security and perernce layout
+[33m3d05182[m Merge branch 'dev' of https://github.com/D-roid-Technologies/D-roidOneMobile into livinus
+[33m2d486db[m Added Affiliated Apps, Security, Preferences, and Documents tabs with full data integration and responsive scrollable Personal Details UI.
+[33md02df27[m WIP:personal Datias items
+[33mf768e2f[m WIP: personal account
+[33m3938667[m add back button in personal details page
+[33m546f169[m Merge branch 'main' of https://github.com/D-roid-Technologies/D-roidOneMobile into livinus
+[33mbd27231[m WIP:personal Details quick actions
+[33m36fc636[m connect member file to root navigation screen
+[33mb9b32d2[m add temporal files in memeber quick actions folder
