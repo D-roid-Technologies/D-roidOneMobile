@@ -114,42 +114,44 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a1a2e",
     justifyContent: "space-between",
   },
   selectText: {
     fontSize: 14,
-    color: "#000000",
+    color: "#ffffff",
     flexShrink: 1,
   },
   placeholderText: {
-    color: "#9ca3af",
+    color: "#6b7280",
   },
   chevronIcon: {
     marginLeft: 8,
     fontSize: 14,
-    color: "#9ca3af",
+    color: "#6b7280",
   },
   inputDefaultBorder: {
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "#333",
   },
   inputErrorBorder: {
     borderWidth: 1,
     borderColor: "#dc3545",
-    backgroundColor: "#fff5f5",
+    backgroundColor: "rgba(114, 28, 36, 0.2)",
   },
   modalBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.25)",
+    backgroundColor: "rgba(0,0,0,0.7)",
     justifyContent: "center",
     padding: 24,
   },
   modalContent: {
     maxHeight: "70%",
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#000c3a",
     paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "#333",
   },
   dropdownItem: {
     flexDirection: "row",
@@ -159,22 +161,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   dropdownItemSelected: {
-    backgroundColor: "#e5f0ff",
+    backgroundColor: "#1e3a8a",
   },
   dropdownItemText: {
     fontSize: 14,
-    color: "#111827",
+    color: "#ffffff",
     flexShrink: 1,
   },
   checkIcon: {
     marginLeft: 8,
     fontSize: 14,
-    color: "#071D6A",
+    color: "#3B82F6",
   },
   errorText: {
     marginTop: 4,
     fontSize: 12,
-    color: "#dc3545",
+    color: "#f87171",
   },
 });
 
