@@ -401,16 +401,16 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 export default ServicesScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16, backgroundColor: "#FFFFFF" },
+  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16, backgroundColor: "#000105" },
   header: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
     gap: 16, // Space between back button and title
   },
-  title: { fontSize: 24, fontWeight: "900", color: "#111827" },
+  title: { fontSize: 24, fontWeight: "900", color: "#ffffff" },
   sectionWrap: { flex: 1 },
-  subHeader: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 16 },
+  subHeader: { fontSize: 18, fontWeight: "700", color: "#ffffff", marginBottom: 16 },
   list: { paddingBottom: 120 },
   columnWrapper: { justifyContent: "space-between" },
 });

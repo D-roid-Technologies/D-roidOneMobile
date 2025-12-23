@@ -45,6 +45,7 @@ const SecurityInformationSection: React.FC<SecurityInformationSectionProps> = ({
             errors.securityAnswer && styles.inputErrorBorder,
           ]}
           placeholder="Enter your security answer"
+          placeholderTextColor="#D1D5DB"
           value={(formData as any).securityAnswer || ""}
           onChangeText={(text) => onChange("securityAnswer", text)}
           onBlur={() => onBlur("securityAnswer")}

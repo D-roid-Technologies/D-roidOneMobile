@@ -82,9 +82,9 @@ const ServiceDetailView: React.FC<Props> = ({
 
           <View style={styles.iconWrapper}>
             {isExpanded ? (
-              <ChevronUp color="#2667cc" size={20} />
+              <ChevronUp color="#3B82F6" size={20} />
             ) : (
-              <ChevronDown color="#2667cc" size={20} />
+              <ChevronDown color="#3B82F6" size={20} />
             )}
           </View>
         </View>
@@ -175,20 +175,20 @@ export default ServiceDetailView;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#000c3a",
     borderRadius: 16,
     padding: 20,
-    shadowColor: "#071d6a",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 30,
     elevation: 5,
-    borderWidth: 2,
-    borderColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#222",
     marginBottom: 20,
   },
   containerExpanded: {
-    borderColor: "#2667cc",
+    borderColor: "#3B82F6",
   },
   header: {
     flexDirection: "row",
@@ -211,17 +211,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#071d6a",
+    color: "#ffffff",
     flex: 1,
   },
   subTitle: {
-    color: "#64748b",
+    color: "#94a3b8",
     fontSize: 14,
     marginBottom: 16,
     lineHeight: 20,
   },
   iconWrapper: {
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "rgba(255,255,255,0.1)",
     padding: 8,
     borderRadius: 8,
     marginLeft: 16,
@@ -238,19 +238,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "rgba(255,255,255,0.05)",
     borderRadius: 8,
     marginRight: 8,
     marginBottom: 8,
   },
   statText: {
     fontSize: 13,
-    color: "#475569",
+    color: "#e2e8f0",
     fontWeight: "500",
     marginLeft: 6,
   },
   summary: {
-    color: "#334155",
+    color: "#cbd5e1",
     lineHeight: 22,
     marginBottom: 24,
     fontSize: 15,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   expandedContent: {
     borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
+    borderTopColor: "rgba(255,255,255,0.1)",
     paddingTop: 24,
   },
   section: {
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#071d6a",
+    color: "#3B82F6",
     marginBottom: 16,
   },
   toolsWrapper: {
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   toolBadge: {
-    backgroundColor: "#2667cc",
+    backgroundColor: "#3B82F6",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
@@ -301,27 +301,27 @@ const styles = StyleSheet.create({
   benefitBullet: {
     width: 6,
     height: 6,
-    backgroundColor: "#2667cc",
+    backgroundColor: "#3B82F6",
     borderRadius: 3,
     marginTop: 8,
     marginRight: 8,
   },
   benefitText: {
-    color: "#475569",
+    color: "#cbd5e1",
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
   },
   pricingBox: {
-    backgroundColor: "#f8fafc",
+    backgroundColor: "rgba(255,255,255,0.05)",
     padding: 24,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "rgba(255,255,255,0.1)",
   },
   priceItem: {
     fontSize: 14,
-    color: "#334155",
+    color: "#e2e8f0",
     marginBottom: 8,
     fontWeight: "500",
   },
@@ -329,12 +329,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingVertical: 14,
     paddingHorizontal: 24,
-    backgroundColor: "#2667cc",
+    backgroundColor: "#3B82F6",
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#2667cc",
+    shadowColor: "#3B82F6",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 12,

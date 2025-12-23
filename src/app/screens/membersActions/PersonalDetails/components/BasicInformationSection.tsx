@@ -41,6 +41,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
               errors.firstName && styles.inputErrorBorder,
             ]}
             placeholder="Enter first name"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).firstName || ""}
             onChangeText={(text) => onChange("firstName", text)}
             onBlur={() => onBlur("firstName")}
@@ -58,6 +59,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
               errors.lastName && styles.inputErrorBorder,
             ]}
             placeholder="Enter last name"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).lastName || ""}
             onChangeText={(text) => onChange("lastName", text)}
             onBlur={() => onBlur("lastName")}
@@ -76,6 +78,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
                 errors.middleName && styles.inputErrorBorder,
               ]}
               placeholder="Enter middle name"
+              placeholderTextColor="#D1D5DB"
               value={(formData as any).middleName || ""}
               onChangeText={(text) => onChange("middleName", text)}
               onBlur={() => onBlur("middleName")}
@@ -109,6 +112,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
                 errors.dateOfBirth && styles.inputErrorBorder,
               ]}
               placeholder="YYYY-MM-DD"
+              placeholderTextColor="#D1D5DB"
               value={(formData as any).dateOfBirth || ""}
               onChangeText={(text) => onChange("dateOfBirth", text)}
               onBlur={() => onBlur("dateOfBirth")}

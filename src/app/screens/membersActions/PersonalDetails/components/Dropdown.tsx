@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   placeholderText: {
-    color: "#6b7280",
+    color: "#D1D5DB",
   },
   chevronIcon: {
     marginLeft: 8,

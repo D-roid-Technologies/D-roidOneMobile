@@ -36,6 +36,7 @@ const StaffInformationSection: React.FC<StaffInformationSectionProps> = ({
               errors.position && styles.inputErrorBorder,
             ]}
             placeholder="Enter position or job title"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any)?.position || ""}
             onChangeText={(text) => onChange("position", text)}
             onBlur={() => onBlur("position")}
@@ -53,6 +54,7 @@ const StaffInformationSection: React.FC<StaffInformationSectionProps> = ({
               errors.department && styles.inputErrorBorder,
             ]}
             placeholder="Enter department"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any)?.department || ""}
             onChangeText={(text) => onChange("department", text)}
             onBlur={() => onBlur("department")}
@@ -70,6 +72,7 @@ const StaffInformationSection: React.FC<StaffInformationSectionProps> = ({
               errors.employeeId && styles.inputErrorBorder,
             ]}
             placeholder="Enter employee ID"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any)?.employeeId || ""}
             onChangeText={(text) => onChange("employeeId", text)}
             onBlur={() => onBlur("employeeId")}
@@ -87,6 +90,7 @@ const StaffInformationSection: React.FC<StaffInformationSectionProps> = ({
               errors.joinDate && styles.inputErrorBorder,
             ]}
             placeholder="YYYY-MM-DD"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any)?.joinDate || ""}
             onChangeText={(text) => onChange("joinDate", text)}
             onBlur={() => onBlur("joinDate")}

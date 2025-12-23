@@ -77,11 +77,11 @@ const StoryReader: React.FC<Props> = ({ story, onClose }) => {
 
   const getGenreIcon = () => {
     const genreLower = story.genre.toLowerCase();
-    if (genreLower.includes("war") || genreLower.includes("action")) return <Sword color="#2667cc" size={16} />;
-    if (genreLower.includes("drama") || genreLower.includes("emotional")) return <Film color="#2667cc" size={16} />;
-    if (genreLower.includes("urban") || genreLower.includes("city")) return <Building color="#2667cc" size={16} />;
-    if (genreLower.includes("medical") || genreLower.includes("resilience")) return <Heart color="#2667cc" size={16} />;
-    return <BookOpen color="#2667cc" size={16} />;
+    if (genreLower.includes("war") || genreLower.includes("action")) return <Sword color="#3B82F6" size={16} />;
+    if (genreLower.includes("drama") || genreLower.includes("emotional")) return <Film color="#3B82F6" size={16} />;
+    if (genreLower.includes("urban") || genreLower.includes("city")) return <Building color="#3B82F6" size={16} />;
+    if (genreLower.includes("medical") || genreLower.includes("resilience")) return <Heart color="#3B82F6" size={16} />;
+    return <BookOpen color="#3B82F6" size={16} />;
   };
 
   // --- Reading Mode View ---
@@ -90,7 +90,7 @@ const StoryReader: React.FC<Props> = ({ story, onClose }) => {
     
     return (
       <SafeAreaView style={styles.readingContainer}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="light-content" />
         
         {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
@@ -291,86 +291,86 @@ const StoryReader: React.FC<Props> = ({ story, onClose }) => {
 export default StoryReader;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  readingContainer: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#000105" },
+  readingContainer: { flex: 1, backgroundColor: "#000105" },
   scrollView: { flex: 1 },
   closeButton: { position: "absolute", top: 16, right: 16, zIndex: 10, padding: 8 },
   
   // Hero
   heroSection: { padding: 20, alignItems: "center" },
-  genreTag: { flexDirection: "row", alignItems: "center", backgroundColor: "#EEF2FF", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, marginBottom: 16 },
-  genreText: { color: "#2667cc", fontWeight: "600", fontSize: 12, marginLeft: 6, textTransform: "uppercase" },
-  heroTitle: { fontSize: 28, fontWeight: "900", color: "#111827", textAlign: "center", marginBottom: 8 },
-  heroSubtitle: { fontSize: 16, color: "#6B7280", marginBottom: 16, fontStyle: "italic" },
+  genreTag: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(59, 130, 246, 0.1)", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, marginBottom: 16 },
+  genreText: { color: "#3B82F6", fontWeight: "600", fontSize: 12, marginLeft: 6, textTransform: "uppercase" },
+  heroTitle: { fontSize: 28, fontWeight: "900", color: "#ffffff", textAlign: "center", marginBottom: 8 },
+  heroSubtitle: { fontSize: 16, color: "#9ca3af", marginBottom: 16, fontStyle: "italic" },
   
   heroMeta: { flexDirection: "row", justifyContent: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" },
   metaItem: { flexDirection: "row", alignItems: "center", gap: 6 },
-  metaText: { color: "#6B7280", fontSize: 13 },
+  metaText: { color: "#9ca3af", fontSize: 13 },
   
-  statsContainer: { flexDirection: "row", justifyContent: "center", gap: 24, marginBottom: 24, paddingVertical: 12, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "#F3F4F6", width: "100%" },
+  statsContainer: { flexDirection: "row", justifyContent: "center", gap: 24, marginBottom: 24, paddingVertical: 12, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "#222", width: "100%" },
   statItem: { flexDirection: "row", alignItems: "center", gap: 6 },
-  statValue: { color: "#4B5563", fontWeight: "600", fontSize: 14 },
+  statValue: { color: "#e0e0e0", fontWeight: "600", fontSize: 14 },
   
-  description: { fontSize: 16, color: "#374151", textAlign: "center", lineHeight: 24, marginBottom: 24 },
-  primaryButton: { backgroundColor: "#2667cc", paddingVertical: 14, paddingHorizontal: 32, borderRadius: 30, width: "100%", alignItems: "center", shadowColor: "#2667cc", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },
+  description: { fontSize: 16, color: "#cbd5e1", textAlign: "center", lineHeight: 24, marginBottom: 24 },
+  primaryButton: { backgroundColor: "#3B82F6", paddingVertical: 14, paddingHorizontal: 32, borderRadius: 30, width: "100%", alignItems: "center", shadowColor: "#3B82F6", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 },
   primaryButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   
   // Generic Section
   section: { paddingHorizontal: 20, marginBottom: 30 },
   sectionHeader: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 12 },
-  sectionTitle: { fontSize: 20, fontWeight: "800", color: "#111827" },
-  sectionTitleWithoutIcon: { fontSize: 20, fontWeight: "800", color: "#111827", marginBottom: 12 },
-  card: { backgroundColor: "#F9FAFB", padding: 16, borderRadius: 16, borderWidth: 1, borderColor: "#F3F4F6" },
-  synopsisText: { fontSize: 15, color: "#4B5563", lineHeight: 24 },
+  sectionTitle: { fontSize: 20, fontWeight: "800", color: "#ffffff" },
+  sectionTitleWithoutIcon: { fontSize: 20, fontWeight: "800", color: "#ffffff", marginBottom: 12 },
+  card: { backgroundColor: "#000c3a", padding: 16, borderRadius: 16, borderWidth: 1, borderColor: "#222" },
+  synopsisText: { fontSize: 15, color: "#e0e0e0", lineHeight: 24 },
   
   // Themes
   themesGrid: { gap: 12 },
-  themeCard: { backgroundColor: "#F9FAFB", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#F3F4F6" },
-  themeTitle: { fontSize: 16, fontWeight: "700", color: "#1F2937", marginBottom: 4 },
-  themeDesc: { fontSize: 14, color: "#6B7280", lineHeight: 20 },
+  themeCard: { backgroundColor: "#000c3a", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#222" },
+  themeTitle: { fontSize: 16, fontWeight: "700", color: "#ffffff", marginBottom: 4 },
+  themeDesc: { fontSize: 14, color: "#9ca3af", lineHeight: 20 },
   
   // Chapters Scroll
-  chapterCard: { marginBottom: 12, padding: 16, backgroundColor: "#fff", borderRadius: 12, borderWidth: 1, borderColor: "#E5E7EB" },
+  chapterCard: { marginBottom: 12, padding: 16, backgroundColor: "#000c3a", borderRadius: 12, borderWidth: 1, borderColor: "#222" },
   chapterCardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
-  chapterCardTitle: { fontSize: 16, fontWeight: "700", color: "#111827", flex: 1 },
+  chapterCardTitle: { fontSize: 16, fontWeight: "700", color: "#ffffff", flex: 1 },
   chapterTime: { flexDirection: "row", alignItems: "center", gap: 4 },
-  chapterTimeText: { fontSize: 12, color: "#9CA3AF" },
-  chapterPreview: { fontSize: 14, color: "#6B7280" },
+  chapterTimeText: { fontSize: 12, color: "#6B7280" },
+  chapterPreview: { fontSize: 14, color: "#9ca3af" },
   
-  secondaryButton: { backgroundColor: "#EEF2FF", paddingVertical: 14, borderRadius: 12, alignItems: "center", marginTop: 8 },
-  secondaryButtonText: { color: "#2667cc", fontSize: 16, fontWeight: "700" },
+  secondaryButton: { backgroundColor: "rgba(59, 130, 246, 0.1)", paddingVertical: 14, borderRadius: 12, alignItems: "center", marginTop: 8 },
+  secondaryButtonText: { color: "#3B82F6", fontSize: 16, fontWeight: "700" },
   
   // --- Reading Mode Styles ---
-  progressBarContainer: { height: 4, backgroundColor: "#E5E7EB", width: "100%" },
-  progressBar: { height: "100%", backgroundColor: "#2667cc" },
+  progressBarContainer: { height: 4, backgroundColor: "#222", width: "100%" },
+  progressBar: { height: "100%", backgroundColor: "#3B82F6" },
   
-  readingHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#F3F4F6", backgroundColor: "#fff" },
+  readingHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#222", backgroundColor: "#000105" },
   backButton: { flexDirection: "row", alignItems: "center", gap: 4 },
-  backButtonText: { color: "#4B5563", fontSize: 14, fontWeight: "600" },
+  backButtonText: { color: "#9ca3af", fontSize: 14, fontWeight: "600" },
   headerTitleContainer: { alignItems: "center", flex: 1, marginHorizontal: 8 },
-  headerChapterNum: { fontSize: 10, color: "#9CA3AF", textTransform: "uppercase", fontWeight: "700" },
-  headerChapterTitle: { fontSize: 14, fontWeight: "700", color: "#111827" },
-  progressText: { fontSize: 12, color: "#6B7280", width: 40, textAlign: "right" },
+  headerChapterNum: { fontSize: 10, color: "#6B7280", textTransform: "uppercase", fontWeight: "700" },
+  headerChapterTitle: { fontSize: 14, fontWeight: "700", color: "#ffffff" },
+  progressText: { fontSize: 12, color: "#9ca3af", width: 40, textAlign: "right" },
   
-  readingScrollView: { flex: 1, backgroundColor: "#fff" },
+  readingScrollView: { flex: 1, backgroundColor: "#000105" },
   readingContent: { padding: 24 },
   
   chapterHeader: { marginBottom: 32, alignItems: "center" },
-  chapterTitleMain: { fontSize: 24, fontWeight: "900", color: "#111827", textAlign: "center", marginBottom: 12 },
+  chapterTitleMain: { fontSize: 24, fontWeight: "900", color: "#ffffff", textAlign: "center", marginBottom: 12 },
   chapterMeta: { flexDirection: "row", alignItems: "center", gap: 8 },
   chapterMetaText: { fontSize: 13, color: "#6B7280", textTransform: "uppercase", fontWeight: "600" },
-  chapterMetaDot: { color: "#D1D5DB" },
+  chapterMetaDot: { color: "#444" },
   
   textContainer: { marginBottom: 40 },
-  paragraph: { fontSize: 18, lineHeight: 30, color: "#374151", marginBottom: 20, fontFamily: "System" },
+  paragraph: { fontSize: 18, lineHeight: 30, color: "#e0e0e0", marginBottom: 20, fontFamily: "System" },
   
-  navigationFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 20, borderTopWidth: 1, borderTopColor: "#F3F4F6" },
+  navigationFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 20, borderTopWidth: 1, borderTopColor: "#222" },
   navButton: { flexDirection: "row", alignItems: "center", gap: 8, padding: 8 },
   navButtonDisabled: { opacity: 0.5 },
-  navButtonText: { fontSize: 15, fontWeight: "600", color: "#2667cc" },
-  navButtonTextDisabled: { color: "#9CA3AF" },
+  navButtonText: { fontSize: 15, fontWeight: "600", color: "#3B82F6" },
+  navButtonTextDisabled: { color: "#555" },
   
   chapterDots: { flexDirection: "row", gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#E5E7EB" },
-  dotActive: { backgroundColor: "#2667cc" },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#222" },
+  dotActive: { backgroundColor: "#3B82F6" },
 });

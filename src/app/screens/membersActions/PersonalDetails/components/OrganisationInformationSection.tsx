@@ -68,6 +68,7 @@ const OrganisationInformationSection: React.FC<OrganisationInformationSectionPro
                 errors.dateOfRegistration && styles.inputErrorBorder,
               ]}
               placeholder="YYYY-MM-DD"
+              placeholderTextColor="#D1D5DB"
               value={(formData as any).dateOfRegistration || ""}
               onChangeText={(text) => onChange("dateOfRegistration", text)}
               onBlur={() => onBlur("dateOfRegistration")}

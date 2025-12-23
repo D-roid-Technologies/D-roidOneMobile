@@ -27,6 +27,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.phone && styles.inputErrorBorder,
             ]}
             placeholder="e.g., +234 800 123 4567"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).phone || ""}
             onChangeText={(text) => onChange("phone", text)}
             onBlur={() => onBlur("phone")}
@@ -45,6 +46,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.streetNumber && styles.inputErrorBorder,
             ]}
             placeholder="Enter street number"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).streetNumber || ""}
             onChangeText={(text) => onChange("streetNumber", text)}
             onBlur={() => onBlur("streetNumber")}
@@ -62,6 +64,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.streetName && styles.inputErrorBorder,
             ]}
             placeholder="Enter street name"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).streetName || ""}
             onChangeText={(text) => onChange("streetName", text)}
             onBlur={() => onBlur("streetName")}
@@ -79,6 +82,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.city && styles.inputErrorBorder,
             ]}
             placeholder="Enter city"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).city || ""}
             onChangeText={(text) => onChange("city", text)}
             onBlur={() => onBlur("city")}
@@ -96,6 +100,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.state && styles.inputErrorBorder,
             ]}
             placeholder="Enter state"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).state || ""}
             onChangeText={(text) => onChange("state", text)}
             onBlur={() => onBlur("state")}
@@ -113,6 +118,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
               errors.country && styles.inputErrorBorder,
             ]}
             placeholder="Enter country"
+            placeholderTextColor="#D1D5DB"
             value={(formData as any).country || ""}
             onChangeText={(text) => onChange("country", text)}
             onBlur={() => onBlur("country")}

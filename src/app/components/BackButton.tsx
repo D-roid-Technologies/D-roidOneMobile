@@ -31,7 +31,7 @@ const BackButton: React.FC<BackButtonProps> = ({
       style={styles.backButton}
       activeOpacity={0.7}
     >
-      <Ionicons name="arrow-back" size={size} color={color} />
+      <Ionicons name="chevron-back" size={size} color={color} />
     </TouchableOpacity>
   );
 };
