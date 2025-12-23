@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333333",
+    color: "#ffffff",
     marginBottom: 4,
   },
   photo: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   noPhotoText: {
-    color: "#666666",
+    color: "#9ca3af",
     marginBottom: 8,
   },
   secondaryButton: {
@@ -85,18 +85,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#071D6A",
+    borderColor: "#3B82F6",
     alignSelf: "flex-start",
   },
   secondaryButtonText: {
-    color: "#071D6A",
+    color: "#3B82F6",
     fontSize: 14,
     fontWeight: "500",
   },
   errorText: {
     marginTop: 4,
     fontSize: 12,
-    color: "#dc3545",
+    color: "#f87171",
   },
 });
 

@@ -19,6 +19,8 @@ import type { Plan } from "../../utils/Types";
 import { formatCurrency } from "../../utils/paystack";
 import BottomSheetModal from "../../components/BottomSheetModal";
 import { PaystackProvider, usePaystack } from "react-native-paystack-webview";
+import { useDispatch } from "react-redux";
+import { setTier, TierType } from "../../redux/slice/membershiptierslice";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -120,6 +122,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     onPaymentSuccess,
     onPaymentInitiated,
 }) => {
+    const dispatch = useDispatch();
     const plan = selectedPlan || {
         id: "default",
         name: "Premium Tools Access",
@@ -139,7 +142,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const SERVICE_ID = "service_o1jbklr";
     const TEMPLATE_ID = "template_p8h58ur";
     const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
-    const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
+    const PAYSTACK_PUBLIC_KEY = "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
+    // const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
 
     const [customerInfo, setCustomerInfo] = useState({
         name: "",
@@ -251,22 +255,36 @@ Thank you for choosing us!`,
             email: customerInfo.email,
         };
 
+        // Upgrade user tier based on plan immediately after payment success
+        let newTier: TierType = "Silver";
+        if (plan.name.toLowerCase().includes("premium")) {
+            newTier = "Premium";
+        } else if (plan.name.toLowerCase().includes("gold")) {
+            newTier = "Gold";
+        }
+        
+        console.log(`Upgrading user to ${newTier} tier`);
+        dispatch(setTier(newTier));
+
         try {
             await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+            
             Toast.show({
                 type: "success",
                 text1: "Payment Successful!",
-                text2: `Welcome ${customerInfo.name}!`,
+                text2: `Welcome ${customerInfo.name}! You are now a ${newTier} member.`,
                 visibilityTime: 4000,
             });
         } catch (error) {
             console.error("Email error:", error);
+            // Show success toast even if email fails, as payment and upgrade succeeded
             Toast.show({
                 type: "success",
                 text1: "Payment Successful!",
-                text2: "Confirmation email may be delayed",
+                text2: `Welcome ${customerInfo.name}! You are now a ${newTier} member. (Email confirmation failed)`,
                 visibilityTime: 4000,
             });
+            // We don't re-throw because the core value (upgrade) is delivered
         }
 
         if (onPaymentSuccess) {

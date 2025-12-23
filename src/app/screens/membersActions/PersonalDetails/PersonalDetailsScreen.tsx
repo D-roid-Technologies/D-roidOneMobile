@@ -703,7 +703,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000105" }}>
       {/* Custom Header with Back Button */}
       <View style={styles.header}>
         <BackButton navigation={navigation} />
@@ -712,7 +712,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
       </View>
 
       <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: "#ffffff" }}
+        style={{ flex: 1, backgroundColor: "#000105" }}
         behavior={Platform.select({ ios: "padding", android: undefined })}
       >
         <ScrollView
@@ -790,7 +790,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#071D6A",
+    backgroundColor: "#000c3a",
     elevation: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 16,
     paddingBottom: 100,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#000105",
   },
   headerRow: {
     flexDirection: "row",
@@ -823,50 +823,50 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
-    color: "#000000",
+    color: "#ffffff",
     marginRight: 12,
   },
   subHeaderText: {
     fontSize: 14,
-    color: "#555555",
+    color: "#e0e0e0",
     marginBottom: 8,
   },
   successBox: {
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
-    backgroundColor: "#d4edda",
+    backgroundColor: "rgba(21, 87, 36, 0.2)",
     borderWidth: 1,
-    borderColor: "#c3e6cb",
+    borderColor: "#155724",
     borderRadius: 8,
     marginTop: 8,
   },
   successIcon: {
     fontSize: 18,
     marginRight: 8,
-    color: "#155724",
+    color: "#4ade80",
   },
   successText: {
-    color: "#155724",
+    color: "#4ade80",
     fontSize: 14,
   },
   errorBox: {
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
-    backgroundColor: "#f8d7da",
+    backgroundColor: "rgba(114, 28, 36, 0.2)",
     borderWidth: 1,
-    borderColor: "#f5c6cb",
+    borderColor: "#721c24",
     borderRadius: 8,
     marginTop: 8,
   },
   errorIcon: {
     fontSize: 18,
     marginRight: 8,
-    color: "#721c24",
+    color: "#f87171",
   },
   errorBoxText: {
-    color: "#721c24",
+    color: "#f87171",
     fontSize: 14,
     flexShrink: 1,
   },
@@ -874,19 +874,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 20,
     borderRadius: 12,
-    backgroundColor: "#fafafa",
+    backgroundColor: "#000c3a",
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 2,
+    borderColor: "#222",
   },
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333333",
+    color: "#ffffff",
     marginBottom: 4,
   },
   input: {
@@ -895,12 +890,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a1a2e",
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "#333",
+    color: "#ffffff",
   },
   readOnlyInput: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#111",
+    color: "#888",
   },
   grid: {
     flexDirection: "row",
@@ -916,7 +913,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#071D6A",
+    backgroundColor: "#3B82F6",
     alignItems: "center",
   },
   submitButtonDisabled: {
@@ -945,14 +942,15 @@ tabsRow: {
   minWidth: screenWidth * 0.25, // 25% of screen width
   alignItems: "center",
   justifyContent: "center",
+  backgroundColor: "#1f2937",
 },
 
 tabItemActive: {
-  backgroundColor: "#071D6A",
+  backgroundColor: "#3B82F6",
 },
  tabText: {
   fontSize: 14,
-  color: "#071D6A",
+  color: "#ffffff",
   fontWeight: "500",
 },
 

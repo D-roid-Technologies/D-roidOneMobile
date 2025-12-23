@@ -69,17 +69,17 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#dddddd",
-    backgroundColor: "#f9fafc",
+    borderColor: "#222",
+    backgroundColor: "#000c3a",
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#666666",
+    color: "#3B82F6",
     marginBottom: 10,
     paddingBottom: 5,
     borderBottomWidth: 2,
-    borderBottomColor: "#666666",
+    borderBottomColor: "#3B82F6",
   },
   grid: {
     flexDirection: "row",
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333333",
+    color: "#ffffff",
     marginBottom: 4,
   },
   input: {
@@ -101,12 +101,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a1a2e",
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "#333",
+    color: "#ffffff",
   },
   readOnlyInput: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#111",
+    color: "#888",
   },
 });
 

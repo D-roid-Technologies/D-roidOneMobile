@@ -68,6 +68,7 @@ const OrganisationInformationSection: React.FC<OrganisationInformationSectionPro
                 errors.dateOfRegistration && styles.inputErrorBorder,
               ]}
               placeholder="YYYY-MM-DD"
+              placeholderTextColor="#D1D5DB"
               value={(formData as any).dateOfRegistration || ""}
               onChangeText={(text) => onChange("dateOfRegistration", text)}
               onBlur={() => onBlur("dateOfRegistration")}
@@ -90,17 +91,17 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#e9ecef",
-    backgroundColor: "#f8f9fa",
+    borderColor: "#222",
+    backgroundColor: "#000c3a",
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#071D6A",
+    color: "#3B82F6",
     marginBottom: 10,
     paddingBottom: 5,
     borderBottomWidth: 2,
-    borderBottomColor: "#071D6A",
+    borderBottomColor: "#3B82F6",
   },
   grid: {
     flexDirection: "row",
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333333",
+    color: "#ffffff",
     marginBottom: 4,
   },
   input: {
@@ -122,18 +123,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a1a2e",
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "#333",
+    color: "#ffffff",
   },
   inputErrorBorder: {
     borderColor: "#dc3545",
-    backgroundColor: "#fff5f5",
+    backgroundColor: "rgba(114, 28, 36, 0.2)",
   },
   errorText: {
     marginTop: 4,
     fontSize: 12,
-    color: "#dc3545",
+    color: "#f87171",
   },
 });
 

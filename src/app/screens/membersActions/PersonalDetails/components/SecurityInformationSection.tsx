@@ -45,6 +45,7 @@ const SecurityInformationSection: React.FC<SecurityInformationSectionProps> = ({
             errors.securityAnswer && styles.inputErrorBorder,
           ]}
           placeholder="Enter your security answer"
+          placeholderTextColor="#D1D5DB"
           value={(formData as any).securityAnswer || ""}
           onChangeText={(text) => onChange("securityAnswer", text)}
           onBlur={() => onBlur("securityAnswer")}
@@ -63,17 +64,17 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#e1bee7",
-    backgroundColor: "#f3e5f5",
+    borderColor: "#222",
+    backgroundColor: "#000c3a",
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#7b1fa2",
+    color: "#3B82F6",
     marginBottom: 10,
     paddingBottom: 5,
     borderBottomWidth: 2,
-    borderBottomColor: "#7b1fa2",
+    borderBottomColor: "#3B82F6",
   },
   field: {
     width: "100%",
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333333",
+    color: "#ffffff",
     marginBottom: 4,
   },
   input: {
@@ -91,18 +92,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#1a1a2e",
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "#333",
+    color: "#ffffff",
   },
   inputErrorBorder: {
     borderColor: "#dc3545",
-    backgroundColor: "#fff5f5",
+    backgroundColor: "rgba(114, 28, 36, 0.2)",
   },
   errorText: {
     marginTop: 4,
     fontSize: 12,
-    color: "#dc3545",
+    color: "#f87171",
   },
 });
 
