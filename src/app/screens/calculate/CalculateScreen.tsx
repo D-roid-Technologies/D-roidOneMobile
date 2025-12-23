@@ -11,9 +11,11 @@ import {
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
+import ScientificCalculatorScreen from "./ScientificCalculatorScreen";
+import BMICalculatorScreen from "./BMICalculatorScreen";
 
 export const tools = [
-    { id: "1", title: "Basic Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
+    { id: "1", title: "Scientific Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
     { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981", requiredTier: "Silver" },
     { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B", requiredTier: "Gold" },
     { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6", requiredTier: "Silver" },
@@ -39,10 +41,10 @@ const CalculatorsScreen: React.FC = () => {
 
     const renderToolContent = (toolName: string) => {
         switch (toolName) {
-            case "Basic Calculator":
-                return <Text style={styles.toolPlaceholder}>🔢 Basic Calculator UI</Text>;
+            case "Scientific Calculator":
+                return <ScientificCalculatorScreen />;
             case "BMI Calculator":
-                return <Text style={styles.toolPlaceholder}>⚖️ BMI Calculator UI</Text>;
+                return <BMICalculatorScreen />;
             case "Loan Calculator":
                 return <Text style={styles.toolPlaceholder}>💰 Loan Calculator UI</Text>;
             case "Tip Calculator":
@@ -71,7 +73,7 @@ const CalculatorsScreen: React.FC = () => {
                 Access various calculators for your needs
             </Text>
 
-            {/* 1. Scrollable Tools List */}
+            {/* Scrollable Tools List */}
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
@@ -90,7 +92,7 @@ const CalculatorsScreen: React.FC = () => {
                                 onPress={() => !isLocked && setSelectedTool(tool.title)}
                                 disabled={isLocked}
                             >
-                                {/* 2. Membership Type Badge */}
+                                {/* Membership Type Badge */}
                                 <View style={styles.tierBadge}>
                                     <Text style={styles.tierBadgeText}>{tool.requiredTier}</Text>
                                 </View>
@@ -117,16 +119,9 @@ const CalculatorsScreen: React.FC = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <ScrollView
-                        style={styles.modalContent}
-                        contentContainerStyle={{
-                            flexGrow: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
+                    <View style={styles.modalContent}>
                         {selectedTool && renderToolContent(selectedTool)}
-                    </ScrollView>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -212,6 +207,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         flex: 1,
+        backgroundColor: "#101828",
     },
     toolPlaceholder: {
         fontSize: 18,
