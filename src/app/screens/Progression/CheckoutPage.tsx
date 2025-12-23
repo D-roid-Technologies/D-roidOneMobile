@@ -47,9 +47,11 @@ const AutoStartPaystack: React.FC<{
   onCancel: () => void;
 }> = ({ amount, email, name, phone, reference, onSuccess, onCancel }) => {
   const { popup } = usePaystack();
+  const hasStarted = useRef(false);
 
   useEffect(() => {
-    if (popup) {
+    if (popup && !hasStarted.current) {
+        hasStarted.current = true;
         popup.checkout({
             amount,
             email,
