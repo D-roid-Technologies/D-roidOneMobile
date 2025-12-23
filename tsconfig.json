@@ -8,7 +8,15 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["react", "react-native"]
+    "types": [
+      "react",
+      "react-native"
+    ]
   },
-  "include": ["app", "App.tsx", "index.ts", "index.tsx"]
+  "include": [
+    "app",
+    "App.tsx",
+    "index.ts",
+    "index.tsx"
+  ]
 }

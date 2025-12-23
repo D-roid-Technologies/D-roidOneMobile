@@ -18,13 +18,9 @@ import emailjs from "emailjs-com";
 import type { Plan } from "../../utils/Types";
 import { formatCurrency } from "../../utils/paystack";
 import BottomSheetModal from "../../components/BottomSheetModal";
+import { PaystackProvider, usePaystack } from "react-native-paystack-webview";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-// Type definition for Paystack ref
-interface PaystackRef {
-    startTransaction: () => void;
-}
 
 interface PaystackResponse {
     transactionRef?: string;
@@ -40,7 +36,48 @@ interface CheckoutPageProps {
     onPaymentInitiated?: () => void;
 }
 
-// Paystack Component wrapper to handle the webview
+// Inner component to trigger transaction via hook
+const AutoStartPaystack: React.FC<{
+  amount: number;
+  email: string;
+  name: string;
+  phone: string;
+  reference: string;
+  onSuccess: (res: any) => void;
+  onCancel: () => void;
+}> = ({ amount, email, name, phone, reference, onSuccess, onCancel }) => {
+  const { popup } = usePaystack();
+
+  useEffect(() => {
+    if (popup) {
+        popup.checkout({
+            amount,
+            email,
+            reference,
+            metadata: {
+                custom_fields: [
+                    {
+                        display_name: "Name",
+                        variable_name: "name",
+                        value: name
+                    },
+                    {
+                        display_name: "Phone Number",
+                        variable_name: "phone",
+                        value: phone
+                    }
+                ]
+            },
+            onSuccess,
+            onCancel
+        });
+    }
+  }, [popup, amount, email, name, phone, reference, onSuccess, onCancel]);
+
+  return <ActivityIndicator size="large" color="#3B82F6" style={{ marginTop: 20 }} />;
+};
+
+// Paystack Component wrapper to handle the payment
 const PaystackPayment: React.FC<{
     paystackKey: string;
     amount: number;
@@ -51,22 +88,26 @@ const PaystackPayment: React.FC<{
     onSuccess: (response: any) => void;
     onCancel: () => void;
 }> = ({ paystackKey, amount, email, name, phone, reference, onSuccess, onCancel }) => {
-    // Dynamically require PaystackWebView only when needed
-    const PaystackWebView = require("react-native-paystack-webview").default;
-    
     return (
-        <PaystackWebView
-            paystackKey={paystackKey}
-            amount={amount}
-            billingEmail={email}
-            billingName={name}
-            billingMobile={phone}
-            channels={["card", "bank", "ussd", "mobile_money"]}
-            refNumber={reference}
-            onCancel={onCancel}
-            onSuccess={onSuccess}
-            autoStart={false}
-        />
+        <View style={{ flex: 1 }}>
+            <PaystackProvider 
+                publicKey={paystackKey}
+                onGlobalSuccess={(res) => onSuccess(res)}
+                onGlobalCancel={() => onCancel()}
+                defaultChannels={["card", "bank", "ussd", "mobile_money"]}
+                currency="NGN"
+            >
+                <AutoStartPaystack 
+                    amount={amount}
+                    email={email}
+                    name={name}
+                    phone={phone}
+                    reference={reference}
+                    onSuccess={onSuccess}
+                    onCancel={onCancel}
+                />
+            </PaystackProvider>
+        </View>
     );
 };
 
