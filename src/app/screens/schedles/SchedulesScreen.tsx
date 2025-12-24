@@ -214,7 +214,7 @@ const CalendarScreen: React.FC = () => {
               style={styles.modalButton}
               onPress={() => {
                 setIsModalVisible(false);
-                navigation.navigate('Settings'); // Or 'Find Someone' screen
+                navigation.navigate('FindSomeoneScreen');
               }}
             >
               <Ionicons name="search-outline" size={24} color="#000c3a" />

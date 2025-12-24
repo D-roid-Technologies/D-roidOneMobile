@@ -178,24 +178,29 @@ export default ProgressionHeader;
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#000105', // Matches container background
+        backgroundColor: "#000105",
     },
+
     container: {
         flexGrow: 1,
-        backgroundColor: '#000105',
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingBottom: 30,
+        backgroundColor: "#000105",
     },
+
+    /* Back Button */
     backBtn: {
-        marginTop: 10,
-        marginBottom: 20,
+        marginTop: 40,
+        marginBottom: 24,
         width: 40,
         height: 40,
-        borderRadius: 12,
         justifyContent: "center",
         alignItems: "center",
     },
+
+    /* Current Membership Card */
     card: {
-        backgroundColor: "#000c3a", // Dark Blue
+        backgroundColor: "#C7D2FE",
         padding: 20,
         borderRadius: 16,
         marginBottom: 30,
@@ -203,101 +208,107 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: "900",
-        color: "#fff",
-    },
-    subtitle: {
-        marginTop: 6,
-        color: "#e0e0e0",
-        fontSize: 14,
-        fontWeight: "300",
-        lineHeight: 20,
+        color: "#000105",
+        marginBottom: 6,
     },
     subtitleA: {
-        marginTop: 4,
-        color: "#e0e0e0",
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "700",
+        color: "#334155",
     },
+    subtitle: {
+        marginTop: 10,
+        fontSize: 14,
+        lineHeight: 20,
+        color: "#334155",
+        fontWeight: "400",
+    },
+
+    /* Progress */
     progressSection: {
         marginTop: 20,
     },
     progressLabel: {
-        color: "#fff",
+        fontSize: 13,
+        fontWeight: "700",
+        color: "#000105",
         marginBottom: 6,
-        fontWeight: "600",
     },
     progressBackground: {
         height: 10,
-        backgroundColor: "rgba(255,255,255,0.2)",
+        backgroundColor: "rgba(0,0,0,0.15)",
         borderRadius: 6,
         overflow: "hidden",
     },
     progressFill: {
         height: "100%",
         borderRadius: 6,
-        backgroundColor: "#34D399", // Green
+        backgroundColor: "#10B981",
     },
     priceLabel: {
         marginTop: 10,
-        color: "#fff",
-        fontWeight: "700",
         fontSize: 12,
-        opacity: 0.8
+        fontWeight: "700",
+        color: "#475569",
     },
+
+    /* Time Box */
     timeBox: {
         marginTop: 20,
-        backgroundColor: "rgba(255,255,255,0.1)",
-        padding: 12,
-        borderRadius: 10,
+        padding: 14,
+        borderRadius: 12,
+        backgroundColor: "rgba(0,0,0,0.08)",
     },
     timeLabel: {
-        color: "#d1d5db",
         fontSize: 12,
+        color: "#475569",
     },
     timeValue: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "700",
         marginTop: 4,
+        fontSize: 18,
+        fontWeight: "800",
+        color: "#000105",
     },
-    // --- Upgrade Section Styles ---
+
+    /* Upgrade Section */
     upgradeSection: {
         marginBottom: 20,
     },
     upgradeTitle: {
-        fontSize: 20,
-        fontWeight: "700",
-        color: "#fff",
+        fontSize: 22,
+        fontWeight: "900",
+        color: "#ffffff",
         marginBottom: 8,
     },
     upgradeDesc: {
-        color: "#BAB8B8",
         fontSize: 14,
         lineHeight: 20,
+        color: "#BAB8B8",
+        fontWeight: "300",
     },
-    // --- Tier/Upgrade Card Styles ---
+
+    /* Tier Cards */
     tierCard: {
-        backgroundColor: "#C7D2FE", // Dark Grey/Black for contrast against main bg
+        backgroundColor: "#C7D2FE",
         padding: 20,
         borderRadius: 14,
         marginBottom: 16,
-        borderWidth: 1,
-        borderColor: "#222",
     },
     tierTitle: {
-        color: "#000105",
         fontSize: 18,
-        fontWeight: "700",
+        fontWeight: "800",
+        color: "#000105",
     },
     tierPrice: {
-        color: "#3B82F6",
-        fontWeight: "700",
         marginVertical: 6,
         fontSize: 16,
+        fontWeight: "800",
+        color: "#3B82F6",
     },
     tierDesc: {
-        color: "#000105",
         fontSize: 14,
         lineHeight: 20,
+        color: "#000105",
+        fontWeight: "400",
     },
 });
