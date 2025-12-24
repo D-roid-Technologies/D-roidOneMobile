@@ -18,6 +18,7 @@ import { addEvent, updateEvent, Event } from "../../redux/slice/eventSlice";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { authService } from "../../redux/configuration/auth.service";
+import { createAndDispatchNotification } from "../../utils/Notifications";
 
 // ——— EVENT TYPES ———
 type RouteParams = {
@@ -123,11 +124,19 @@ const CreateEventScreen: React.FC = () => {
         setText("...Creating your event")
 
         await authService.addScheduleToFirebase(newEvent).then(() => {
-            setText("Event Created")
+            setText("Event Created");
+            createAndDispatchNotification(dispatch, {
+                title: `Scheduler for ${newEvent.type} created.`,
+                message: `Your Scheduler for "${newEvent.description}" has been created successfully.`,
+            });
             setTimeout(() => {
                 navigation.goBack();
             }, 2000)
         }).catch(() => {
+            createAndDispatchNotification(dispatch, {
+                title: `Scheduler for ${newEvent.type} failed.`,
+                message: `Your Scheduler for "${newEvent.description}" has not been created successfully, please try again.`,
+            });
             setText(text)
         })
 
@@ -152,231 +161,272 @@ const CreateEventScreen: React.FC = () => {
     };
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
-            <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
-                </TouchableOpacity>
+        <View style={{ flex: 1, backgroundColor: "#000105" }}>
+            {/* SCROLLABLE FORM */}
+            <ScrollView
+                style={styles.container}
+                contentContainerStyle={{ paddingBottom: 150 }}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* HEADER */}
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="chevron-back" size={26} color="#ffffff" />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>{editingEvent ? "Edit Event" : "Create Event"}</Text>
+                </View>
 
-                <Text style={styles.title}>{editingEvent ? "Edit Event" : "Create Event"}</Text>
+                {/* TITLE */}
+                <TextInput
+                    placeholder={`Add your Title`}
+                    value={title}
+                    onChangeText={setTitle}
+                    style={styles.input}
+                    placeholderTextColor="#000105"
+                />
 
-                <View style={{ width: 26 }} />
-            </View>
+                {/* DESCRIPTION */}
+                <TextInput
+                    placeholder={dynamicDescriptionPlaceholder}
+                    value={description}
+                    onChangeText={setDescription}
+                    style={[styles.input, { height: type === "Note" ? 120 : 80 }]}
+                    multiline
+                    placeholderTextColor="#000105"
+                />
 
-            {/* TITLE */}
-            <TextInput
-                placeholder="Title"
-                value={title}
-                onChangeText={setTitle}
-                style={styles.input}
-                placeholderTextColor="#000105"
-            />
+                {/* EVENT TYPE PICKER */}
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={type}
+                        onValueChange={(value) => setType(value)}
+                        style={styles.picker}
+                        dropdownIconColor="#000000"
+                    >
+                        {eventTypes.map((t) => (
+                            <Picker.Item key={t} label={t} value={t} />
+                        ))}
+                    </Picker>
+                </View>
 
-            {/* DESCRIPTION */}
-            <TextInput
-                placeholder={dynamicDescriptionPlaceholder}
-                value={description}
-                onChangeText={setDescription}
-                style={[styles.input, { height: type === "Note" ? 120 : 80 }]}
-                multiline
-                placeholderTextColor="#000105"
-            />
+                {/* NOTE MODE */}
+                {type === "Note" && (
+                    <View>
+                        <Text style={styles.sectionTitle}>Note Items</Text>
 
-            {/* EVENT TYPE PICKER */}
-            <View style={styles.pickerContainer}>
-                <Picker
-                    selectedValue={type}
-                    onValueChange={(value) => setType(value)}
-                    style={styles.picker}
-                    dropdownIconColor="#000000"
-                >
-                    {eventTypes.map((t) => (
-                        <Picker.Item key={t} label={t} value={t} />
-                    ))}
-                </Picker>
-            </View>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 15 }}>
+                            <TextInput
+                                value={inputNoteItem}
+                                onChangeText={setInputNoteItem}
+                                placeholder="Add list item"
+                                placeholderTextColor="#000105"
+                                style={[styles.input, { flex: 1, marginBottom: 0 }]}
+                            />
+                            <TouchableOpacity
+                                style={styles.addItemBtn}
+                                onPress={() => {
+                                    if (inputNoteItem.trim()) {
+                                        setNoteItems([...noteItems, inputNoteItem.trim()]);
+                                        setInputNoteItem("");
+                                    }
+                                }}
+                            >
+                                <Ionicons name="add" size={20} color="#000" />
+                            </TouchableOpacity>
+                        </View>
 
-            {/* NOTE MODE */}
-            {type === "Note" && (
-                <View>
-                    <Text style={styles.sectionTitle}>Note Items</Text>
+                        {noteItems.map((item, i) => (
+                            <Text key={i} style={{ color: "#fff", marginVertical: 4 }}>
+                                • {item}
+                            </Text>
+                        ))}
+                    </View>
+                )}
 
-                    <View style={{ flexDirection: "row", gap: 8, marginBottom: 15 }}>
+                {/* TASK MODE */}
+                {type === "Task" && (
+                    <View>
+                        <Text style={styles.sectionTitle}>Task Status</Text>
+
+                        {TASK_STATUSES.map((s) => (
+                            <TouchableOpacity
+                                key={s}
+                                onPress={() => setTaskStatus(s)}
+                                style={styles.radioRow}
+                            >
+                                <View
+                                    style={[
+                                        styles.radioCircle,
+                                        taskStatus === s && styles.radioSelected
+                                    ]}
+                                />
+                                <Text style={{ color: "#fff" }}>{s}</Text>
+                            </TouchableOpacity>
+                        ))}
+
+                        <Text style={styles.sectionTitle}>Priority</Text>
+
+                        {TASK_PRIORITY.map((p) => (
+                            <TouchableOpacity
+                                key={p}
+                                onPress={() => setTaskPriority(p)}
+                                style={styles.radioRow}
+                            >
+                                <View
+                                    style={[
+                                        styles.radioCircle,
+                                        taskPriority === p && styles.radioSelected,
+                                    ]}
+                                />
+                                <Text style={{ color: "#fff" }}>{p}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                )}
+
+                {/* APPOINTMENT MODE */}
+                {type === "Appointment" && (
+                    <View>
+                        <Text style={styles.sectionTitle}>Location</Text>
                         <TextInput
-                            value={inputNoteItem}
-                            onChangeText={setInputNoteItem}
-                            placeholder="Add list item"
+                            value={location}
+                            onChangeText={setLocation}
+                            placeholder="Enter location"
                             placeholderTextColor="#000105"
-                            style={[styles.input, { flex: 1 }]}
+                            style={styles.input}
                         />
+                    </View>
+                )}
+
+                {/* MEETING MODE */}
+                {type === "Meeting" && (
+                    <View>
+                        <Text style={styles.sectionTitle}>Location</Text>
+                        <TextInput
+                            value={location}
+                            onChangeText={setLocation}
+                            placeholder="Meeting location"
+                            placeholderTextColor="#000105"
+                            style={styles.input}
+                        />
+
+                        <Text style={styles.sectionTitle}>Participants</Text>
+                        <TextInput
+                            value={participants}
+                            onChangeText={setParticipants}
+                            placeholder="Enter participants"
+                            placeholderTextColor="#000105"
+                            style={styles.input}
+                        />
+                    </View>
+                )}
+
+                {/* DATE & TIME */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Date & Time</Text>
+
+                    {/* Dates */}
+                    <View style={styles.row}>
                         <TouchableOpacity
-                            style={styles.addItemBtn}
-                            onPress={() => {
-                                if (inputNoteItem.trim()) {
-                                    setNoteItems([...noteItems, inputNoteItem.trim()]);
-                                    setInputNoteItem("");
-                                }
-                            }}
+                            onPress={() => setShowStartDatePicker(true)}
+                            style={styles.dateButton}
                         >
-                            <Ionicons name="add" size={20} color="#000" />
+                            <Text style={styles.dateText}>Start: {startDate}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setShowEndDatePicker(true)}
+                            style={styles.dateButton}
+                        >
+                            <Text style={styles.dateText}>End: {endDate}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {noteItems.map((item, i) => (
-                        <Text key={i} style={{ color: "#fff", marginVertical: 4 }}>
-                            • {item}
-                        </Text>
-                    ))}
-                </View>
-            )}
-
-            {/* TASK MODE */}
-            {type === "Task" && (
-                <View>
-                    <Text style={styles.sectionTitle}>Task Status</Text>
-
-                    {TASK_STATUSES.map((s) => (
+                    {/* Times */}
+                    <View style={styles.row}>
                         <TouchableOpacity
-                            key={s}
-                            onPress={() => setTaskStatus(s)}
-                            style={styles.radioRow}
+                            onPress={() => setShowStartTimePicker(true)}
+                            style={styles.dateButton}
                         >
-                            <View
-                                style={[
-                                    styles.radioCircle,
-                                    taskStatus === s && styles.radioSelected
-                                ]}
-                            />
-                            <Text style={{ color: "#fff" }}>{s}</Text>
+                            <Text style={styles.dateText}>From: {startTime}</Text>
                         </TouchableOpacity>
-                    ))}
-
-                    <Text style={styles.sectionTitle}>Priority</Text>
-
-                    {TASK_PRIORITY.map((p) => (
                         <TouchableOpacity
-                            key={p}
-                            onPress={() => setTaskPriority(p)}
-                            style={styles.radioRow}
+                            onPress={() => setShowEndTimePicker(true)}
+                            style={styles.dateButton}
                         >
-                            <View
-                                style={[
-                                    styles.radioCircle,
-                                    taskPriority === p && styles.radioSelected,
-                                ]}
-                            />
-                            <Text style={{ color: "#fff" }}>{p}</Text>
+                            <Text style={styles.dateText}>To: {endTime}</Text>
                         </TouchableOpacity>
-                    ))}
+                    </View>
                 </View>
-            )}
 
-            {/* APPOINTMENT MODE */}
-            {type === "Appointment" && (
-                <View>
-                    <Text style={styles.sectionTitle}>Location</Text>
-                    <TextInput
-                        value={location}
-                        onChangeText={setLocation}
-                        placeholder="Enter location"
-                        placeholderTextColor="#000105"
-                        style={styles.input}
+                {/* DATE & TIME PICKERS */}
+                {showStartDatePicker && (
+                    <DateTimePicker
+                        value={new Date(startDate)}
+                        mode="date"
+                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        onChange={(e, d) => onChangeDate(e, d, "start")}
                     />
-                </View>
-            )}
-
-            {/* MEETING MODE */}
-            {type === "Meeting" && (
-                <View>
-                    <Text style={styles.sectionTitle}>Location</Text>
-                    <TextInput
-                        value={location}
-                        onChangeText={setLocation}
-                        placeholder="Meeting location"
-                        placeholderTextColor="#000105"
-                        style={styles.input}
+                )}
+                {showEndDatePicker && (
+                    <DateTimePicker
+                        value={new Date(endDate)}
+                        mode="date"
+                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        onChange={(e, d) => onChangeDate(e, d, "end")}
                     />
-
-                    <Text style={styles.sectionTitle}>Participants</Text>
-                    <TextInput
-                        value={participants}
-                        onChangeText={setParticipants}
-                        placeholder="Enter participants"
-                        placeholderTextColor="#000105"
-                        style={styles.input}
+                )}
+                {showStartTimePicker && (
+                    <DateTimePicker
+                        value={new Date(`${startDate}T${startTime}`)}
+                        mode="time"
+                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        onChange={(e, d) => onChangeTime(e, d, "start")}
                     />
-                </View>
-            )}
+                )}
+                {showEndTimePicker && (
+                    <DateTimePicker
+                        value={new Date(`${endDate}T${endTime}`)}
+                        mode="time"
+                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        onChange={(e, d) => onChangeTime(e, d, "end")}
+                    />
+                )}
+            </ScrollView>
 
-
-            {/* DATES */}
-            <View style={styles.row}>
-                <TouchableOpacity onPress={() => setShowStartDatePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Add Start Date: {startDate}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setShowEndDatePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Add End Date: {endDate}</Text>
+            {/* CREATE EVENT BUTTON fixed at bottom */}
+            <View style={styles.footer}>
+                <TouchableOpacity style={styles.saveButton} onPress={onSave}>
+                    <Text style={styles.saveButtonText}>{text}</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* TIMES */}
-            <View style={styles.row}>
-                <TouchableOpacity onPress={() => setShowStartTimePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Add Start Time: {startTime}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setShowEndTimePicker(true)} style={styles.dateButton}>
-                    <Text style={styles.dateText}>Add End Time: {endTime}</Text>
-                </TouchableOpacity>
-            </View>
-
-            {/* PICKERS */}
-            {showStartDatePicker && (
-                <DateTimePicker
-                    value={new Date(startDate)}
-                    mode="date"
-                    display={Platform.OS === "ios" ? "spinner" : "default"}
-                    onChange={(e, d) => onChangeDate(e, d, "start")}
-                />
-            )}
-            {showEndDatePicker && (
-                <DateTimePicker
-                    value={new Date(endDate)}
-                    mode="date"
-                    display={Platform.OS === "ios" ? "spinner" : "default"}
-                    onChange={(e, d) => onChangeDate(e, d, "end")}
-                />
-            )}
-            {showStartTimePicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="time"
-                    display={Platform.OS === "ios" ? "spinner" : "default"}
-                    onChange={(e, d) => onChangeTime(e, d, "start")}
-                />
-            )}
-            {showEndTimePicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="time"
-                    display={Platform.OS === "ios" ? "spinner" : "default"}
-                    onChange={(e, d) => onChangeTime(e, d, "end")}
-                />
-            )}
-
-            <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-                <Text style={styles.saveButtonText}>
-                    {text}
-                </Text>
-            </TouchableOpacity>
-        </ScrollView>
+        </View>
     );
+
 };
 
 export default CreateEventScreen;
 
 const styles = StyleSheet.create({
+    footer: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: 16,
+        backgroundColor: "#000105",
+        borderTopWidth: 1,
+        borderColor: "#1E293B",
+    },
+    saveButton: {
+        backgroundColor: "#C7D2FE",
+        padding: 16,
+        borderRadius: 10,
+        alignItems: "center",
+    },
+    saveButtonText: { color: "#000105", fontSize: 18, fontWeight: "800" },
     container: { flex: 1, backgroundColor: "#000105", padding: 16 },
-    title: { fontSize: 22, fontWeight: "700", color: "#fff", marginBottom: 16, textAlign: "center" },
+    title: { fontSize: 22, fontWeight: "700", color: "#fff", textAlign: "center" },
     input: {
         width: "100%",
         padding: 12,
@@ -390,8 +440,8 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 12,
-        justifyContent: "space-between",
+        gap: 12,
+        marginBottom: 18,
     },
     pickerContainer: {
         backgroundColor: "#C7D2FE",
@@ -427,13 +477,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-
-    saveButton: {
-        backgroundColor: "#C7D2FE",
-        padding: 16,
-        borderRadius: 5,
-        alignItems: "center",
-        marginTop: 24,
+    section: {
+        marginTop: 20,
+        marginBottom: 10,
     },
-    saveButtonText: { color: "#000000", fontWeight: "900", fontSize: 18 },
 });

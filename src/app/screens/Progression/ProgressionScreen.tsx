@@ -94,7 +94,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                             -
                         </Text>
                         <Text style={styles.subtitleA}>
-                                Next Level: {nextTier}
+                            Next Level: {nextTier}
                         </Text>
                     </View>
                     <Text style={styles.subtitle}>
@@ -135,7 +135,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                 </View>
 
                 {/* 3. UPGRADE CARDS */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.tierCard}
                     onPress={() => handlePlanSelect(goldPlan)}
                 >
@@ -146,7 +146,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.tierCard}
                     onPress={() => handlePlanSelect(platinumPlan)}
                 >
@@ -162,13 +162,12 @@ const ProgressionHeader: React.FunctionComponent = () => {
 
             </ScrollView>
 
-            {/* Checkout Modal */}
             <CheckoutPage
                 visible={checkoutModalVisible}
                 selectedPlan={selectedPlan}
                 onClose={() => setCheckoutModalVisible(false)}
                 onPaymentSuccess={handlePaymentSuccess}
-                onPaymentInitiated={() => console.log("Payment initiated for:", selectedPlan?.name)}
+                onPaymentInitiated={() => { }}
             />
         </View>
     );

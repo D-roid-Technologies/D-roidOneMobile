@@ -134,7 +134,7 @@ export class AuthService {
                         trainings: [],
                         progressions: {},
                         userForms: [],
-                        notifications: isStaff ? [this.createOnboardingNotification()] : [], // AUTO-CREATE FOR STAFF
+                        notifications: [],
                     },
                     staff: {
                         paySlip: [],
@@ -470,173 +470,169 @@ export class AuthService {
         }
     }
     async getCurrentUser(): Promise<any> {
-//   console.log("authService.getCurrentUser() called…");
+        //   console.log("authService.getCurrentUser() called…");
 
-  return new Promise((resolve, reject) => {
-    try {
-      const unsubscribe = onAuthStateChanged(
-        auth,
-        (user) => {
-        //   console.log("onAuthStateChanged fired. User =", user);
+        return new Promise((resolve, reject) => {
+            try {
+                const unsubscribe = onAuthStateChanged(
+                    auth,
+                    (user) => {
+                        //   console.log("onAuthStateChanged fired. User =", user);
 
-          unsubscribe();
+                        unsubscribe();
 
-          if (user) {
-            // console.log("User authenticated. UID:", user.uid);
-            resolve(user);
-          } else {
-            // console.log("No authenticated user found!");
-            reject(new Error("User not authenticated"));
-          }
-        },
-        (error) => {
-        //   console.log("onAuthStateChanged ERROR:", error);
-          reject(error);
-        }
-      );
-    } catch (err) {
-    //   console.log("getCurrentUser() unexpected error:", err);
-      reject(err);
+                        if (user) {
+                            // console.log("User authenticated. UID:", user.uid);
+                            resolve(user);
+                        } else {
+                            // console.log("No authenticated user found!");
+                            reject(new Error("User not authenticated"));
+                        }
+                    },
+                    (error) => {
+                        //   console.log("onAuthStateChanged ERROR:", error);
+                        reject(error);
+                    }
+                );
+            } catch (err) {
+                //   console.log("getCurrentUser() unexpected error:", err);
+                reject(err);
+            }
+        });
     }
-  });
-}
-
-
     async updatePrimaryInformation(formData: any) {
-  try {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      throw new Error("No authenticated user found.");
+        try {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                throw new Error("No authenticated user found.");
+            }
+
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                throw new Error("User profile not found in the database.");
+            }
+
+            const existingData = userSnapshot.data();
+
+            // Build update payload while preserving Firestore structure
+            const updatedPrimaryInfo = {
+                ...existingData.user.primaryInformation,
+                ...formData,
+                initials: `${formData.firstName?.[0] || ""}${formData.lastName?.[0] || ""}`.toUpperCase(),
+                updatedAt: new Date().toISOString(),
+            };
+
+            // Update Firestore
+            await updateDoc(userDocRef, {
+                "user.primaryInformation": updatedPrimaryInfo,
+            });
+
+            // Save to local storage
+            await ReactNativeAsyncStorage.setItem(
+                "profileUpdated",
+                JSON.stringify(updatedPrimaryInfo)
+            );
+
+            // Display success toast
+            Toast.show({
+                type: "success",
+                text1: "Profile Updated",
+                text2: "Your personal details have been successfully saved.",
+            });
+
+            return { success: true, data: updatedPrimaryInfo };
+
+        } catch (error: any) {
+            console.error("Error updating profile:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Update Failed",
+                text2: error.message || "Unable to update profile information.",
+            });
+
+            return { success: false, error: error.message };
+        }
     }
+    async updateAffiliatesData(
+        partialAffiliates: {
+            knowledgeCity?: { user: boolean };
+            nerves?: { user: boolean };
+            muzik?: { user: boolean };
+        }
+    ) {
+        try {
+            const currentUser = await this.getCurrentUser();
+            const userId = currentUser.uid;
 
-    const userDocRef = doc(db, "droidaccount", currentUser.uid);
-    const userSnapshot = await getDoc(userDocRef);
+            const userDocRef = doc(db, "droidaccount", userId);
+            const userSnapshot = await getDoc(userDocRef);
 
-    if (!userSnapshot.exists()) {
-      throw new Error("User profile not found in the database.");
+            if (!userSnapshot.exists()) {
+                Toast.show({
+                    type: "error",
+                    text1: "Update Failed",
+                    text2: "User record not found.",
+                });
+                return null;
+            }
+
+            const currentData = userSnapshot.data();
+            const currentAffiliates = currentData?.user?.affiliates || {};
+
+            // Merge the updates with existing data
+            const updatedAffiliates = {
+                knowledgeCity: {
+                    ...currentAffiliates.knowledgeCity,
+                    ...partialAffiliates.knowledgeCity,
+                },
+                nerves: {
+                    ...currentAffiliates.nerves,
+                    ...partialAffiliates.nerves,
+                },
+                muzik: {
+                    ...currentAffiliates.muzik,
+                    ...partialAffiliates.muzik,
+                },
+            };
+
+            // 🔥 Firestore update (single source of truth)
+            await updateDoc(userDocRef, {
+                "user.affiliates": updatedAffiliates,
+            });
+
+            // ✅ Transform to Redux format (flat boolean structure)
+            const reduxFormat = {
+                knowledgeCity: updatedAffiliates.knowledgeCity?.user || false,
+                nerves: updatedAffiliates.nerves?.user || false,
+                muzik: updatedAffiliates.muzik?.user || false,
+            };
+
+            // Sync Redux (projection only)
+            store.dispatch(setConnectedApps(reduxFormat));
+
+            // 🎉 UX feedback
+            Toast.show({
+                type: "success",
+                text1: "Apps Updated",
+                text2: "Your affiliated apps were updated successfully.",
+            });
+
+            return updatedAffiliates;
+        } catch (error: any) {
+            console.error("Affiliate update error:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Update Failed",
+                text2: error.message || "Unable to update affiliated apps.",
+            });
+
+            throw error;
+        }
     }
-
-    const existingData = userSnapshot.data();
-
-    // Build update payload while preserving Firestore structure
-    const updatedPrimaryInfo = {
-      ...existingData.user.primaryInformation,
-      ...formData,
-      initials: `${formData.firstName?.[0] || ""}${formData.lastName?.[0] || ""}`.toUpperCase(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    // Update Firestore
-    await updateDoc(userDocRef, {
-      "user.primaryInformation": updatedPrimaryInfo,
-    });
-
-    // Save to local storage
-    await ReactNativeAsyncStorage.setItem(
-      "profileUpdated",
-      JSON.stringify(updatedPrimaryInfo)
-    );
-
-    // Display success toast
-    Toast.show({
-      type: "success",
-      text1: "Profile Updated",
-      text2: "Your personal details have been successfully saved.",
-    });
-
-    return { success: true, data: updatedPrimaryInfo };
-
-  } catch (error: any) {
-    console.error("Error updating profile:", error);
-
-    Toast.show({
-      type: "error",
-      text1: "Update Failed",
-      text2: error.message || "Unable to update profile information.",
-    });
-
-    return { success: false, error: error.message };
-  }
-}
-async updateAffiliatesData(
-  partialAffiliates: {
-    knowledgeCity?: { user: boolean };
-    nerves?: { user: boolean };
-    muzik?: { user: boolean };
-  }
-) {
-  try {
-    const currentUser = await this.getCurrentUser();
-    const userId = currentUser.uid;
-
-    const userDocRef = doc(db, "droidaccount", userId);
-    const userSnapshot = await getDoc(userDocRef);
-
-    if (!userSnapshot.exists()) {
-      Toast.show({
-        type: "error",
-        text1: "Update Failed",
-        text2: "User record not found.",
-      });
-      return null;
-    }
-
-    const currentData = userSnapshot.data();
-    const currentAffiliates = currentData?.user?.affiliates || {};
-
-    // Merge the updates with existing data
-    const updatedAffiliates = {
-      knowledgeCity: {
-        ...currentAffiliates.knowledgeCity,
-        ...partialAffiliates.knowledgeCity,
-      },
-      nerves: {
-        ...currentAffiliates.nerves,
-        ...partialAffiliates.nerves,
-      },
-      muzik: {
-        ...currentAffiliates.muzik,
-        ...partialAffiliates.muzik,
-      },
-    };
-
-    // 🔥 Firestore update (single source of truth)
-    await updateDoc(userDocRef, {
-      "user.affiliates": updatedAffiliates,
-    });
-
-    // ✅ Transform to Redux format (flat boolean structure)
-    const reduxFormat = {
-      knowledgeCity: updatedAffiliates.knowledgeCity?.user || false,
-      nerves: updatedAffiliates.nerves?.user || false,
-      muzik: updatedAffiliates.muzik?.user || false,
-    };
-
-    // Sync Redux (projection only)
-    store.dispatch(setConnectedApps(reduxFormat));
-
-    // 🎉 UX feedback
-    Toast.show({
-      type: "success",
-      text1: "Apps Updated",
-      text2: "Your affiliated apps were updated successfully.",
-    });
-
-    return updatedAffiliates;
-  } catch (error: any) {
-    console.error("Affiliate update error:", error);
-
-    Toast.show({
-      type: "error",
-      text1: "Update Failed",
-      text2: error.message || "Unable to update affiliated apps.",
-    });
-
-    throw error;
-  }
-}
-
-
     async handleForgotPassword(email: string) {
         try {
             if (!email || email.trim() === "") {
@@ -678,6 +674,79 @@ async updateAffiliatesData(
             return null;
         }
     }
+    async addNotificationToFirebase(notification: any) {
+        try {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                Toast.show({
+                    type: "error",
+                    text1: "Failed to Add Notification",
+                    text2: "No authenticated user found",
+                });
+                return null;
+            }
+
+            const userId = currentUser.uid;
+            const userDocRef = doc(db, "droidaccount", userId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            // Remove undefined fields
+            const sanitizedNotification = Object.fromEntries(
+                Object.entries(notification).filter(([_, v]) => v !== undefined)
+            );
+
+            if (!userSnapshot.exists()) {
+                await setDoc(
+                    userDocRef,
+                    {
+                        user: {
+                            onboard: { notifications: [sanitizedNotification] }
+                        }
+                    },
+                    { merge: true }
+                );
+            } else {
+                const existingNotifications = userSnapshot.data()?.user?.onboard?.notifications || [];
+                const duplicate = existingNotifications.some((n: any) => n.id === sanitizedNotification.id);
+
+                if (duplicate) {
+                    Toast.show({
+                        type: "error",
+                        text1: "Failed to Add Notification",
+                        text2: "This notification already exists.",
+                    });
+                    return null;
+                }
+
+                await updateDoc(userDocRef, {
+                    "user.onboard.notifications": arrayUnion(sanitizedNotification),
+                });
+            }
+
+            // Optionally update Redux state if you have a notification slice
+            // const updatedSnapshot = await getDoc(userDocRef);
+            // const updatedNotifications = updatedSnapshot.data()?.user?.onboard?.notifications || [];
+            // store.dispatch(setNotifications(updatedNotifications));
+
+            Toast.show({
+                type: "success",
+                text1: "Notification Added",
+                text2: "Your notification has been successfully added.",
+            });
+
+            return sanitizedNotification;
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: "Failed to Add Notification",
+                text2: error.message || "Error adding notification",
+            });
+            console.error("Error adding notification: ", error);
+            return null;
+        }
+    }
+
 
 }
 

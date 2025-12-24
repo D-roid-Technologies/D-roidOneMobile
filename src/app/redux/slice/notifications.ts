@@ -15,15 +15,19 @@ export interface NotificationItem {
 
 interface NotificationState {
     notifications: NotificationItem[];
+    unreadCount: number;
     isLoading: boolean;
     error: string | null;
 }
 
 const initialState: NotificationState = {
     notifications: [],
+    unreadCount: 0,
     isLoading: false,
     error: null,
 };
+
+const registrationTime = new Date();
 
 // Async Thunks for AsyncStorage operations
 export const loadNotifications = createAsyncThunk(
@@ -35,24 +39,26 @@ export const loadNotifications = createAsyncThunk(
                 const parsed = JSON.parse(stored) as NotificationItem[];
                 return parsed;
             }
-            // Return default notifications if none stored
             return [
                 {
                     id: "1",
-                    message: "Your appointment with Dr. Smith is tomorrow at 10:00 AM.",
+                    title: "Welcome to D'roid One",
+                    message: "We're excited to have you onboard! Explore features and get started.",
+                    date: registrationTime.toLocaleDateString("en-GB"), // DD/MM/YYYY
+                    time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }), // HH:MM
                     isRead: false,
                 },
                 {
                     id: "2",
-                    message: "Daily reminder: Take your morning medication.",
+                    title: "Complete Your Personal Details",
+                    message: "Please complete your personal details and finish onboarding if necessary.",
+                    date: registrationTime.toLocaleDateString("en-GB"),
+                    time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }),
                     isRead: false,
                 },
-                {
-                    id: "3",
-                    message: "Your prescription has been refilled and is ready for pickup.",
-                    isRead: true,
-                },
-            ];
+                
+            ] as NotificationItem[]
+
         } catch (error) {
             console.error("Failed to load notifications:", error);
             return rejectWithValue("Failed to load notifications");
@@ -76,38 +82,48 @@ export const persistNotifications = createAsyncThunk(
     }
 );
 
+const countUnread = (notifications: NotificationItem[]) =>
+    notifications.filter(n => !n.isRead).length;
+
 export const notificationsSlice = createSlice({
     name: "notifications",
     initialState,
     reducers: {
-        // Pure reducers without side effects
         addNotification: (state, action: PayloadAction<NotificationItem>) => {
             state.notifications.unshift(action.payload);
+
+            if (!action.payload.isRead) {
+                state.unreadCount += 1;
+            }
         },
 
-        setNotifications: (state, action: PayloadAction<Notification[]>) => {
+        setNotifications: (state, action: PayloadAction<NotificationItem[]>) => {
             state.notifications = action.payload;
+            state.unreadCount = countUnread(action.payload);
         },
 
         clearNotifications: (state) => {
             state.notifications = [];
+            state.unreadCount = 0;
         },
 
         markNotificationAsRead: (state, action: PayloadAction<string>) => {
-            const notification = state.notifications.find((n) => n.id === action.payload);
-            if (notification) {
+            const notification = state.notifications.find(
+                n => n.id === action.payload
+            );
+
+            if (notification && !notification.isRead) {
                 notification.isRead = true;
+                state.unreadCount -= 1;
             }
         },
 
         markAllAsRead: (state) => {
-            // Optimize: only update if there are unread notifications
-            const hasUnread = state.notifications.some((n) => !n.isRead);
-            if (hasUnread) {
-                state.notifications.forEach((n) => {
-                    n.isRead = true;
-                });
-            }
+            state.notifications.forEach(n => {
+                n.isRead = true;
+            });
+
+            state.unreadCount = 0;
         },
     },
     extraReducers: (builder) => {
@@ -120,6 +136,7 @@ export const notificationsSlice = createSlice({
             .addCase(loadNotifications.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.notifications = action.payload;
+                state.unreadCount = countUnread(action.payload);
             })
             .addCase(loadNotifications.rejected, (state, action) => {
                 state.isLoading = false;
