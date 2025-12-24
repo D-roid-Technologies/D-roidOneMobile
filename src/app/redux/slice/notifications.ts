@@ -39,25 +39,7 @@ export const loadNotifications = createAsyncThunk(
                 const parsed = JSON.parse(stored) as NotificationItem[];
                 return parsed;
             }
-            return [
-                {
-                    id: "1",
-                    title: "Welcome to D'roid One",
-                    message: "We're excited to have you onboard! Explore features and get started.",
-                    date: registrationTime.toLocaleDateString("en-GB"), // DD/MM/YYYY
-                    time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }), // HH:MM
-                    isRead: false,
-                },
-                {
-                    id: "2",
-                    title: "Complete Your Personal Details",
-                    message: "Please complete your personal details and finish onboarding if necessary.",
-                    date: registrationTime.toLocaleDateString("en-GB"),
-                    time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }),
-                    isRead: false,
-                },
-                
-            ] as NotificationItem[]
+            return [] as NotificationItem[]
 
         } catch (error) {
             console.error("Failed to load notifications:", error);

@@ -8,6 +8,7 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { LocationState, UserType } from "../../constants/TypesAndInerface";
 import { setEvents } from "../slice/eventSlice";
 import { setConnectedApps } from "../slice/affiliatedAppsSlice";
+import { NotificationItem, persistNotifications, setNotifications } from "../slice/notifications";
 
 
 
@@ -36,6 +37,8 @@ const getCurrentDateTime = () => {
         formattedDateTime: `${formattedDate} ${formattedTime}`,
     };
 };
+
+const registrationTime = new Date();
 
 export class AuthService {
 
@@ -134,7 +137,25 @@ export class AuthService {
                         trainings: [],
                         progressions: {},
                         userForms: [],
-                        notifications: [],
+                        notifications: [
+                            {
+                                id: "0",
+                                title: "Welcome to D'roid One",
+                                message: "We're excited to have you onboard! Explore features and get started.",
+                                date: registrationTime.toLocaleDateString("en-GB"),
+                                time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }), // HH:MM
+                                isRead: false,
+                            },
+                            {
+                                id: "1",
+                                title: "Complete Your Personal Details",
+                                message: "Please complete your personal details and finish onboarding if necessary.",
+                                date: registrationTime.toLocaleDateString("en-GB"),
+                                time: registrationTime.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }),
+                                isRead: false,
+                            },
+
+                        ],
                     },
                     staff: {
                         paySlip: [],
@@ -213,25 +234,34 @@ export class AuthService {
                 const userForm = fetchedUserData.user?.userForms;
                 const userType = primaryInformation?.userType;
 
-                // FIXED: Case-insensitive staff detection
                 const isUserActuallyStaff =
                     userType?.toLowerCase() === "staff" ||
                     userType?.toLowerCase() === "admin";
 
                 const schedleData = fetchedUserData?.schedules?.mySchedles || [];;
-                const firestoreNotifications =
+                const firestoreNotificationsRaw =
                     fetchedUserData.user?.onboard?.notifications || [];
+                // console.log(firestoreNotifications)
+                const firestoreNotifications: NotificationItem[] =
+                    firestoreNotificationsRaw.map((n: any, index: number) => ({
+                        id: n.id ?? `firebase-${index}`,
+                        title: n.title ?? "Notification",
+                        message: n.message ?? "",
+                        date: n.date,
+                        time: n.time,
+                        isRead: n.isRead ?? false,
+                    }));
 
-                // Set notifications from Firestore to Redux
+                store.dispatch(setNotifications(firestoreNotifications));
+                store.dispatch(persistNotifications(firestoreNotifications));
                 store.dispatch(setEvents(schedleData))
-                // store.dispatch(setStaffLeave(updatedStaffLeave));
                 store.dispatch(
                     setUser({ ...primaryInformation, role: primaryInformation.role })
                 );
 
                 Toast.show({
-                    type: 'success', // Uses the library's predefined success styling (which is usually green)
-                    text1: 'Login Successful', // A title for the toast
+                    type: 'success',
+                    text1: 'Login Successful',
                     text2: 'We have successfully logged you into your account.',
                 });
 
@@ -241,9 +271,9 @@ export class AuthService {
             }
         } catch (err: any) {
             Toast.show({
-                type: 'error', // Uses the library's predefined error styling (usually red)
-                text1: 'Login Failed', // A concise title
-                text2: err.message || "Login failed", // The detailed error message
+                type: 'error',
+                text1: 'Login Failed',
+                text2: err.message || "Login failed",
             });
             throw err;
         }
