@@ -9,6 +9,7 @@ import { LocationState, UserType } from "../../constants/TypesAndInerface";
 import { setEvents } from "../slice/eventSlice";
 import { setConnectedApps } from "../slice/affiliatedAppsSlice";
 import { NotificationItem, persistNotifications, setNotifications } from "../slice/notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -773,6 +774,96 @@ export class AuthService {
                 text2: error.message || "Error adding notification",
             });
             console.error("Error adding notification: ", error);
+            return null;
+        }
+    }
+    async pullNotificationsFromFirebase() {
+        try {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return null;
+
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            const rawNotifications =
+                userSnapshot.exists()
+                    ? userSnapshot.data()?.user?.onboard?.notifications || []
+                    : [];
+
+            const notifications: NotificationItem[] = rawNotifications
+                .map((n: any) =>
+                    n?.id && n?.message
+                        ? {
+                            id: String(n.id),
+                            title: n.title ?? undefined,
+                            message: String(n.message),
+                            date: n.date ?? undefined,
+                            time: n.time ?? undefined,
+                            isRead: Boolean(n.isRead),
+                        }
+                        : null
+                )
+                .filter(Boolean) as NotificationItem[];
+
+            // 🔄 Redux
+            store.dispatch(setNotifications(notifications));
+
+            // 💾 AsyncStorage (IMPORTANT)
+            await AsyncStorage.setItem(
+                "notifications",
+                JSON.stringify(notifications)
+            );
+
+            return notifications;
+        } catch (error) {
+            console.error("Error pulling notifications:", error);
+            return null;
+        }
+    }
+
+    async markNotificationAsReadInFirebase(notificationId: string) {
+        try {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return null;
+
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+            if (!userSnapshot.exists()) return null;
+
+            const rawNotifications =
+                userSnapshot.data()?.user?.onboard?.notifications || [];
+
+            let updated = false;
+
+            const updatedNotifications: NotificationItem[] = rawNotifications.map(
+                (n: any) => {
+                    if (n?.id === notificationId && !n.isRead) {
+                        updated = true;
+                        return { ...n, isRead: true };
+                    }
+                    return n;
+                }
+            );
+
+            if (!updated) return null;
+
+            // 🔄 Firestore
+            await updateDoc(userDocRef, {
+                "user.onboard.notifications": updatedNotifications,
+            });
+
+            // 🔄 Redux
+            store.dispatch(setNotifications(updatedNotifications));
+
+            // 💾 AsyncStorage
+            await AsyncStorage.setItem(
+                "notifications",
+                JSON.stringify(updatedNotifications)
+            );
+
+            return true;
+        } catch (error) {
+            console.error("Error marking notification as read:", error);
             return null;
         }
     }

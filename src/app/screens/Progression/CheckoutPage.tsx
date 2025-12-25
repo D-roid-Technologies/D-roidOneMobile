@@ -20,7 +20,7 @@ import { formatCurrency } from "../../utils/paystack";
 import BottomSheetModal from "../../components/BottomSheetModal";
 import { PaystackProvider, usePaystack } from "react-native-paystack-webview";
 import { useDispatch } from "react-redux";
-import { setTier, TierType } from "../../redux/slice/membershiptierslice";
+import { MembershipTierState, setTier, TierType } from "../../redux/slice/membershiptierslice";
 import { createAndDispatchNotification } from "../../utils/Notifications";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -210,7 +210,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
 
         const newRef = generateReferenceNumber();
-        console.log("Generated Reference:", newRef);
+        // console.log("Generated Reference:", newRef);
 
         setReferenceNumber(newRef);
         setIsFormSubmitted(true);
@@ -226,37 +226,61 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
     const handlePaymentSuccess = useCallback(
         async (response: PaystackResponse) => {
-    
+
             // 🛑 Prevent double execution
             if (paymentHandledRef.current) return;
             paymentHandledRef.current = true;
-    
+
             setShowPaystackModal(false);
-    
-            let newTier: TierType = "Silver";
+
+            // let newTier: TierType = "Silver";
+            let newTier: any = {
+                tier: "Silver",
+                nextTier: "Gold",
+                progressPercentage: 33,
+                status: "Active",
+                desc: "You are making great progress on your membership journey."
+            };
             const planName = plan.name.toLowerCase();
-    
-            if (planName.includes("premium")) {
-                newTier = "Premium";
+
+            if (planName.includes("platinum")) {
+                newTier = {
+                    tier: "Platinum",
+                    nextTier: "Silver",
+                    progressPercentage: 100,
+                    status: "Active",
+                    desc: "Congratulations, you are now a D'roid One Platinum user."
+                };
             } else if (planName.includes("gold")) {
-                newTier = "Gold";
+                newTier = {
+                    tier: "Gold",
+                    nextTier: "Premium",
+                    progressPercentage: 66,
+                    status: "Active",
+                    desc: "You are half way there, enjoy everything on our Gold banner."
+                };
             }
-    
-            dispatch(setTier(newTier));
-    
+
+            // console.log(newTier)
+
             try {
                 Toast.show({
                     type: "success",
                     text1: "Payment Successful!",
-                    text2: `Welcome ${customerInfo.name}! You are now a ${newTier} member.`,
+                    text2: `Welcome ${customerInfo.name}! You are now a ${newTier.tier} member.`,
                     visibilityTime: 8000,
                 });
-    
+                dispatch(setTier(newTier));
+
                 createAndDispatchNotification(dispatch, {
-                    title: `Payment Successful for ${newTier}`,
-                    message: `Your subscription for ${newTier} has been completed successfully.`,
+                    title: `Payment Successful for ${newTier.tier}`,
+                    message: `Your subscription for ${newTier.tier} has been completed successfully.`,
                 });
-    
+                createAndDispatchNotification(dispatch, {
+                    title: `Upgrade to your ${newTier.tier} membership is successful`,
+                    message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
+                });
+
             } catch (error) {
                 Toast.show({
                     type: "error",
@@ -264,19 +288,23 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     text2: "Payment was not successful, please try again.",
                     visibilityTime: 8000,
                 });
-    
+
                 createAndDispatchNotification(dispatch, {
-                    title: `Payment Unsuccessful for ${newTier}`,
-                    message: `Your subscription for ${newTier} was unsuccessful.`,
+                    title: `Payment Unsuccessful for ${newTier.tier}`,
+                    message: `Your subscription for ${newTier.tier} was unsuccessful.`,
+                });
+                createAndDispatchNotification(dispatch, {
+                    title: `Upgrade to your ${newTier.tier} membership is unsuccessful`,
+                    message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
                 });
             }
-    
+
             onPaymentSuccess?.();
-    
+
             setCustomerInfo({ name: "", email: "", phone: "" });
             setIsFormSubmitted(false);
             setReferenceNumber("");
-    
+
             setTimeout(onClose, 2000);
         },
         [customerInfo, plan, onPaymentSuccess, onClose]

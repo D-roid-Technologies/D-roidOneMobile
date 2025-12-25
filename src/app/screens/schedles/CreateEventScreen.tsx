@@ -180,9 +180,10 @@ const CreateEventScreen: React.FC = () => {
                 <TextInput
                     placeholder={`Add your Title`}
                     value={title}
+                    keyboardType="default"
                     onChangeText={setTitle}
                     style={styles.input}
-                    placeholderTextColor="#000105"
+                    placeholderTextColor="#777"
                 />
 
                 {/* DESCRIPTION */}
@@ -192,7 +193,7 @@ const CreateEventScreen: React.FC = () => {
                     onChangeText={setDescription}
                     style={[styles.input, { height: type === "Note" ? 120 : 80 }]}
                     multiline
-                    placeholderTextColor="#000105"
+                    placeholderTextColor="#777"
                 />
 
                 {/* EVENT TYPE PICKER */}
@@ -219,7 +220,7 @@ const CreateEventScreen: React.FC = () => {
                                 value={inputNoteItem}
                                 onChangeText={setInputNoteItem}
                                 placeholder="Add list item"
-                                placeholderTextColor="#000105"
+                                placeholderTextColor="#777"
                                 style={[styles.input, { flex: 1, marginBottom: 0 }]}
                             />
                             <TouchableOpacity
@@ -292,7 +293,7 @@ const CreateEventScreen: React.FC = () => {
                             value={location}
                             onChangeText={setLocation}
                             placeholder="Enter location"
-                            placeholderTextColor="#000105"
+                            placeholderTextColor="#777"
                             style={styles.input}
                         />
                     </View>
@@ -306,7 +307,7 @@ const CreateEventScreen: React.FC = () => {
                             value={location}
                             onChangeText={setLocation}
                             placeholder="Meeting location"
-                            placeholderTextColor="#000105"
+                            placeholderTextColor="#777"
                             style={styles.input}
                         />
 
@@ -315,7 +316,7 @@ const CreateEventScreen: React.FC = () => {
                             value={participants}
                             onChangeText={setParticipants}
                             placeholder="Enter participants"
-                            placeholderTextColor="#000105"
+                            placeholderTextColor="#777"
                             style={styles.input}
                         />
                     </View>
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     picker: {
-        color: "#000000",
+        color: "#777",
         borderRadius: 5
     },
     sectionTitle: { color: "#fff", marginBottom: 10, fontWeight: "600", fontSize: 16 },

@@ -25,6 +25,7 @@ import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
 import { addHours } from "../redux/slice/membershiptierslice";
 import BottomSheetModal from "../components/BottomSheetModal";
+import { authService } from "../redux/configuration/auth.service";
 
 const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
@@ -310,6 +311,10 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
             navigation.navigate("Login")
         })
     };
+
+    useEffect(() => {
+        authService.pullNotificationsFromFirebase();
+    }, []);
 
 
     return (

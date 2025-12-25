@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the valid tiers
-export type TierType = "Silver" | "Gold" | "Premium";
+export type TierType = "Silver" | "Gold" | "Platinum";
 
 export type MembershipTierState = {
   tier: TierType;
@@ -26,20 +26,24 @@ export const membershipTierSlice = createSlice({
   initialState,
   reducers: {
     // Modified to accept TierType
-    setTier: (state, action: PayloadAction<TierType>) => {
-      state.tier = action.payload;
-      // Logic to automatically set the next tier based on the current one
-      if (action.payload === "Silver") state.nextTier = "Gold";
-      else if (action.payload === "Gold") state.nextTier = "Premium";
-      else state.nextTier = undefined; // Premium is max
+    setTier: (state, action: PayloadAction<any>) => {
+      const {
+        tier,
+        nextTier,
+        progressPercentage,
+        status,
+        desc,
+      } = action.payload;
+
+      state.tier = tier;
+      state.nextTier = nextTier;
+      state.progressPercentage = progressPercentage;
+      state.status = status;
+      state.desc = desc;
     },
 
     addHours: (state, action: PayloadAction<number>) => {
-      // 1. Add the small increment (e.g., 0.00027) to the current total
       const updatedTotal = state.totalHours + action.payload;
-
-      // 2. Store with high precision (5 decimal places)
-      // This ensures small increments aren't rounded down to zero immediately.
       state.totalHours = Number(updatedTotal.toFixed(5));
     },
 
