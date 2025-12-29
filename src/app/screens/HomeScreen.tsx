@@ -76,6 +76,31 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
     const eventsPosts = [
         {
+            id: 18,
+            title: "Internship Program 2025 - Apply Now!",
+            excerpt:
+                "Join our dynamic internship program and gain hands-on experience in your field of interest.",
+            date: "Monday, 6th January 2025",
+            author: "D'roid Technologies",
+            authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+            category: "Internship",
+            readTime: "4 min read",
+            image: ASSETS.images.CTC2025,
+            isInternship: true,
+            content: [
+                "D'roid Technologies is excited to announce our 2025 Internship Program, designed to empower the next generation of innovators, developers, and professionals. This program offers students and recent graduates an opportunity to gain real-world experience, work on impactful projects, and learn from industry experts.",
+
+                "Our internship spans across multiple departments including Engineering, Marketing, Human Resources, Finance, IT, Design, Sales, and Operations. Interns will be immersed in a collaborative environment where they can apply their academic knowledge to practical challenges, develop new skills, and contribute to meaningful projects.",
+
+                "We believe in nurturing talent and providing comprehensive mentorship. Throughout the program, interns will receive guidance from experienced professionals, participate in training sessions, and have access to resources that will accelerate their career growth. This is more than just an internship — it's a launchpad for your future.",
+
+                "Program durations range from 1 month to 12 months, offering flexibility to accommodate different academic schedules and career goals. Successful interns may also be considered for full-time positions upon completion of the program.",
+
+                "Don't miss this opportunity to jumpstart your career with D'roid Technologies. Click 'Apply Now' to submit your application and take the first step towards an exciting and rewarding experience. We look forward to welcoming you to our team!"
+            ]
+
+        },
+        {
             id: 12,
             title: "Clash of Kings - Chess Tournament[2025]",
             excerpt:

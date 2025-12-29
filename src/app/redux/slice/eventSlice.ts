@@ -8,6 +8,7 @@ export type EventType =
     | "Task"
     | "Appointment"
     | "Meeting"
+    | "Internship"
 // | "Deadline"
 // | "Call"
 // | "Birthday"
