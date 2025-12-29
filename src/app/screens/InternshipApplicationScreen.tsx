@@ -11,11 +11,11 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { submitInternshipApplication } from "../redux/slice/internshipSlice";
 import { Picker } from "@react-native-picker/picker";
+import BackButton from "../components/BackButton";
 
 interface FormData {
   firstName: string;
@@ -294,9 +294,7 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
         style={styles.keyboardView}
       >
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation?.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+          <BackButton onPress={() => navigation?.goBack()} color="#ffffff" />
           <Text style={styles.headerTitle}>Internship Application</Text>
           <View style={{ width: 24 }} />
         </View>
