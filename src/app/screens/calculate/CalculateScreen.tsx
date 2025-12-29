@@ -13,6 +13,9 @@ import { useSelector } from "react-redux";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
 import ScientificCalculatorScreen from "./ScientificCalculatorScreen";
 import BMICalculatorScreen from "./BMICalculatorScreen";
+import TipCalculatorScreen from "./TipCalculatorScreen";
+import UnitConverterScreen from "./UnitConverterScreen";
+import DiscountCalculatorScreen from "./DiscountCalculatorScreen";
 
 export const tools = [
     { id: "1", title: "Scientific Calculator", icon: "calculator", color: "#3B82F6", requiredTier: "Silver" },
@@ -45,18 +48,18 @@ const CalculatorsScreen: React.FC = () => {
                 return <ScientificCalculatorScreen />;
             case "BMI Calculator":
                 return <BMICalculatorScreen />;
+            case "Tip Calculator":
+                return <TipCalculatorScreen />;
+            case "Unit Converter":
+                return <UnitConverterScreen />;
+            case "Discount Calc":
+                return <DiscountCalculatorScreen />;
             case "Loan Calculator":
                 return <Text style={styles.toolPlaceholder}>💰 Loan Calculator UI</Text>;
-            case "Tip Calculator":
-                return <Text style={styles.toolPlaceholder}>💸 Tip Calculator UI</Text>;
             case "Currency Converter":
                 return <Text style={styles.toolPlaceholder}>💱 Currency Converter UI</Text>;
-            case "Unit Converter":
-                return <Text style={styles.toolPlaceholder}>📏 Unit Converter UI</Text>;
             case "Investment Calc":
                 return <Text style={styles.toolPlaceholder}>📈 Investment Calculator UI</Text>;
-            case "Discount Calc":
-                return <Text style={styles.toolPlaceholder}>🏷️ Discount Calculator UI</Text>;
             case "Fuel Cost Calc":
                 return <Text style={styles.toolPlaceholder}>⛽ Fuel Cost Calculator UI</Text>;
             case "Mortgage Calc":
