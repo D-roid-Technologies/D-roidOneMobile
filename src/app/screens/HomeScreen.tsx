@@ -85,7 +85,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
             authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
             category: "Internship",
             readTime: "4 min read",
-            image: ASSETS.images.CTC2025,
+            image: ASSETS.images.internship,
             isInternship: true,
             content: [
                 "D'roid Technologies is excited to announce our 2025 Internship Program, designed to empower the next generation of innovators, developers, and professionals. This program offers students and recent graduates an opportunity to gain real-world experience, work on impactful projects, and learn from industry experts.",

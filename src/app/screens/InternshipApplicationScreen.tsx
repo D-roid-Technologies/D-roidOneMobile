@@ -246,6 +246,7 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
           errors[field] && touchedFields.has(field) && styles.inputError,
         ]}
         placeholder={placeholder}
+        placeholderTextColor="#666"
         value={formData[field]}
         onChangeText={(value) => handleInputChange(field, value)}
         onBlur={() => handleBlur(field)}
@@ -294,7 +295,7 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation?.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
+            <Ionicons name="arrow-back" size={24} color="#ffffff" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Internship Application</Text>
           <View style={{ width: 24 }} />
@@ -374,7 +375,7 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#000105",
   },
   keyboardView: {
     flex: 1,
@@ -384,14 +385,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#000c3a",
     borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: "#1a1a3a",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "#ffffff",
   },
   scrollView: {
     flex: 1,
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   section: {
-    backgroundColor: "#fff",
+    backgroundColor: "#000c3a",
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -408,7 +409,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "#C7D2FE",
     marginBottom: 16,
   },
   inputContainer: {
@@ -417,50 +418,52 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#333",
+    color: "#ffffff",
     marginBottom: 8,
   },
   required: {
-    color: "#e74c3c",
+    color: "#FF6F61",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a5a",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a3a",
+    color: "#ffffff",
   },
   textArea: {
     height: 100,
     textAlignVertical: "top",
   },
   inputError: {
-    borderColor: "#e74c3c",
+    borderColor: "#FF6F61",
   },
   errorText: {
-    color: "#e74c3c",
+    color: "#FF6F61",
     fontSize: 12,
     marginTop: 4,
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#3a3a5a",
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a3a",
   },
   picker: {
     height: 50,
+    color: "#ffffff",
   },
   submitButton: {
-    backgroundColor: "#3498db",
+    backgroundColor: "#C7D2FE",
     borderRadius: 8,
     padding: 16,
     alignItems: "center",
     marginBottom: 32,
   },
   submitButtonText: {
-    color: "#fff",
+    color: "#071D6A",
     fontSize: 16,
     fontWeight: "600",
   },
