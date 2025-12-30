@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import BackButton from "../components/BackButton";
 
 const EventDescriptionScreen: React.FunctionComponent = () => {
     const route = useRoute();
@@ -36,9 +37,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
 
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </TouchableOpacity>
+                <BackButton onPress={() => navigation.goBack()} color="#fff" />
                 <Text style={styles.headerTitle}>Event Details</Text>
                 <View style={{ width: 24 }} />
             </View>
