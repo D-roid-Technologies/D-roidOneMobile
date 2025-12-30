@@ -174,25 +174,19 @@ const sStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f8fafc",
   },
 
   title: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 12,
+    color: "#071D6A",
   },
 
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#C7D2FE",
     borderRadius: 16,
     padding: 16,
-
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
   },
 
   row: {
@@ -210,7 +204,7 @@ const sStyles = StyleSheet.create({
   textWrap: {
     marginLeft: 12,
     flex: 1,
-    paddingRight: 12, // ensures space before toggle
+    paddingRight: 12,
   },
 
   switchWrapper: {
@@ -221,18 +215,19 @@ const sStyles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     lineHeight: 20,
+    color: "#071D6A",
   },
 
   rowSubtitle: {
     fontSize: 13,
     lineHeight: 18,
-    color: "#6b7280",
+    color: "#071D6A",
     marginTop: 4,
   },
 
   divider: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#A5B4FC",
     marginVertical: 12,
   },
 
@@ -243,13 +238,13 @@ const sStyles = StyleSheet.create({
 
   infoText: {
     marginLeft: 8,
-    color: "#374151",
+    color: "#071D6A",
     fontSize: 13,
   },
 
   button: {
     marginTop: 16,
-    backgroundColor: "#111827",
+    backgroundColor: "#071D6A",
     paddingVertical: 12,
     alignItems: "center",
     borderRadius: 10,
@@ -268,7 +263,7 @@ const sStyles = StyleSheet.create({
   },
 
   muted: {
-    color: "#6b7280",
+    color: "#071D6A",
     marginTop: 8,
   },
 
@@ -281,6 +276,7 @@ const sStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginTop: 8,
+    color: "#071D6A",
   },
 });
 
