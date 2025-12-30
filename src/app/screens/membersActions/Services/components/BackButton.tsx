@@ -10,7 +10,7 @@ interface Props {
 const BackButton: React.FC<Props> = ({ onPress, style }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.btn, style]}>
-      <ChevronLeft size={26} color="#111827" />
+      <ChevronLeft size={26} color="#ffffff" />
     </TouchableOpacity>
   );
 };
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6", // Light gray to match light theme vs Progression's dark theme
+    backgroundColor: "transparent", // Light gray to match light theme vs Progression's dark theme
     justifyContent: "center",
     alignItems: "center",
   },

@@ -38,7 +38,7 @@ const CareersScreen: React.FC = () => {
                 <Text style={styles.sectionTitle}>Open Positions</Text>
 
                 {openPositions.map((job) => (
-                    <TouchableOpacity key={job.id} style={styles.jobCard}>
+                    <View key={job.id} style={styles.jobCard}>
                         <View style={styles.jobHeader}>
                             <Text style={styles.jobTitle}>{job.title}</Text>
                             <View style={styles.typeBadge}>
@@ -59,7 +59,7 @@ const CareersScreen: React.FC = () => {
                             <Text style={styles.applyButtonText}>Apply Now</Text>
                             <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
                         </TouchableOpacity>
-                    </TouchableOpacity>
+                    </View>
                 ))}
             </ScrollView>
         </View>
@@ -71,113 +71,131 @@ export default CareersScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000105',
+        backgroundColor: "#000105",
     },
+
+    /* Header */
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingTop: 50,
-        paddingBottom: 16,
-        backgroundColor: '#000c3a',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 20,
+        backgroundColor: "#000105",
     },
     backButton: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 6,
     },
     headerTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#fff',
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     placeholder: {
-        width: 40,
+        width: 24,
     },
+
     content: {
-        padding: 16,
+        paddingHorizontal: 20,
+        paddingBottom: 30,
     },
+
+    /* Banner */
     banner: {
-        backgroundColor: '#000c3a',
+        backgroundColor: "#C7D2FE",
         padding: 24,
-        borderRadius: 16,
-        alignItems: 'center',
-        marginBottom: 24,
+        borderRadius: 12,
+        alignItems: "center",
+        marginBottom: 30,
     },
     bannerTitle: {
-        fontSize: 24,
-        fontWeight: '700',
-        color: '#fff',
+        fontSize: 22,
+        fontWeight: "800",
+        color: "#000105",
         marginTop: 12,
-        marginBottom: 8,
+        marginBottom: 6,
     },
     bannerText: {
         fontSize: 14,
-        color: '#999',
-        textAlign: 'center',
+        color: "#334155",
+        textAlign: "center",
+        fontWeight: "300",
     },
+
     sectionTitle: {
         fontSize: 18,
-        fontWeight: '700',
-        color: '#fff',
-        marginBottom: 16,
+        fontWeight: "800",
+        color: "#ffffff",
+        marginBottom: 12,
+        marginTop: 10,
     },
+
+    /* Job Card */
     jobCard: {
-        backgroundColor: '#000c3a',
+        backgroundColor: "#C7D2FE",
         padding: 16,
-        borderRadius: 12,
+        borderRadius: 10,
         marginBottom: 12,
     },
+
     jobHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 10,
     },
+
     jobTitle: {
         fontSize: 16,
-        fontWeight: '600',
-        color: '#fff',
+        fontWeight: "800",
+        color: "#000105",
         flex: 1,
         marginRight: 8,
     },
+
     typeBadge: {
-        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+        backgroundColor: "rgba(245, 158, 11, 0.25)",
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 6,
     },
     typeText: {
         fontSize: 12,
-        color: '#F59E0B',
-        fontWeight: '600',
+        color: "#92400E",
+        fontWeight: "700",
     },
+
     jobDetails: {
-        flexDirection: 'row',
+        flexDirection: "row",
         gap: 16,
-        marginBottom: 12,
+        marginBottom: 14,
     },
     detailItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         gap: 4,
     },
     detailText: {
         fontSize: 13,
-        color: '#999',
+        color: "#334155",
+        fontWeight: "400",
     },
+
+    /* Apply Button */
     applyButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         gap: 6,
-        paddingVertical: 8,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: "#E5E7EB",
     },
     applyButtonText: {
         fontSize: 14,
-        fontWeight: '600',
-        color: '#F59E0B',
+        fontWeight: "700",
+        color: "#92400E",
     },
 });
+

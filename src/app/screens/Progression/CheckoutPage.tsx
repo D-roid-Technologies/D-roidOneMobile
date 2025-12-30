@@ -20,7 +20,8 @@ import { formatCurrency } from "../../utils/paystack";
 import BottomSheetModal from "../../components/BottomSheetModal";
 import { PaystackProvider, usePaystack } from "react-native-paystack-webview";
 import { useDispatch } from "react-redux";
-import { setTier, TierType } from "../../redux/slice/membershiptierslice";
+import { MembershipTierState, setTier, TierType } from "../../redux/slice/membershiptierslice";
+import { createAndDispatchNotification } from "../../utils/Notifications";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -40,45 +41,45 @@ interface CheckoutPageProps {
 
 // Inner component to trigger transaction via hook
 const AutoStartPaystack: React.FC<{
-  amount: number;
-  email: string;
-  name: string;
-  phone: string;
-  reference: string;
-  onSuccess: (res: any) => void;
-  onCancel: () => void;
+    amount: number;
+    email: string;
+    name: string;
+    phone: string;
+    reference: string;
+    onSuccess: (res: any) => void;
+    onCancel: () => void;
 }> = ({ amount, email, name, phone, reference, onSuccess, onCancel }) => {
-  const { popup } = usePaystack();
-  const hasStarted = useRef(false);
+    const { popup } = usePaystack();
+    const hasStarted = useRef(false);
 
-  useEffect(() => {
-    if (popup && !hasStarted.current) {
-        hasStarted.current = true;
-        popup.checkout({
-            amount,
-            email,
-            reference,
-            metadata: {
-                custom_fields: [
-                    {
-                        display_name: "Name",
-                        variable_name: "name",
-                        value: name
-                    },
-                    {
-                        display_name: "Phone Number",
-                        variable_name: "phone",
-                        value: phone
-                    }
-                ]
-            },
-            onSuccess,
-            onCancel
-        });
-    }
-  }, [popup, amount, email, name, phone, reference, onSuccess, onCancel]);
+    useEffect(() => {
+        if (popup && !hasStarted.current) {
+            hasStarted.current = true;
+            popup.checkout({
+                amount,
+                email,
+                reference,
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Name",
+                            variable_name: "name",
+                            value: name
+                        },
+                        {
+                            display_name: "Phone Number",
+                            variable_name: "phone",
+                            value: phone
+                        }
+                    ]
+                },
+                onSuccess,
+                onCancel
+            });
+        }
+    }, [popup, amount, email, name, phone, reference, onSuccess, onCancel]);
 
-  return <ActivityIndicator size="large" color="#3B82F6" style={{ marginTop: 20 }} />;
+    return <ActivityIndicator size="large" color="#3B82F6" style={{ marginTop: 20 }} />;
 };
 
 // Paystack Component wrapper to handle the payment
@@ -94,15 +95,15 @@ const PaystackPayment: React.FC<{
 }> = ({ paystackKey, amount, email, name, phone, reference, onSuccess, onCancel }) => {
     return (
         <View style={{ flex: 1 }}>
-            <PaystackProvider 
+            <PaystackProvider
                 publicKey={paystackKey}
                 onGlobalSuccess={(res) => onSuccess(res)}
                 onGlobalCancel={() => onCancel()}
                 defaultChannels={["card", "bank", "ussd", "mobile_money"]}
                 currency="NGN"
             >
-                <AutoStartPaystack 
-                    amount={amount}
+                <AutoStartPaystack
+                    amount={amount / 100}
                     email={email}
                     name={name}
                     phone={phone}
@@ -143,7 +144,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const TEMPLATE_ID = "template_p8h58ur";
     const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
     const PAYSTACK_PUBLIC_KEY = "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
-    // const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
 
     const [customerInfo, setCustomerInfo] = useState({
         name: "",
@@ -155,14 +155,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const [referenceNumber, setReferenceNumber] = useState<string>("");
     const [showPaystackModal, setShowPaystackModal] = useState(false);
 
-    // Debug logging
-    useEffect(() => {
-        console.log("=== CheckoutPage State ===");
-        console.log("Visible:", visible);
-        console.log("Selected Plan:", selectedPlan?.name);
-        console.log("Form Submitted:", isFormSubmitted);
-    }, [visible, selectedPlan, isFormSubmitted]);
-
     const handleInputChange = (field: string, value: string) => {
         setCustomerInfo(prev => ({
             ...prev,
@@ -171,8 +163,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     };
 
     const isFormValid = Boolean(
-        customerInfo.name.trim() && 
-        customerInfo.email.trim() && 
+        customerInfo.name.trim() &&
+        customerInfo.email.trim() &&
         customerInfo.phone.trim()
     );
 
@@ -189,7 +181,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     };
 
     const handleValidateAndProceed = () => {
-        console.log("=== Validate Form Clicked ===");
 
         if (!customerInfo.name.trim()) {
             Toast.show({
@@ -219,12 +210,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
 
         const newRef = generateReferenceNumber();
-        console.log("Generated Reference:", newRef);
-        
+        // console.log("Generated Reference:", newRef);
+
         setReferenceNumber(newRef);
         setIsFormSubmitted(true);
-        
-        // Open Paystack in a separate modal
+
         setShowPaystackModal(true);
 
         if (onPaymentInitiated) {
@@ -232,80 +222,98 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
     };
 
-    const handlePaymentSuccess = useCallback(async (response: PaystackResponse) => {
-        console.log("=== Payment Success ===", response);
+    const paymentHandledRef = useRef(false);
 
-        setShowPaystackModal(false);
+    const handlePaymentSuccess = useCallback(
+        async (response: PaystackResponse) => {
 
-        const templateParams = {
-            name: customerInfo.name,
-            title: `Thank You for Your Purchase!
+            // 🛑 Prevent double execution
+            if (paymentHandledRef.current) return;
+            paymentHandledRef.current = true;
 
-Your subscription to ${plan.name} has been successfully activated.
+            setShowPaystackModal(false);
 
-Your Details:
-• Name: ${customerInfo.name}
-• Email: ${customerInfo.email}
-• Phone: ${customerInfo.phone}
-• Plan: ${plan.name}
-• Amount Paid: ${formatCurrency(plan.price)}
-• Reference: ${referenceNumber}
+            // let newTier: TierType = "Silver";
+            let newTier: any = {
+                tier: "Silver",
+                nextTier: "Gold",
+                progressPercentage: 33,
+                status: "Active",
+                desc: "You are making great progress on your membership journey."
+            };
+            const planName = plan.name.toLowerCase();
 
-Thank you for choosing us!`,
-            email: customerInfo.email,
-        };
+            if (planName.includes("platinum")) {
+                newTier = {
+                    tier: "Platinum",
+                    nextTier: "Silver",
+                    progressPercentage: 100,
+                    status: "Active",
+                    desc: "Congratulations, you are now a D'roid One Platinum user."
+                };
+            } else if (planName.includes("gold")) {
+                newTier = {
+                    tier: "Gold",
+                    nextTier: "Premium",
+                    progressPercentage: 66,
+                    status: "Active",
+                    desc: "You are half way there, enjoy everything on our Gold banner."
+                };
+            }
 
-        // Upgrade user tier based on plan immediately after payment success
-        let newTier: TierType = "Silver";
-        if (plan.name.toLowerCase().includes("premium")) {
-            newTier = "Premium";
-        } else if (plan.name.toLowerCase().includes("gold")) {
-            newTier = "Gold";
-        }
-        
-        console.log(`Upgrading user to ${newTier} tier`);
-        dispatch(setTier(newTier));
+            // console.log(newTier)
 
-        try {
-            await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-            
-            Toast.show({
-                type: "success",
-                text1: "Payment Successful!",
-                text2: `Welcome ${customerInfo.name}! You are now a ${newTier} member.`,
-                visibilityTime: 4000,
-            });
-        } catch (error) {
-            console.error("Email error:", error);
-            // Show success toast even if email fails, as payment and upgrade succeeded
-            Toast.show({
-                type: "success",
-                text1: "Payment Successful!",
-                text2: `Welcome ${customerInfo.name}! You are now a ${newTier} member. (Email confirmation failed)`,
-                visibilityTime: 4000,
-            });
-            // We don't re-throw because the core value (upgrade) is delivered
-        }
+            try {
+                Toast.show({
+                    type: "success",
+                    text1: "Payment Successful!",
+                    text2: `Welcome ${customerInfo.name}! You are now a ${newTier.tier} member.`,
+                    visibilityTime: 8000,
+                });
+                dispatch(setTier(newTier));
 
-        if (onPaymentSuccess) {
-            onPaymentSuccess();
-        }
+                createAndDispatchNotification(dispatch, {
+                    title: `Payment Successful for ${newTier.tier}`,
+                    message: `Your subscription for ${newTier.tier} has been completed successfully.`,
+                });
+                createAndDispatchNotification(dispatch, {
+                    title: `Upgrade to your ${newTier.tier} membership is successful`,
+                    message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
+                });
 
-        // Reset state
-        setCustomerInfo({ name: "", email: "", phone: "" });
-        setIsFormSubmitted(false);
-        setReferenceNumber("");
+            } catch (error) {
+                Toast.show({
+                    type: "error",
+                    text1: "Payment Unsuccessful",
+                    text2: "Payment was not successful, please try again.",
+                    visibilityTime: 8000,
+                });
 
-        setTimeout(() => {
-            onClose();
-        }, 2000);
-    }, [customerInfo, plan, referenceNumber, onPaymentSuccess, onClose]);
+                createAndDispatchNotification(dispatch, {
+                    title: `Payment Unsuccessful for ${newTier.tier}`,
+                    message: `Your subscription for ${newTier.tier} was unsuccessful.`,
+                });
+                createAndDispatchNotification(dispatch, {
+                    title: `Upgrade to your ${newTier.tier} membership is unsuccessful`,
+                    message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
+                });
+            }
+
+            onPaymentSuccess?.();
+
+            setCustomerInfo({ name: "", email: "", phone: "" });
+            setIsFormSubmitted(false);
+            setReferenceNumber("");
+
+            setTimeout(onClose, 2000);
+        },
+        [customerInfo, plan, onPaymentSuccess, onClose]
+    );
 
     const handlePaymentCancel = useCallback(() => {
-        console.log("=== Payment Cancelled ===");
-        
+
         setShowPaystackModal(false);
-        
+
         Toast.show({
             type: "error",
             text1: "Payment Cancelled",
@@ -324,7 +332,6 @@ Thank you for choosing us!`,
         onClose();
     };
 
-    // Reset state when modal visibility changes
     useEffect(() => {
         if (!visible) {
             setIsFormSubmitted(false);
@@ -467,14 +474,14 @@ Thank you for choosing us!`,
                 <View style={styles.paystackModalContainer}>
                     <View style={styles.paystackHeader}>
                         <Text style={styles.paystackHeaderText}>Complete Payment</Text>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             onPress={handlePaymentCancel}
                             style={styles.cancelButton}
                         >
                             <Text style={styles.cancelButtonText}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
-                    
+
                     {referenceNumber ? (
                         <View style={styles.paystackContent}>
                             <PaystackPayment
@@ -487,7 +494,7 @@ Thank you for choosing us!`,
                                 onSuccess={handlePaymentSuccess}
                                 onCancel={handlePaymentCancel}
                             />
-                            
+
                             <Text style={styles.paystackInstructions}>
                                 Tap the button above to proceed with payment
                             </Text>

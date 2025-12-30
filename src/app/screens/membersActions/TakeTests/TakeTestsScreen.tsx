@@ -22,8 +22,8 @@ const TakeTestsScreen: React.FC = () => {
         { id: 'general', label: 'General' },
     ];
 
-    const filteredTests = selectedCategory === 'all' 
-        ? tests 
+    const filteredTests = selectedCategory === 'all'
+        ? tests
         : tests.filter(test => test.category === selectedCategory);
 
     const getDifficultyColor = (difficulty: string) => {
@@ -107,109 +107,120 @@ export default TakeTestsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000105',
+        backgroundColor: "#000105",
     },
+
+    /* Header */
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingTop: 50,
-        paddingBottom: 16,
-        backgroundColor: '#000c3a',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 20,
+        backgroundColor: "#000105",
     },
     backButton: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 6,
     },
     headerTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#fff',
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     placeholder: {
-        width: 40,
+        width: 24,
     },
+
     content: {
-        padding: 16,
+        paddingHorizontal: 20,
+        paddingBottom: 30,
     },
+
+    /* Categories */
     categoriesContainer: {
-        marginBottom: 20,
+        marginBottom: 24,
     },
     categoryChip: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+        paddingHorizontal: 18,
+        paddingVertical: 10,
         borderRadius: 20,
-        backgroundColor: '#000c3a',
-        marginRight: 8,
+        backgroundColor: "#C7D2FE",
+        marginRight: 10,
     },
     categoryChipActive: {
-        backgroundColor: '#8B5CF6',
+        backgroundColor: "#8B5CF6",
     },
     categoryText: {
         fontSize: 14,
-        color: '#999',
-        fontWeight: '600',
+        fontWeight: "700",
+        color: "#000105",
     },
     categoryTextActive: {
-        color: '#fff',
+        color: "#ffffff",
     },
+
+    /* Test Card */
     testCard: {
-        backgroundColor: '#000c3a',
+        backgroundColor: "#C7D2FE",
         padding: 16,
         borderRadius: 12,
-        marginBottom: 12,
+        marginBottom: 14,
     },
     testHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 10,
     },
     testTitle: {
         fontSize: 16,
-        fontWeight: '600',
-        color: '#fff',
+        fontWeight: "800",
+        color: "#000105",
         flex: 1,
         marginRight: 8,
     },
+
     difficultyBadge: {
-        paddingHorizontal: 8,
+        paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 6,
     },
     difficultyText: {
         fontSize: 12,
-        fontWeight: '600',
+        fontWeight: "800",
     },
+
     testInfo: {
-        flexDirection: 'row',
+        flexDirection: "row",
         gap: 16,
-        marginBottom: 12,
+        marginBottom: 14,
     },
     infoItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         gap: 4,
     },
     infoText: {
         fontSize: 13,
-        color: '#999',
+        color: "#334155",
+        fontWeight: "400",
     },
+
+    /* Start Button */
     startButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#8B5CF6',
-        paddingVertical: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 12,
         borderRadius: 8,
+        backgroundColor: "#000105",
         gap: 6,
     },
     startButtonText: {
         fontSize: 14,
-        fontWeight: '600',
-        color: '#fff',
+        fontWeight: "800",
+        color: "#ffffff",
     },
 });
+

@@ -38,7 +38,7 @@ const CalculatorsScreen: React.FC = () => {
 
     // Helper to determine if a tool is accessible based on tier hierarchy
     const isTierAccessible = (required: string) => {
-        const tiers = ["Silver", "Gold", "Premium"];
+        const tiers = ["Silver", "Gold", "Platinum"];
         return tiers.indexOf(userMembership.tier) >= tiers.indexOf(required);
     };
 

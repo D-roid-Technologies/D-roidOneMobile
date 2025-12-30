@@ -25,6 +25,7 @@ import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
 import { addHours } from "../redux/slice/membershiptierslice";
 import BottomSheetModal from "../components/BottomSheetModal";
+import { authService } from "../redux/configuration/auth.service";
 
 const { height } = Dimensions.get('window'); // Get screen height for modal styling
 
@@ -35,6 +36,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
     const dispatch = useDispatch<AppDispatch>();
     const count = useSelector((state: RootState) => state.notifications.notifications.length);
+    const unreadCount = useSelector(
+        (state: RootState) => state.notifications.unreadCount
+    );
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
@@ -333,6 +337,10 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         })
     };
 
+    useEffect(() => {
+        authService.pullNotificationsFromFirebase();
+    }, []);
+
 
     return (
         <View
@@ -358,7 +366,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                             {/* Notification Icon */}
                             <View
                                 style={{
-                                    backgroundColor: "#000105",
+                                    backgroundColor: "transparent",
                                     padding: 10,
                                     borderRadius: 8,
                                 }}
@@ -367,7 +375,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                             </View>
 
                             {/* Badge */}
-                            {count > 0 && (
+                            {unreadCount > 0 && (
                                 <View
                                     style={{
                                         position: "absolute",
@@ -388,7 +396,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                                             fontWeight: "bold",
                                         }}
                                     >
-                                        {count}
+                                        {unreadCount}
                                     </Text>
                                 </View>
                             )}
@@ -443,7 +451,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                         <Text style={styles.statTitle}>Total Hours</Text>
                         <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours.toFixed(3)} Hours</Text>
                         <Text style={styles.statChange}>
-                            Membership: {membershipTier.progressPercentage.toFixed(2)}%
+                            Membership: {membershipTier.progressPercentage}%
                         </Text>
                     </View>
                 </View>
@@ -516,7 +524,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 </TouchableOpacity>
 
             </ScrollView>
-            
+
             <BottomSheetModal
                 visible={isModalVisible}
                 onClose={() => setIsModalVisible(false)}

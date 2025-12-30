@@ -206,7 +206,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderTechDetail = () => {
     if (!activeTech) return null;
-    
+
     // Transform TechItem to ServiceDetailData
     const detailData: ServiceDetailData = {
       title: activeTech.title,
@@ -249,7 +249,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
   const renderTrainingDetail = () => {
     if (!activeTraining) return null;
     const program = trainingPrograms.find((p) => p.id === activeTraining.program);
-    
+
     // Fallback data if program details missing
     if (!program) return null;
 
@@ -333,8 +333,8 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
             // We match based on ID (case-insensitive for safety)
             const found = stories.find((s) => s.id.toLowerCase() === item.id.toLowerCase());
             if (found) {
-                // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
-                // We will use the full story in renderAnimationDetail anyway
+              // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
+              // We will use the full story in renderAnimationDetail anyway
               setActiveStory(found);
               setView("ANIMATION_DETAIL");
             }
@@ -346,27 +346,27 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderAnimationDetail = () => {
     if (!activeStory) return null;
-    
+
     // Find the full story object from our rich data source that matches the active ID
     // The IDs in animationItems are like 'brothers', 'Cityboy', etc.
     // The match was fixed in data.tsx, so activeStory.id should strictly match.
     const fullStory = stories.find(s => s.id.toLowerCase() === activeStory.id.toLowerCase());
 
     if (!fullStory) {
-        // Fallback or error handling if somehow data is missing
-        return (
-            <View style={{padding: 20}}>
-                <Text>Story data not found for {activeStory.title}</Text>
-                <BackButton onPress={() => setView("ANIMATION")} />
-            </View>
-        )
+      // Fallback or error handling if somehow data is missing
+      return (
+        <View style={{ padding: 20 }}>
+          <Text>Story data not found for {activeStory.title}</Text>
+          <BackButton onPress={() => setView("ANIMATION")} />
+        </View>
+      )
     }
 
     return (
-        <StoryReader 
-            story={fullStory} 
-            onClose={() => setView("ANIMATION")} 
-        />
+      <StoryReader
+        story={fullStory}
+        onClose={() => setView("ANIMATION")}
+      />
     );
   }
 
@@ -401,16 +401,109 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 export default ServicesScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16, backgroundColor: "#000105" },
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: "#000105", // dark base
+  },
+
+  /* Header */
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-    gap: 16, // Space between back button and title
+    marginBottom: 24,
+    gap: 16,
   },
-  title: { fontSize: 24, fontWeight: "900", color: "#ffffff" },
-  sectionWrap: { flex: 1 },
-  subHeader: { fontSize: 18, fontWeight: "700", color: "#ffffff", marginBottom: 16 },
-  list: { paddingBottom: 120 },
-  columnWrapper: { justifyContent: "space-between" },
+  title: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#fff",
+  },
+
+  /* Section Wrappers */
+  sectionWrap: {
+    flex: 1,
+    marginBottom: 24,
+  },
+  subHeader: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#fff",
+    marginBottom: 16,
+  },
+
+  /* FlatList Grid */
+  list: {
+    paddingBottom: 140, // spacing for floating WhatsApp button
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+
+  /* Service / Class / Training / Consulting Cards */
+  serviceCard: {
+    flex: 1,
+    backgroundColor: "red",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#222",
+  },
+  serviceCardTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000105",
+    marginBottom: 6,
+  },
+  serviceCardDesc: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "#334155",
+    lineHeight: 20,
+  },
+
+  /* Detail / Stats / Benefits */
+  detailCard: {
+    backgroundColor: "#C7D2FE",
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 24,
+  },
+  detailTitle: {
+    fontSize: 22,
+    fontWeight: "900",
+    color: "#000105",
+    marginBottom: 6,
+  },
+  detailSubTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#475569",
+    marginBottom: 12,
+  },
+  detailText: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "#334155",
+    lineHeight: 20,
+  },
+
+  /* Floating WhatsApp Button */
+  whatsappButtonContainer: {
+    position: "absolute",
+    bottom: 24,
+    right: 24,
+    backgroundColor: "#25D366",
+    padding: 14,
+    borderRadius: 28,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
 });
+

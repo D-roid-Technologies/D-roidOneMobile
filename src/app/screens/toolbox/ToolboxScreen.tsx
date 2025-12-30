@@ -38,7 +38,7 @@ const ToolboxsScreen: React.FC = () => {
     };
 
     const isTierAccessible = (required: string) => {
-        const tiers = ["Silver", "Gold", "Premium"];
+        const tiers = ["Silver", "Gold", "Platinum"];
         return tiers.indexOf(userMembership.tier) >= tiers.indexOf(required);
     };
 

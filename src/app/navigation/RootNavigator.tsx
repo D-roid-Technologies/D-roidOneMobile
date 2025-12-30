@@ -36,7 +36,7 @@ import PayslipScreen from "../screens/membersActions/Payslip/PayslipScreen";
 import StaffOnboardingScreen from "../screens/membersActions/Onboarding/OnboardingScreen";
 import TrainingScreen from "../screens/membersActions/Training/TrainingScreen";
 import AttendanceScreen from "../screens/membersActions/Attendance/AttendanceScreen";
-import InternshipApplicationScreen from "../screens/InternshipApplicationScreen";
+import FindSomeoneScreen from "../screens/FindSomeone";
 
 const Stack = createNativeStackNavigator();
 
@@ -82,7 +82,7 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="TAC" component={TermsAndConditions} />
                     <Stack.Screen name="PAP" component={PrivacyPolicyScreen} />
                     <Stack.Screen name="AllEventsScreen" component={AllEventsScreen} />
-                    <Stack.Screen name="InternshipApplication" component={InternshipApplicationScreen} />
+                    <Stack.Screen name="FindSomeoneScreen" component={FindSomeoneScreen} />
                 </Stack.Navigator>
             </SafeAreaView>
         </NavigationContainer>
