@@ -703,7 +703,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000105" }}>
       {/* Custom Header with Back Button */}
       <View style={styles.header}>
         <BackButton navigation={navigation} />
@@ -712,7 +712,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
       </View>
 
       <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: "#071D6A" }}
+        style={{ flex: 1, backgroundColor: "#000105" }}
         behavior={Platform.select({ ios: "padding", android: undefined })}
       >
         <ScrollView
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: "#071D6A",
+    backgroundColor: "#000105",
   },
   headerTitle: {
     fontSize: 24,
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingHorizontal: 20,
     paddingBottom: 100,
-    backgroundColor: "#071D6A",
+    backgroundColor: "#000105",
   },
   headerRow: {
     flexDirection: "row",
