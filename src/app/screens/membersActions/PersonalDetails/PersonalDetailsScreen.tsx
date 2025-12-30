@@ -703,7 +703,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#000105" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#071D6A" }}>
       {/* Custom Header with Back Button */}
       <View style={styles.header}>
         <BackButton navigation={navigation} />
@@ -712,7 +712,7 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
       </View>
 
       <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: "#000105" }}
+        style={{ flex: 1, backgroundColor: "#071D6A" }}
         behavior={Platform.select({ ios: "padding", android: undefined })}
       >
         <ScrollView
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: "#000105",
+    backgroundColor: "#071D6A",
   },
   headerTitle: {
     fontSize: 24,
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingHorizontal: 20,
     paddingBottom: 100,
-    backgroundColor: "#000105",
+    backgroundColor: "#071D6A",
   },
   headerRow: {
     flexDirection: "row",
@@ -868,14 +868,11 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 16,
-    padding: 20,
-    borderRadius: 12,
-    backgroundColor: "#C7D2FE",
   },
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#000105",
+    color: "#071D6A",
     marginBottom: 4,
   },
   input: {
@@ -884,14 +881,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#EEF2FF",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    color: "#000105",
+    borderColor: "#C7D2FE",
+    color: "#071D6A",
   },
   readOnlyInput: {
     backgroundColor: "#E0E7FF",
-    color: "#334155",
+    color: "#6366F1",
   },
   grid: {
     flexDirection: "row",
@@ -907,14 +904,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#000105",
+    backgroundColor: "#C7D2FE",
     alignItems: "center",
   },
   submitButtonDisabled: {
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: "#071D6A",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -936,20 +933,20 @@ tabsRow: {
   minWidth: screenWidth * 0.25, // 25% of screen width
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "#C7D2FE",
+  backgroundColor: "#1a2554",
 },
 
 tabItemActive: {
-  backgroundColor: "#000105",
+  backgroundColor: "#C7D2FE",
 },
  tabText: {
   fontSize: 14,
-  color: "#000105",
+  color: "#C7D2FE",
   fontWeight: "500",
 },
 
 tabTextActive: {
-  color: "#ffffff",
+  color: "#071D6A",
   fontWeight: "600",
 },
 });
