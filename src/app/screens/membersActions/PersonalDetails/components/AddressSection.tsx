@@ -135,6 +135,9 @@ const AddressSection: React.FC<AddressSectionProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: "#C7D2FE",
   },
   grid: {
     flexDirection: "row",
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#ffffff",
+    color: "#071D6A",
     marginBottom: 4,
   },
   input: {
@@ -156,14 +159,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#1a1a2e",
+    backgroundColor: "#EEF2FF",
     borderWidth: 1,
-    borderColor: "#333",
-    color: "#ffffff",
+    borderColor: "#C7D2FE",
+    color: "#071D6A",
   },
   inputErrorBorder: {
     borderColor: "#dc3545",
-    backgroundColor: "rgba(114, 28, 36, 0.2)",
+    backgroundColor: "rgba(220, 53, 69, 0.1)",
   },
   errorText: {
     marginTop: 4,

@@ -198,24 +198,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f8fafc",
   },
 
   title: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 12,
+    color: "#071D6A",
   },
 
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#C7D2FE",
     borderRadius: 16,
     padding: 16,
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
   },
 
   row: {
@@ -227,6 +222,7 @@ const styles = StyleSheet.create({
   rowLabel: {
     fontSize: 15,
     fontWeight: "500",
+    color: "#071D6A",
   },
 
   button: {
@@ -234,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
-    backgroundColor: "#111827",
+    backgroundColor: "#071D6A",
   },
 
   buttonText: {
@@ -251,7 +247,7 @@ const styles = StyleSheet.create({
   },
 
   muted: {
-    color: "#6b7280",
+    color: "#071D6A",
     marginTop: 8,
   },
 
@@ -265,6 +261,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 8,
     marginBottom: 4,
+    color: "#071D6A",
   },
 });
 

@@ -31,6 +31,7 @@ const eventTypes: Event["type"][] = [
     "Task",
     "Appointment",
     "Meeting",
+    "Internship",
 ];
 
 // ——— COMPONENT ———

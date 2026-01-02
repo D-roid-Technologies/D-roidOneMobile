@@ -191,25 +191,22 @@ const SummaryRow = ({ label, value }: { label: string; value: string }) => (
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#f5f5f5",
   },
 
   title: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#555",
+    color: "#071D6A",
   },
 
   subtitle: {
-    color: "#555",
+    color: "#071D6A",
     marginBottom: 20,
   },
 
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#C7D2FE",
     borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#e0e0e0",
     padding: 16,
     marginBottom: 16,
   },
@@ -224,7 +221,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: PRIMARY,
+    backgroundColor: "#071D6A",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -232,25 +229,26 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#071D6A",
   },
 
   cardDesc: {
     fontSize: 13,
-    color: "#666",
+    color: "#071D6A",
     marginTop: 4,
   },
 
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#A5B4FC",
     borderRadius: 8,
     overflow: "hidden",
+    backgroundColor: "#EEF2FF",
   },
 
   submitBtn: {
     marginTop: 12,
-    backgroundColor: PRIMARY,
+    backgroundColor: "#071D6A",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",

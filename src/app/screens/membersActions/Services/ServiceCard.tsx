@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 14,
     borderRadius: 14,
-    backgroundColor: "#000c3a",
+    backgroundColor: "#C7D2FE",
     // Android shadow
     elevation: 3,
     // iOS shadow
     shadowColor: "#000",
-    shadowOpacity: 0.2, // Increased opacity for dark mode
+    shadowOpacity: 0.2,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     minHeight: 140,
@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#000105",
     marginBottom: 6,
   },
   desc: {
     fontSize: 13,
-    color: "#e0e0e0",
+    color: "#334155",
     lineHeight: 18,
   },
 });

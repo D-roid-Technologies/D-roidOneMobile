@@ -14,8 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { updateEvent, deleteEvent, Event } from "../../redux/slice/eventSlice";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
 import { authService } from "../../redux/configuration/auth.service";
+import BackButton from "../../components/BackButton";
 
 type RouteParams = { itemId: string };
 
@@ -106,9 +106,7 @@ const EventDetailScreen: React.FC = () => {
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
             <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
-                </TouchableOpacity>
+                <BackButton onPress={() => navigation.goBack()} color="#ffffff" />
                 <Text style={styles.title}>Event Details</Text>
                 <View style={{ width: 26 }} />
             </View>

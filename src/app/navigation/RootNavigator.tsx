@@ -22,6 +22,7 @@ import ForgotPassword from "../screens/ForgotPassword";
 import TermsAndConditions from "../screens/TermsAndConditions";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 import AllEventsScreen from "../screens/AllEventsScreen";
+import InternshipApplicationScreen from "../screens/InternshipApplicationScreen";
 
 // Quick Actions - Member Screens
 import PersonalDetailsScreen from "../screens/membersActions/PersonalDetails/PersonalDetailsScreen";
@@ -62,6 +63,7 @@ const RootNavigator: React.FC = () => {
                     <Stack.Screen name="BottomTabs" component={BottomTabs} />
                     <Stack.Screen name="Notifications" component={NotificationScreen} />
                     <Stack.Screen name="EventDescription" component={EventDescriptionScreen} />
+                    <Stack.Screen name="InternshipApplication" component={InternshipApplicationScreen} />
                     <Stack.Screen name="Services" component={MemberServicesScreen} />
                     <Stack.Screen name="Progression" component={ProgressionScreen} />
                     <Stack.Screen name="CreateEvent" component={CreateEventScreen} />

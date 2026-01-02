@@ -7,16 +7,14 @@ import {
     Modal,
     Dimensions,
     ScrollView,
-    TextInput,
-    Image,
-    Platform
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
-import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
+import WordCounterScreen from "./WordCounterScreen";
+import CropToolScreen from "./CropToolScreen";
+import QRGeneratorScreen from "./QRGeneratorScreen";
+import TranslatorScreen from "./TranslatorScreen";
 
 const tools = [
     { id: "1", title: "Crop Tool", icon: "crop", color: "#3B82F6", requiredTier: "Silver" },
@@ -35,57 +33,13 @@ const ToolboxsScreen: React.FC = () => {
     const [selectedTool, setSelectedTool] = useState<string | null>(null);
     const userMembership = useSelector(selectMembershipTier);
 
-    // --- Tool State ---
-    const [text, setText] = useState("");
-    const [image, setImage] = useState<string | null>(null);
-
     const handleClose = () => {
         setSelectedTool(null);
-        setText("");
-        setImage(null);
     };
 
-    // --- Access Logic ---
     const isTierAccessible = (required: string) => {
         const tiers = ["Silver", "Gold", "Platinum"];
         return tiers.indexOf(userMembership.tier) >= tiers.indexOf(required);
-    };
-
-    // --- Word Counter Logic ---
-    const getStats = () => {
-        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-        const chars = text.length;
-        const spaces = (text.match(/\s/g) || []).length;
-        return { words, chars, spaces };
-    };
-
-    // --- Image Picker & Save Logic ---
-    const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Toast.show({ type: 'error', text1: 'Permission Denied', text2: 'Gallery access is required.' });
-            return;
-        }
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
-        if (!result.canceled) setImage(result.assets[0].uri);
-    };
-
-    const saveImage = async () => {
-        if (!image) return;
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-        if (status === 'granted') {
-            try {
-                await MediaLibrary.saveToLibraryAsync(image);
-                Toast.show({ type: 'success', text1: 'Saved Successfully ✅' });
-            } catch (error) {
-                Toast.show({ type: 'error', text1: 'Save Failed' });
-            }
-        }
     };
 
     const renderToolContent = (toolName: string) => {
@@ -96,44 +50,16 @@ const ToolboxsScreen: React.FC = () => {
 
         switch (toolName) {
             case "Crop Tool":
-                return (
-                    <ToolView>
-                        {image ? (
-                            <View style={{ alignItems: 'center' }}>
-                                <Image source={{ uri: image }} style={styles.previewImage} />
-                                <View style={styles.buttonRow}>
-                                    <TouchableOpacity style={[styles.actionBtn, { flex: 1, marginRight: 10, backgroundColor: '#475569' }]} onPress={pickImage}>
-                                        <Text style={styles.actionBtnText}>Change</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={[styles.actionBtn, { flex: 1, backgroundColor: '#3B82F6' }]} onPress={saveImage}>
-                                        <Text style={styles.actionBtnText}>Save</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        ) : (
-                            <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
-                                <Ionicons name="cloud-upload-outline" size={50} color="#3B82F6" />
-                                <Text style={styles.uploadText}>Tap to upload image</Text>
-                            </TouchableOpacity>
-                        )}
-                    </ToolView>
-                );
+                return <CropToolScreen />;
 
             case "Word Counter":
-                const stats = getStats();
-                return (
-                    <ToolView>
-                        <View style={styles.statsRow}>
-                            <View style={styles.statCard}><Text style={styles.statNum}>{stats.words}</Text><Text style={styles.statLabel}>Words</Text></View>
-                            <View style={styles.statCard}><Text style={styles.statNum}>{stats.chars}</Text><Text style={styles.statLabel}>Chars</Text></View>
-                            <View style={styles.statCard}><Text style={styles.statNum}>{stats.spaces}</Text><Text style={styles.statLabel}>Spaces</Text></View>
-                        </View>
-                        <TextInput multiline style={styles.textArea} placeholder="Start typing..." value={text} onChangeText={setText} />
-                        <TouchableOpacity style={styles.actionBtn} onPress={() => setText("")}>
-                            <Text style={styles.actionBtnText}>Clear All</Text>
-                        </TouchableOpacity>
-                    </ToolView>
-                );
+                return <WordCounterScreen />;
+
+            case "QR Generator":
+                return <QRGeneratorScreen />;
+
+            case "Translator":
+                return <TranslatorScreen />;
 
             case "PDF Scanner":
                 return (
@@ -142,17 +68,6 @@ const ToolboxsScreen: React.FC = () => {
                         <Text style={styles.toolPlaceholder}>Scan documents into PDF</Text>
                         <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#F59E0B' }]}>
                             <Text style={styles.actionBtnText}>Start Scanning</Text>
-                        </TouchableOpacity>
-                    </ToolView>
-                );
-
-            case "QR Generator":
-                return (
-                    <ToolView>
-                        <Ionicons name="qr-code-outline" size={60} color="#8B5CF6" style={{ alignSelf: 'center' }} />
-                        <TextInput style={[styles.textArea, { height: 60, marginBottom: 20 }]} placeholder="Enter URL or Text" />
-                        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#8B5CF6' }]}>
-                            <Text style={styles.actionBtnText}>Generate QR Code</Text>
                         </TouchableOpacity>
                     </ToolView>
                 );
@@ -175,21 +90,6 @@ const ToolboxsScreen: React.FC = () => {
                         <Text style={styles.toolPlaceholder}>Reduce image file size</Text>
                         <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#6366F1' }]}>
                             <Text style={styles.actionBtnText}>Select Image</Text>
-                        </TouchableOpacity>
-                    </ToolView>
-                );
-
-            case "Translator":
-                return (
-                    <ToolView>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
-                            <Text style={{ color: '#64748b' }}>English</Text>
-                            <Ionicons name="arrow-forward" size={16} color="#64748b" />
-                            <Text style={{ color: '#64748b' }}>Spanish</Text>
-                        </View>
-                        <TextInput multiline style={[styles.textArea, { height: 150 }]} placeholder="Type to translate..." />
-                        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EC4899' }]}>
-                            <Text style={styles.actionBtnText}>Translate</Text>
                         </TouchableOpacity>
                     </ToolView>
                 );
@@ -219,10 +119,10 @@ const ToolboxsScreen: React.FC = () => {
             case "Notes Pro":
                 return (
                     <ToolView>
-                        <TextInput placeholder="Note Title" style={[styles.textArea, { height: 50, marginBottom: 10, fontWeight: 'bold' }]} />
-                        <TextInput multiline placeholder="Start writing..." style={[styles.textArea, { height: 300 }]} />
+                        <Ionicons name="create-outline" size={60} color="#8B5CF6" style={{ alignSelf: 'center' }} />
+                        <Text style={styles.toolPlaceholder}>Advanced note-taking with rich text</Text>
                         <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#8B5CF6' }]}>
-                            <Text style={styles.actionBtnText}>Save Note</Text>
+                            <Text style={styles.actionBtnText}>Create Note</Text>
                         </TouchableOpacity>
                     </ToolView>
                 );
@@ -285,7 +185,7 @@ const styles = StyleSheet.create({
     subtitle: { fontSize: 14, color: "#64748b", marginBottom: 30 },
     grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" },
 
-    // Unified Tool Card Styling
+    // Tool Card Styling
     toolCard: {
         width: width / 2 - 24,
         height: 140,
@@ -304,26 +204,17 @@ const styles = StyleSheet.create({
     lockIcon: { position: 'absolute', bottom: 10, right: 10 },
 
     // Modal Styles
-    modalContainer: { flex: 1, backgroundColor: "#F8FAFC" },
+    modalContainer: { flex: 1, backgroundColor: "#101828" },
     modalHeader: { backgroundColor: "#000c3a", paddingTop: 50, paddingBottom: 20, paddingHorizontal: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
     modalTitle: { color: "#fff", fontSize: 18, fontWeight: "700" },
     closeButton: { backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: 4 },
-    scrollContent: { padding: 20 },
+    scrollContent: { padding: 0 },
     toolWrapper: { width: '100%' },
 
-    // Tool Specific UI
-    statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-    statCard: { backgroundColor: '#fff', padding: 12, borderRadius: 12, width: '31%', alignItems: 'center' },
-    statNum: { fontSize: 18, fontWeight: '900', color: '#000105' },
-    statLabel: { fontSize: 10, color: '#64748b', marginTop: 4 },
-    textArea: { backgroundColor: '#fff', borderRadius: 16, padding: 15, height: 300, textAlignVertical: 'top' },
-    uploadBox: { height: 350, borderStyle: 'dashed', borderWidth: 2, borderColor: '#cbd5e1', borderRadius: 24, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
-    uploadText: { marginTop: 15, color: '#64748b' },
-    previewImage: { width: '100%', height: 400, borderRadius: 20, marginBottom: 20 },
-    buttonRow: { flexDirection: 'row' },
+    // Placeholder Tool UI (for Gold/Premium tier tools)
+    toolPlaceholder: { fontSize: 18, color: "#64748b", textAlign: 'center', marginTop: 50, padding: 20 },
     actionBtn: { backgroundColor: '#000105', padding: 16, borderRadius: 14, alignItems: 'center', marginTop: 20 },
     actionBtnText: { color: '#fff', fontWeight: '700' },
-    toolPlaceholder: { fontSize: 18, color: "#64748b", textAlign: 'center', marginTop: 50 }
 });
 
 export default ToolboxsScreen;

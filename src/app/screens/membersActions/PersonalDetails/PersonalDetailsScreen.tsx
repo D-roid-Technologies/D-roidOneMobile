@@ -788,18 +788,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#000c3a",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: "#000105",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 24,
+    fontWeight: "900",
     color: "#ffffff",
     flex: 1,
     textAlign: "center",
@@ -809,7 +805,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   scrollContainer: {
-    padding: 16,
+    paddingHorizontal: 20,
     paddingBottom: 100,
     backgroundColor: "#000105",
   },
@@ -828,8 +824,8 @@ const styles = StyleSheet.create({
   },
   subHeaderText: {
     fontSize: 14,
-    color: "#e0e0e0",
-    marginBottom: 8,
+    color: "#ffffff",
+    marginBottom: 12,
   },
   successBox: {
     flexDirection: "row",
@@ -872,16 +868,11 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 16,
-    padding: 20,
-    borderRadius: 12,
-    backgroundColor: "#000c3a",
-    borderWidth: 1,
-    borderColor: "#222",
   },
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#ffffff",
+    color: "#071D6A",
     marginBottom: 4,
   },
   input: {
@@ -890,14 +881,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#1a1a2e",
+    backgroundColor: "#EEF2FF",
     borderWidth: 1,
-    borderColor: "#333",
-    color: "#ffffff",
+    borderColor: "#C7D2FE",
+    color: "#071D6A",
   },
   readOnlyInput: {
-    backgroundColor: "#111",
-    color: "#888",
+    backgroundColor: "#E0E7FF",
+    color: "#6366F1",
   },
   grid: {
     flexDirection: "row",
@@ -913,14 +904,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#3B82F6",
+    backgroundColor: "#C7D2FE",
     alignItems: "center",
   },
   submitButtonDisabled: {
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: "#071D6A",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -937,25 +928,25 @@ tabsRow: {
   tabItem: {
   paddingVertical: 10,
   paddingHorizontal: 20,
-  borderRadius: 30,
+  borderRadius: 10,
   marginRight: 6,
   minWidth: screenWidth * 0.25, // 25% of screen width
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "#1f2937",
+  backgroundColor: "#1a2554",
 },
 
 tabItemActive: {
-  backgroundColor: "#3B82F6",
+  backgroundColor: "#C7D2FE",
 },
  tabText: {
   fontSize: 14,
-  color: "#ffffff",
+  color: "#C7D2FE",
   fontWeight: "500",
 },
 
 tabTextActive: {
-  color: "#ffffff",
+  color: "#071D6A",
   fontWeight: "600",
 },
 });

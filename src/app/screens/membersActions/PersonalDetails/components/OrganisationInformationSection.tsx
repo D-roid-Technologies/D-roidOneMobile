@@ -88,20 +88,18 @@ const OrganisationInformationSection: React.FC<OrganisationInformationSectionPro
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 20,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#222",
-    backgroundColor: "#000c3a",
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: "#C7D2FE",
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#3B82F6",
+    fontWeight: "700",
+    color: "#071D6A",
     marginBottom: 10,
-    paddingBottom: 5,
+    paddingBottom: 8,
     borderBottomWidth: 2,
-    borderBottomColor: "#3B82F6",
+    borderBottomColor: "#071D6A",
   },
   grid: {
     flexDirection: "row",
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#ffffff",
+    color: "#071D6A",
     marginBottom: 4,
   },
   input: {
@@ -123,14 +121,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     fontSize: 14,
-    backgroundColor: "#1a1a2e",
+    backgroundColor: "#EEF2FF",
     borderWidth: 1,
-    borderColor: "#333",
-    color: "#ffffff",
+    borderColor: "#C7D2FE",
+    color: "#071D6A",
   },
   inputErrorBorder: {
     borderColor: "#dc3545",
-    backgroundColor: "rgba(114, 28, 36, 0.2)",
+    backgroundColor: "rgba(220, 53, 69, 0.1)",
   },
   errorText: {
     marginTop: 4,

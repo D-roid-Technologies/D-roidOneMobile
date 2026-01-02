@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import BackButton from "../components/BackButton";
 
 const EventDescriptionScreen: React.FunctionComponent = () => {
     const route = useRoute();
@@ -36,9 +37,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
 
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </TouchableOpacity>
+                <BackButton onPress={() => navigation.goBack()} color="#fff" />
                 <Text style={styles.headerTitle}>Event Details</Text>
                 <View style={{ width: 24 }} />
             </View>
@@ -83,6 +82,17 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
                         <Text style={styles.content}>{paragraph}</Text>
                     </View>
                 ))}
+
+                {/* Apply Now Button - Only for Internship */}
+                {event.isInternship && (
+                    <TouchableOpacity
+                        style={styles.applyButton}
+                        onPress={() => (navigation as any).navigate("InternshipApplication")}
+                    >
+                        <Text style={styles.applyButtonText}>Apply Now</Text>
+                        <Ionicons name="arrow-forward" size={20} color="#fff" />
+                    </TouchableOpacity>
+                )}
             </ScrollView>
         </View>
     );
@@ -202,5 +212,26 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: "center",
         marginTop: 50,
+    },
+    applyButton: {
+        backgroundColor: "#10B981",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        borderRadius: 12,
+        marginTop: 24,
+        shadowColor: "#10B981",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    applyButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "700",
+        marginRight: 8,
     },
 });
