@@ -2,29 +2,75 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { selectMembershipTier, TierType } from '../../../redux/slice/membershiptierslice';
+import { useSelector } from 'react-redux';
 
 const TakeTestsScreen: React.FC = () => {
     const navigation = useNavigation<any>();
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const membership = useSelector(selectMembershipTier);
+    const tiers: TierType[] = ["Silver", "Gold", "Platinum"];
+    const isPlatinum = membership.tier === "Platinum";
+    const isGoldOrAbove =
+        membership.tier === "Gold" || membership.tier === "Platinum";
 
-    const tests = [
-        { id: 1, title: 'JavaScript Fundamentals', category: 'programming', duration: '30 min', questions: 20, difficulty: 'Beginner' },
-        { id: 2, title: 'React Native Basics', category: 'programming', duration: '45 min', questions: 25, difficulty: 'Intermediate' },
-        { id: 3, title: 'UI/UX Principles', category: 'design', duration: '25 min', questions: 15, difficulty: 'Beginner' },
-        { id: 4, title: 'TypeScript Advanced', category: 'programming', duration: '60 min', questions: 30, difficulty: 'Advanced' },
-        { id: 5, title: 'Problem Solving', category: 'general', duration: '40 min', questions: 20, difficulty: 'Intermediate' },
+
+
+    const learningContent = [
+        {
+            id: 'test-js',
+            type: 'test',
+            title: 'JavaScript Fundamentals',
+            category: 'programming',
+            durationMinutes: 30,
+            questions: 20,
+            difficulty: 'Beginner',
+        },
+        {
+            id: 'course-rn',
+            type: 'course',
+            title: 'React Native Essentials',
+            category: 'programming',
+            durationHours: 8,
+            lessons: 12,
+            difficulty: 'Intermediate',
+        },
+        {
+            id: 'test-uiux',
+            type: 'test',
+            title: 'UI/UX Principles',
+            category: 'design',
+            durationMinutes: 25,
+            questions: 15,
+            difficulty: 'Beginner',
+        },
+        {
+            id: 'course-ts',
+            type: 'course',
+            title: 'Advanced TypeScript',
+            category: 'programming',
+            durationHours: 10,
+            lessons: 18,
+            difficulty: 'Advanced',
+        },
+        {
+            id: 'test-logic',
+            type: 'test',
+            title: 'Problem Solving',
+            category: 'general',
+            durationMinutes: 40,
+            questions: 20,
+            difficulty: 'Intermediate',
+        },
     ];
 
+
     const categories = [
-        { id: 'all', label: 'All Tests' },
+        { id: 'all', label: 'All Content' },
         { id: 'programming', label: 'Programming' },
         { id: 'design', label: 'Design' },
         { id: 'general', label: 'General' },
     ];
-
-    const filteredTests = selectedCategory === 'all'
-        ? tests
-        : tests.filter(test => test.category === selectedCategory);
 
     const getDifficultyColor = (difficulty: string) => {
         switch (difficulty) {
@@ -35,20 +81,72 @@ const TakeTestsScreen: React.FC = () => {
         }
     };
 
+    const filteredContent =
+        selectedCategory === 'all'
+            ? learningContent
+            : learningContent.filter(item => item.category === selectedCategory);
+
+
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Take Tests</Text>
-                <View style={styles.placeholder} />
+                <Text style={styles.header}>Courses and Tests</Text>
+            </View>
+            {/* Membership Tier Bar */}
+            <View style={styles.tierBar}>
+                {tiers.map((tier) => {
+                    const isActive = membership.tier === tier;
+                    const isLocked =
+                        tiers.indexOf(tier) > tiers.indexOf(membership.tier);
+
+                    return (
+                        <View
+                            key={tier}
+                            style={[
+                                styles.tierChip,
+                                isActive && styles.tierActive,
+                                isLocked && styles.tierLocked,
+                            ]}
+                        >
+                            <Ionicons
+                                name={
+                                    isActive
+                                        ? "checkmark-circle"
+                                        : isLocked
+                                            ? "lock-closed"
+                                            : "ellipse-outline"
+                                }
+                                size={14}
+                                color={isActive ? "#10B981" : "#64748B"}
+                            />
+
+                            <Text
+                                style={[
+                                    styles.tierText,
+                                    isActive && styles.tierTextActive,
+                                    isLocked && styles.tierTextLocked,
+                                ]}
+                            >
+                                {tier}
+                            </Text>
+                        </View>
+                    );
+                })}
             </View>
 
+
+            {/* Scrollable Content */}
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Categories */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.categoriesContainer}
+                >
                     {categories.map((category) => (
                         <TouchableOpacity
                             key={category.id}
@@ -68,39 +166,167 @@ const TakeTestsScreen: React.FC = () => {
                     ))}
                 </ScrollView>
 
-                {/* Tests List */}
-                {filteredTests.map((test) => (
-                    <View key={test.id} style={styles.testCard}>
+                {/* Content Cards */}
+                {filteredContent.map((item) => (
+                    <View key={item.id} style={styles.testCard}>
                         <View style={styles.testHeader}>
-                            <Text style={styles.testTitle}>{test.title}</Text>
-                            <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(test.difficulty) + '20' }]}>
-                                <Text style={[styles.difficultyText, { color: getDifficultyColor(test.difficulty) }]}>
-                                    {test.difficulty}
-                                </Text>
+                            <Text style={styles.testTitle}>{item.title}</Text>
+
+                            <View style={{ alignItems: "flex-end", gap: 6 }}>
+                                {/* Difficulty */}
+                                <View
+                                    style={[
+                                        styles.difficultyBadge,
+                                        { backgroundColor: getDifficultyColor(item.difficulty) + "20" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.difficultyText,
+                                            { color: getDifficultyColor(item.difficulty) },
+                                        ]}
+                                    >
+                                        {item.difficulty}
+                                    </Text>
+                                </View>
+
+                                {/* Tier */}
+                                <View
+                                    style={[
+                                        styles.tierBadge,
+                                        { backgroundColor: getTierColor(membership.tier) + "20" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.tierBadgeText,
+                                            { color: getTierColor(membership.tier) },
+                                        ]}
+                                    >
+                                        {membership.tier}
+                                    </Text>
+                                </View>
                             </View>
                         </View>
+
+
+                        <Text style={styles.typeLabel}>
+                            {getTypeLabel(item.type)}
+                        </Text>
 
                         <View style={styles.testInfo}>
                             <View style={styles.infoItem}>
                                 <Ionicons name="time-outline" size={16} color="#999" />
-                                <Text style={styles.infoText}>{test.duration}</Text>
+                                <Text style={styles.infoText}>
+                                    {'durationMinutes' in item
+                                        ? `${item.durationMinutes} min`
+                                        : `${item.durationHours} hrs`}
+                                </Text>
                             </View>
-                            <View style={styles.infoItem}>
-                                <Ionicons name="help-circle-outline" size={16} color="#999" />
-                                <Text style={styles.infoText}>{test.questions} questions</Text>
-                            </View>
+
+                            {'questions' in item && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="help-circle-outline" size={16} color="#999" />
+                                    <Text style={styles.infoText}>
+                                        {item.questions} questions
+                                    </Text>
+                                </View>
+                            )}
+
+                            {'lessons' in item && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="book-outline" size={16} color="#999" />
+                                    <Text style={styles.infoText}>
+                                        {item.lessons} lessons
+                                    </Text>
+                                </View>
+                            )}
                         </View>
 
                         <TouchableOpacity style={styles.startButton}>
-                            <Text style={styles.startButtonText}>Start Test</Text>
+                            <Text style={styles.startButtonText}>
+                                {getPrimaryActionLabel(item.type)}
+                            </Text>
                             <Ionicons name="play-circle-outline" size={20} color="#fff" />
                         </TouchableOpacity>
                     </View>
                 ))}
             </ScrollView>
+
+            {/* 🔻 Bottom Action Bar */}
+            <View style={styles.bottomActions}>
+                <TouchableOpacity
+                    style={[
+                        styles.primaryActionBtn,
+                        !isPlatinum && styles.disabledBtn,
+                    ]}
+                    disabled={!isPlatinum}
+                    onPress={() => navigation.navigate("CreateCourse")}
+                >
+                    <Ionicons
+                        name="create-outline"
+                        size={18}
+                        color={isPlatinum ? "#000105" : "#64748B"}
+                    />
+                    <Text
+                        style={[
+                            styles.primaryActionText,
+                            !isPlatinum && styles.disabledText,
+                        ]}
+                    >
+                        Create a Course
+                    </Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={[
+                        styles.secondaryActionBtn,
+                        !isGoldOrAbove && styles.disabledBtn,
+                    ]}
+                    disabled={!isGoldOrAbove}
+                    onPress={() => navigation.navigate("UploadCourse")}
+                >
+                    <Ionicons
+                        name="cloud-upload-outline"
+                        size={18}
+                        color={isGoldOrAbove ? "#ffffff" : "#94A3B8"}
+                    />
+                    <Text
+                        style={[
+                            styles.secondaryActionText,
+                            !isGoldOrAbove && styles.disabledText,
+                        ]}
+                    >
+                        Upload a Course
+                    </Text>
+                </TouchableOpacity>
+
+            </View>
         </View>
     );
+
 };
+
+const getTierColor = (tier: TierType) => {
+    switch (tier) {
+        case "Silver":
+            return "#94A3B8";
+        case "Gold":
+            return "#000105";
+        case "Platinum":
+            return "#67E8F9";
+        default:
+            return "#CBD5E1";
+    }
+};
+
+const getTypeLabel = (type: string) =>
+    type === 'course' ? 'Course' : 'Test';
+
+const getPrimaryActionLabel = (type: string) =>
+    type === 'course' ? 'Start Course' : 'Start Test';
+
 
 export default TakeTestsScreen;
 
@@ -108,20 +334,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000105",
+        paddingTop: 40
     },
 
-    /* Header */
-    header: {
+    headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 20,
-        backgroundColor: "#000105",
+        gap: 12,
+        marginBottom: 20,
+        paddingLeft: 10
     },
-    backButton: {
-        padding: 6,
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     headerTitle: {
         fontSize: 24,
@@ -131,6 +357,14 @@ const styles = StyleSheet.create({
     placeholder: {
         width: 24,
     },
+    disabledBtn: {
+        opacity: 0.45,
+    },
+    
+    disabledText: {
+        color: "#64748B",
+    },
+    
 
     content: {
         paddingHorizontal: 20,
@@ -159,6 +393,18 @@ const styles = StyleSheet.create({
     categoryTextActive: {
         color: "#ffffff",
     },
+
+    tierBadge: {
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+
+    tierBadgeText: {
+        fontSize: 12,
+        fontWeight: "900",
+    },
+
 
     /* Test Card */
     testCard: {
@@ -222,5 +468,97 @@ const styles = StyleSheet.create({
         fontWeight: "800",
         color: "#ffffff",
     },
+    typeLabel: {
+        fontSize: 12,
+        fontWeight: "700",
+        color: "#475569",
+        marginBottom: 6,
+    },
+
+    /* Bottom Action Bar */
+    bottomActions: {
+        flexDirection: "row",
+        gap: 12,
+        padding: 16,
+        borderTopWidth: 1,
+        borderTopColor: "#1E293B",
+        backgroundColor: "#000105",
+    },
+
+    primaryActionBtn: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        backgroundColor: "#C7D2FE",
+        paddingVertical: 14,
+        borderRadius: 10,
+    },
+
+    primaryActionText: {
+        fontSize: 14,
+        fontWeight: "900",
+        color: "#000105",
+    },
+
+    secondaryActionBtn: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        backgroundColor: "#4F46E5",
+        paddingVertical: 14,
+        borderRadius: 10,
+    },
+
+    secondaryActionText: {
+        fontSize: 14,
+        fontWeight: "900",
+        color: "#ffffff",
+    },
+    /* Tier Bar */
+    tierBar: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginHorizontal: 16,
+        marginBottom: 20,
+        padding: 12,
+        borderRadius: 14,
+        backgroundColor: "#020617",
+    },
+
+    tierChip: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 4,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+
+    tierActive: {
+        backgroundColor: "#022C22",
+    },
+
+    tierLocked: {
+        opacity: 0.45,
+    },
+
+    tierText: {
+        fontSize: 13,
+        fontWeight: "800",
+        color: "#CBD5E1",
+    },
+
+    tierTextActive: {
+        color: "#10B981",
+    },
+
+    tierTextLocked: {
+        color: "#64748B",
+    },
+
 });
 

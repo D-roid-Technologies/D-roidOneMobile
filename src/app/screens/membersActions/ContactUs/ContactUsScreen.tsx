@@ -29,12 +29,11 @@ const ContactUsScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Contact Us</Text>
-                <View style={styles.placeholder} />
+                <Text style={styles.header}>Contact Us</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.content}>
@@ -111,17 +110,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000105",
+        paddingTop: 40
     },
 
     /* Header */
-    header: {
+    headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 20,
-        backgroundColor: "#000105",
+        gap: 12,
+        marginBottom: 20,
+        paddingLeft: 10
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     backButton: {
         padding: 6,
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
 
     /* Banner */
     banner: {
-        backgroundColor: "#C7D2FE",
+        backgroundColor: "#000c3a",
         padding: 24,
         borderRadius: 12,
         alignItems: "center",
@@ -151,13 +154,13 @@ const styles = StyleSheet.create({
     bannerTitle: {
         fontSize: 22,
         fontWeight: "800",
-        color: "#000105",
+        color: "#ffffff",
         marginTop: 12,
         marginBottom: 6,
     },
     bannerText: {
         fontSize: 14,
-        color: "#334155",
+        color: "#E0E7FF",
         textAlign: "center",
         fontWeight: "300",
     },

@@ -36,10 +36,11 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
             />
 
             {/* Header */}
-            <View style={styles.header}>
-                <BackButton onPress={() => navigation.goBack()} color="#fff" />
-                <Text style={styles.headerTitle}>Event Details</Text>
-                <View style={{ width: 24 }} />
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
+                </TouchableOpacity>
+                <Text style={styles.header}>Event Details</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -104,19 +105,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#0A0A1A",
+        paddingTop: 40
     },
-    header: {
+    headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        position: "absolute",
-        top: Platform.OS === "ios" ? 50 : 20,
-        left: 16,
-        right: 16,
-        zIndex: 10,
-        backgroundColor: "rgba(0,12,58,0.6)",
-        padding: 8,
-        borderRadius: 10,
+        gap: 12,
+        marginBottom: 20,
+        paddingLeft: 10
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     headerTitle: {
         color: "#fff",
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     scrollContainer: {
-        paddingTop: Platform.OS === "ios" ? 100 : 80,
+        // paddingTop: Platform.OS === "ios" ? 100 : 80,
         paddingHorizontal: 16,
         paddingBottom: 40,
     },

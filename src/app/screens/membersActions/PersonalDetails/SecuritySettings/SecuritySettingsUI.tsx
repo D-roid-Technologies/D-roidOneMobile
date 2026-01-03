@@ -49,7 +49,7 @@ const SecuritySettingsUI: React.FC<SecuritySettingsUIProps> = ({
           setSecuritySettings(snap.data() as SecuritySettings);
         }
       } catch (error) {
-        console.log("Error loading security settings:", error);
+        // console.log("Error loading security settings:", error);
       } finally {
         setIsLoading(false);
       }

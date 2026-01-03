@@ -22,6 +22,7 @@ import { PaystackProvider, usePaystack } from "react-native-paystack-webview";
 import { useDispatch } from "react-redux";
 import { MembershipTierState, setTier, TierType } from "../../redux/slice/membershiptierslice";
 import { createAndDispatchNotification } from "../../utils/Notifications";
+import { authService } from "../../redux/configuration/auth.service";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -261,17 +262,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 };
             }
 
-            // console.log(newTier)
-
-            try {
-                Toast.show({
-                    type: "success",
-                    text1: "Payment Successful!",
-                    text2: `Welcome ${customerInfo.name}! You are now a ${newTier.tier} member.`,
-                    visibilityTime: 8000,
-                });
+            authService.updateProgressionInformation(newTier).then(() => {
                 dispatch(setTier(newTier));
-
                 createAndDispatchNotification(dispatch, {
                     title: `Payment Successful for ${newTier.tier}`,
                     message: `Your subscription for ${newTier.tier} has been completed successfully.`,
@@ -280,8 +272,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     title: `Upgrade to your ${newTier.tier} membership is successful`,
                     message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
                 });
-
-            } catch (error) {
+                Toast.show({
+                    type: "success",
+                    text1: "Payment Successful!",
+                    text2: `Welcome ${customerInfo.name}! You are now a ${newTier.tier} member.`,
+                    visibilityTime: 8000,
+                });
+            }).catch(() => {
                 Toast.show({
                     type: "error",
                     text1: "Payment Unsuccessful",
@@ -297,7 +294,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     title: `Upgrade to your ${newTier.tier} membership is unsuccessful`,
                     message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
                 });
-            }
+            })
 
             onPaymentSuccess?.();
 

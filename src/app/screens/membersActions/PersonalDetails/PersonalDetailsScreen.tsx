@@ -238,9 +238,8 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
         if (!validateRequired(value))
           return `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
         if (!/^[a-zA-Z\s'-]+$/.test(value))
-          return `${
-            name.charAt(0).toUpperCase() + name.slice(1)
-          } can only contain letters, spaces, hyphens, and apostrophes`;
+          return `${name.charAt(0).toUpperCase() + name.slice(1)
+            } can only contain letters, spaces, hyphens, and apostrophes`;
         break;
 
       case "streetNumber":
@@ -519,21 +518,21 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
         type: "success",
         isRead: false,
       };
-      
+
       // Add notification and persist to AsyncStorage
       dispatch(addNotification(notification));
       dispatch(persistNotifications([notification, ...notifications]));
-      
+
       setErrors({});
       setTouchedFields(new Set());
     } catch (error) {
       console.error("Failed to update profile:", error);
       setSubmitStatus("error");
-      
-      const errorMessage = error instanceof Error 
-        ? error.message 
+
+      const errorMessage = error instanceof Error
+        ? error.message
         : "Failed to update information. Please try again.";
-      
+
       setErrors((prev) => ({
         ...prev,
         submit: errorMessage,
@@ -705,10 +704,12 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#000105" }}>
       {/* Custom Header with Back Button */}
-      <View style={styles.header}>
-        <BackButton navigation={navigation} />
-        <Text style={styles.headerTitle}>Personal Details</Text>
-        <View style={styles.headerPlaceholder} />
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={26} color="#ffffff" />
+        </TouchableOpacity>
+
+        <Text style={styles.header}>Personal Details</Text>
       </View>
 
       <KeyboardAvoidingView
@@ -746,8 +747,8 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
           )}
 
           {/* Tabs */}
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.tabsScrollView}
             contentContainerStyle={styles.tabsRow}
@@ -784,14 +785,18 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
 export default PersonalDetailsScreen;
 
 const styles = StyleSheet.create({
-  header: {
+  headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: "#000105",
+    gap: 12,
+    marginBottom: 20,
+    marginTop: 40,
+    paddingLeft: 16
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#ffffff",
   },
   headerTitle: {
     fontSize: 24,
@@ -915,38 +920,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
- tabsScrollView: {
-  marginTop: 12,
-  marginBottom: 4,
-},
+  tabsScrollView: {
+    marginTop: 12,
+    marginBottom: 4,
+  },
 
-tabsRow: {
-  flexDirection: "row",
-  alignItems: "center",
-  padding: 4,
-},
+  tabsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 4,
+  },
   tabItem: {
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  borderRadius: 10,
-  marginRight: 6,
-  minWidth: screenWidth * 0.25, // 25% of screen width
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "#1a2554",
-},
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginRight: 6,
+    minWidth: screenWidth * 0.25, // 25% of screen width
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1a2554",
+  },
 
-tabItemActive: {
-  backgroundColor: "#C7D2FE",
-},
- tabText: {
-  fontSize: 14,
-  color: "#C7D2FE",
-  fontWeight: "500",
-},
+  tabItemActive: {
+    backgroundColor: "#C7D2FE",
+  },
+  tabText: {
+    fontSize: 14,
+    color: "#C7D2FE",
+    fontWeight: "500",
+  },
 
-tabTextActive: {
-  color: "#071D6A",
-  fontWeight: "600",
-},
+  tabTextActive: {
+    color: "#071D6A",
+    fontWeight: "600",
+  },
 });

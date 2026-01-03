@@ -10,6 +10,7 @@ import { setEvents } from "../slice/eventSlice";
 import { setConnectedApps } from "../slice/affiliatedAppsSlice";
 import { NotificationItem, persistNotifications, setNotifications } from "../slice/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setTier } from "../slice/membershiptierslice";
 
 
 
@@ -240,6 +241,7 @@ export class AuthService {
                     userType?.toLowerCase() === "admin";
 
                 const schedleData = fetchedUserData?.schedules?.mySchedles || [];;
+                const progress = fetchedUserData?.user?.onboard?.progress || {};
                 const firestoreNotificationsRaw =
                     fetchedUserData.user?.onboard?.notifications || [];
                 // console.log(firestoreNotifications)
@@ -253,6 +255,7 @@ export class AuthService {
                         isRead: n.isRead ?? false,
                     }));
 
+                store.dispatch(setTier(progress));;
                 store.dispatch(setNotifications(firestoreNotifications));
                 store.dispatch(persistNotifications(firestoreNotifications));
                 store.dispatch(setEvents(schedleData))
@@ -820,7 +823,6 @@ export class AuthService {
             return null;
         }
     }
-
     async markNotificationAsReadInFirebase(notificationId: string) {
         try {
             const currentUser = auth.currentUser;
@@ -867,7 +869,62 @@ export class AuthService {
             return null;
         }
     }
+    async updateProgressionInformation(progressData: any) {
+        try {
+            const currentUser = auth.currentUser;
 
+            if (!currentUser) {
+                throw new Error("No authenticated user found.");
+            }
+
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                throw new Error("User profile not found in the database.");
+            }
+
+            const existingData = userSnapshot.data();
+
+            // Build update payload while preserving Firestore structure
+            const updatedProgress = {
+                ...existingData.user?.onboard?.progress,
+                ...progressData,
+                updatedAt: new Date().toLocaleString(),
+            };
+
+            // 🔄 Update Firestore
+            await updateDoc(userDocRef, {
+                "user.onboard.progress": updatedProgress,
+            });
+
+            // // 💾 Save to local storage
+            // await ReactNativeAsyncStorage.setItem(
+            //     "progressUpdated",
+            //     JSON.stringify(updatedProgress)
+            // );
+
+            // ✅ Success feedback
+            Toast.show({
+                type: "success",
+                text1: "Progress Updated",
+                text2: "Your progression information has been successfully updated.",
+            });
+
+            return { success: true, data: updatedProgress };
+
+        } catch (error: any) {
+            console.error("Error updating progression:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Update Failed",
+                text2: error.message || "Unable to update progression information.",
+            });
+
+            return { success: false, error: error.message };
+        }
+    }
 
 }
 

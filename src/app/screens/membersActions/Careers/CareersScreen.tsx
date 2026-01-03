@@ -7,22 +7,84 @@ const CareersScreen: React.FC = () => {
     const navigation = useNavigation<any>();
 
     const openPositions = [
-        { id: 1, title: 'Senior React Native Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
-        { id: 2, title: 'UI/UX Designer', department: 'Design', type: 'Full-time', location: 'Hybrid' },
-        { id: 3, title: 'Backend Engineer', department: 'Engineering', type: 'Full-time', location: 'On-site' },
-        { id: 4, title: 'Product Manager', department: 'Product', type: 'Full-time', location: 'Remote' },
-        { id: 5, title: 'DevOps Engineer', department: 'Engineering', type: 'Contract', location: 'Remote' },
+        {
+            id: 1,
+            title: "Senior React Native Developer",
+            department: "Engineering",
+            type: "Full-time",
+            location: "Remote",
+            experienceLevel: "Senior",
+            salaryRange: "₦600,000 – ₦900,000 / month",
+            postedDate: "2025-01-10",
+            deadline: "2025-02-15",
+            description:
+                "We are looking for a Senior React Native Developer to lead the development of high-performance mobile applications for D'roid One users.",
+            responsibilities: [
+                "Develop and maintain React Native applications",
+                "Collaborate with backend and UI/UX teams",
+                "Optimize application performance",
+                "Mentor junior developers",
+            ],
+            requirements: [
+                "4+ years of React Native experience",
+                "Strong knowledge of TypeScript",
+                "Experience with Firebase and Redux",
+                "Published apps on App Store or Play Store",
+            ],
+            benefits: [
+                "Remote work flexibility",
+                "Health insurance",
+                "Paid annual leave",
+                "Learning & development budget",
+            ],
+            contactEmail: "careers@droidtechnologies.com",
+            status: "Open",
+        },
+        {
+            id: 2,
+            title: "UI/UX Designer",
+            department: "Design",
+            type: "Full-time",
+            location: "Hybrid",
+            experienceLevel: "Mid-level",
+            salaryRange: "₦400,000 – ₦600,000 / month",
+            postedDate: "2025-01-08",
+            deadline: "2025-02-10",
+            description:
+                "We are seeking a creative UI/UX Designer to design intuitive and visually appealing user experiences across web and mobile platforms.",
+            responsibilities: [
+                "Design user flows, wireframes, and prototypes",
+                "Collaborate with product managers and developers",
+                "Conduct usability testing",
+                "Maintain design consistency across products",
+            ],
+            requirements: [
+                "2+ years of UI/UX design experience",
+                "Proficiency in Figma or Adobe XD",
+                "Strong portfolio of design work",
+                "Understanding of mobile-first design principles",
+            ],
+            benefits: [
+                "Hybrid work setup",
+                "Health insurance",
+                "Creative freedom",
+                "Paid training workshops",
+            ],
+            contactEmail: "careers@droidtechnologies.com",
+            status: "Open",
+        },
     ];
+
 
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Careers</Text>
-                <View style={styles.placeholder} />
+
+                <Text style={styles.header}>Careers</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.content}>
@@ -72,20 +134,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000105",
+        paddingTop: 40
     },
 
-    /* Header */
-    header: {
+    headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 20,
-        backgroundColor: "#000105",
+        gap: 12,
+        marginBottom: 20,
+        paddingLeft: 10
     },
-    backButton: {
-        padding: 6,
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     headerTitle: {
         fontSize: 24,
@@ -103,7 +165,7 @@ const styles = StyleSheet.create({
 
     /* Banner */
     banner: {
-        backgroundColor: "#C7D2FE",
+        backgroundColor: "#000c3a",
         padding: 24,
         borderRadius: 12,
         alignItems: "center",
@@ -112,13 +174,13 @@ const styles = StyleSheet.create({
     bannerTitle: {
         fontSize: 22,
         fontWeight: "800",
-        color: "#000105",
+        color: "#ffffff",
         marginTop: 12,
         marginBottom: 6,
     },
     bannerText: {
         fontSize: 14,
-        color: "#334155",
+        color: "#E0E7FF",
         textAlign: "center",
         fontWeight: "300",
     },
@@ -162,7 +224,7 @@ const styles = StyleSheet.create({
     },
     typeText: {
         fontSize: 12,
-        color: "#92400E",
+        color: "#000c3a",
         fontWeight: "700",
     },
 
@@ -195,7 +257,7 @@ const styles = StyleSheet.create({
     applyButtonText: {
         fontSize: 14,
         fontWeight: "700",
-        color: "#92400E",
+        color: "#000c3a",
     },
 });
 

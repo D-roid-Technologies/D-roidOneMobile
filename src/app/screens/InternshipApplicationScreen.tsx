@@ -170,27 +170,27 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
 
     dispatch(submitInternshipApplication(applicationData));
 
-    console.log("=================================");
-    console.log("📋 INTERNSHIP APPLICATION DATA");
-    console.log("=================================");
-    console.log("Application ID:", applicationData.id);
-    console.log("Name:", `${applicationData.firstName} ${applicationData.lastName}`);
-    console.log("Email:", applicationData.email);
-    console.log("Phone:", applicationData.phone);
-    console.log("Date of Birth:", applicationData.dateOfBirth);
-    console.log("Address:", `${applicationData.address}, ${applicationData.city}, ${applicationData.state} ${applicationData.zipCode}`);
-    console.log("Education Level:", applicationData.educationLevel);
-    console.log("Institution:", applicationData.institution);
-    console.log("Field of Study:", applicationData.fieldOfStudy);
-    console.log("Graduation Year:", applicationData.graduationYear);
-    console.log("Desired Department:", applicationData.desiredDepartment);
-    console.log("Preferred Start Date:", applicationData.startDate);
-    console.log("Duration:", applicationData.duration);
-    console.log("Skills:", applicationData.skills);
-    console.log("Cover Letter:", applicationData.coverLetter);
-    console.log("Status:", applicationData.applicationStatus);
-    console.log("Submitted At:", applicationData.submittedAt);
-    console.log("=================================");
+    // console.log("=================================");
+    // console.log("📋 INTERNSHIP APPLICATION DATA");
+    // console.log("=================================");
+    // console.log("Application ID:", applicationData.id);
+    // console.log("Name:", `${applicationData.firstName} ${applicationData.lastName}`);
+    // console.log("Email:", applicationData.email);
+    // console.log("Phone:", applicationData.phone);
+    // console.log("Date of Birth:", applicationData.dateOfBirth);
+    // console.log("Address:", `${applicationData.address}, ${applicationData.city}, ${applicationData.state} ${applicationData.zipCode}`);
+    // console.log("Education Level:", applicationData.educationLevel);
+    // console.log("Institution:", applicationData.institution);
+    // console.log("Field of Study:", applicationData.fieldOfStudy);
+    // console.log("Graduation Year:", applicationData.graduationYear);
+    // console.log("Desired Department:", applicationData.desiredDepartment);
+    // console.log("Preferred Start Date:", applicationData.startDate);
+    // console.log("Duration:", applicationData.duration);
+    // console.log("Skills:", applicationData.skills);
+    // console.log("Cover Letter:", applicationData.coverLetter);
+    // console.log("Status:", applicationData.applicationStatus);
+    // console.log("Submitted At:", applicationData.submittedAt);
+    // console.log("=================================");
 
     Alert.alert(
       "Success!",
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   section: {
-    backgroundColor: "#000c3a",
+    backgroundColor: "#C7D2FE",
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#C7D2FE",
+    color: "#000c3a",
     marginBottom: 16,
   },
   inputContainer: {
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#ffffff",
+    color: "#000c3a",
     marginBottom: 8,
   },
   required: {
@@ -424,11 +424,11 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#3a3a5a",
+    borderColor: "#ffffff",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#1a1a3a",
+    backgroundColor: "#ffffff",
     color: "#ffffff",
   },
   textArea: {
@@ -445,13 +445,13 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#3a3a5a",
+    borderColor: "#ffffff",
     borderRadius: 8,
-    backgroundColor: "#1a1a3a",
+    backgroundColor: "#ffffff",
   },
   picker: {
     height: 50,
-    color: "#ffffff",
+    color: "#000c3a",
   },
   submitButton: {
     backgroundColor: "#C7D2FE",

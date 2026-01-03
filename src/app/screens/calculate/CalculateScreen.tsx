@@ -22,13 +22,14 @@ export const tools = [
     { id: "2", title: "BMI Calculator", icon: "heartbeat", color: "#10B981", requiredTier: "Silver" },
     { id: "3", title: "Loan Calculator", icon: "money-bill-wave", color: "#F59E0B", requiredTier: "Gold" },
     { id: "4", title: "Tip Calculator", icon: "hand-holding-usd", color: "#8B5CF6", requiredTier: "Silver" },
-    { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444", requiredTier: "Gold" },
+    { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444", requiredTier: "Platinum" },
     { id: "6", title: "Unit Converter", icon: "ruler-combined", color: "#6366F1", requiredTier: "Silver" },
-    { id: "7", title: "Investment Calc", icon: "chart-line", color: "#EC4899", requiredTier: "Premium" },
+    { id: "7", title: "Investment Calc", icon: "chart-line", color: "#EC4899", requiredTier: "Platinum" },
     { id: "8", title: "Discount Calc", icon: "percentage", color: "#14B8A6", requiredTier: "Silver" },
-    { id: "9", title: "Fuel Cost Calc", icon: "gas-pump", color: "#F43F5E", requiredTier: "Gold" },
-    { id: "10", title: "Mortgage Calc", icon: "home", color: "#8B5CF6", requiredTier: "Premium" },
+    { id: "9", title: "Fuel Cost Calc", icon: "gas-pump", color: "#F43F5E", requiredTier: "Platinum" },
+    { id: "10", title: "Mortgage Calc", icon: "home", color: "#8B5CF6", requiredTier: "Platinum" },
 ];
+
 
 const CalculatorsScreen: React.FC = () => {
     const [selectedTool, setSelectedTool] = useState<string | null>(null);

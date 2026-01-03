@@ -13,12 +13,18 @@ import {
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { selectMembershipTier } from "../../redux/slice/membershiptierslice";
+import { selectMembershipTier, setTier } from "../../redux/slice/membershiptierslice";
 import { CheckoutPage } from "./CheckoutPage";
 import type { Plan } from "../../utils/Types";
+import { authService } from "../../redux/configuration/auth.service";
+import { store } from "../../redux/store";
+import { createAndDispatchNotification } from "../../utils/Notifications";
+import { useDispatch } from "react-redux";
+import Toast from "react-native-toast-message";
 
 const ProgressionHeader: React.FunctionComponent = () => {
     const navigation = useNavigation<any>();
+    const dispatch = useDispatch();
 
     const {
         tier,
@@ -31,6 +37,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
 
     const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<Plan | undefined>(undefined);
+    const [text, setText] = useState<string>("Downgrade to Silver")
 
     const handlePlanSelect = (plan: Plan) => {
         setSelectedPlan(plan);
@@ -38,7 +45,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
     };
 
     const handlePaymentSuccess = () => {
-        console.log("Payment successful! User upgraded to:", selectedPlan?.name);
+        // console.log("Payment successful! User upgraded to:", selectedPlan?.name);
         setCheckoutModalVisible(false);
         // You can add additional logic here, like updating Redux state or navigating
     };
@@ -72,16 +79,63 @@ const ProgressionHeader: React.FunctionComponent = () => {
         ],
     };
 
+    const onDowngradePress = () => {
+        let newTier: any = {
+            tier: "Silver",
+            nextTier: "Gold",
+            progressPercentage: 33,
+            status: "Active",
+            desc: "You are making great progress on your membership journey."
+        };
+        setText("...please wait!")
+        authService.updateProgressionInformation(newTier).then(() => {
+            store.dispatch(setTier(newTier));
+            createAndDispatchNotification(dispatch, {
+                title: `Payment Successful for ${newTier.tier}`,
+                message: `Your subscription for ${newTier.tier} has been completed successfully.`,
+            });
+            createAndDispatchNotification(dispatch, {
+                title: `Upgrade to your ${newTier.tier} membership is successful`,
+                message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
+            });
+            Toast.show({
+                type: "success",
+                text1: "Payment Successful!",
+                text2: `You are now a ${newTier.tier} member.`,
+                visibilityTime: 8000,
+            });
+        }).catch(() => {
+            Toast.show({
+                type: "error",
+                text1: "Payment Unsuccessful",
+                text2: "Payment was not successful, please try again.",
+                visibilityTime: 8000,
+            });
+
+            createAndDispatchNotification(dispatch, {
+                title: `Payment Unsuccessful for ${newTier.tier}`,
+                message: `Your subscription for ${newTier.tier} was unsuccessful.`,
+            });
+            createAndDispatchNotification(dispatch, {
+                title: `Upgrade to your ${newTier.tier} membership is unsuccessful`,
+                message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
+            });
+        })
+    }
+
     return (
         <View style={styles.safeArea}>
             <ScrollView
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Back Button */}
-                <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
-                </TouchableOpacity>
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="chevron-back" size={26} color="#ffffff" />
+                    </TouchableOpacity>
+
+                    <Text style={styles.header}>Progressions</Text>
+                </View>
 
                 {/* 1. CURRENT MEMBERSHIP CARD */}
                 <View style={styles.card}>
@@ -90,12 +144,13 @@ const ProgressionHeader: React.FunctionComponent = () => {
                         <Text style={styles.subtitleA}>
                             {status}
                         </Text>
-                        <Text style={styles.subtitleA}>
+
+                        {tier === "Platinum" ? null : <Text style={styles.subtitleA}>
                             -
-                        </Text>
-                        <Text style={styles.subtitleA}>
+                        </Text>}
+                        {tier === "Platinum" ? null : (<Text style={styles.subtitleA}>
                             Next Level: {nextTier}
-                        </Text>
+                        </Text>)}
                     </View>
                     <Text style={styles.subtitle}>
                         {desc}
@@ -119,11 +174,21 @@ const ProgressionHeader: React.FunctionComponent = () => {
 
                     {/* Total Time on App */}
                     <View style={styles.timeBox}>
-                        <Text style={styles.timeLabel}>Total Time in App</Text>
-                        <Text style={styles.timeValue}>
-                            {totalHours} hours
-                        </Text>
+                        <View>
+                            <Text style={styles.timeLabel}>Total Time in App</Text>
+                            <Text style={styles.timeValue}>{totalHours} hours</Text>
+                        </View>
+
+                        {tier !== "Silver" && (
+                            <TouchableOpacity onPress={onDowngradePress}>
+                                <Text style={styles.downgradeText}>
+                                    {text}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+
                     </View>
+
                 </View>
 
                 {/* 2. UPGRADE TEXT SECTION */}
@@ -186,6 +251,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 30,
         backgroundColor: "#000105",
+        paddingTop: 40
     },
 
     /* Back Button */
@@ -197,30 +263,66 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-
-    /* Current Membership Card */
     card: {
-        backgroundColor: "#C7D2FE",
+        backgroundColor: "#000c3a",
         padding: 20,
         borderRadius: 16,
         marginBottom: 30,
     },
+    timeBox: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 16,
+        borderRadius: 12,
+        backgroundColor: "#020617",
+    },
+
+    downgradeText: {
+        fontSize: 12,
+        fontWeight: "800",
+        color: "#94A3B8",
+        textDecorationLine: "underline",
+    },
+
     title: {
         fontSize: 22,
         fontWeight: "900",
-        color: "#000105",
+        color: "#ffffff",
         marginBottom: 6,
     },
     subtitleA: {
         fontSize: 14,
         fontWeight: "700",
-        color: "#334155",
+        color: "#E0E7FF",
+    },
+    headerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        marginBottom: 20,
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
+    },
+    backButton: {
+        padding: 6,
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
+    },
+    placeholder: {
+        width: 24,
     },
     subtitle: {
         marginTop: 10,
         fontSize: 14,
         lineHeight: 20,
-        color: "#334155",
+        color: "#E0E7FF",
         fontWeight: "400",
     },
 
@@ -231,12 +333,12 @@ const styles = StyleSheet.create({
     progressLabel: {
         fontSize: 13,
         fontWeight: "700",
-        color: "#000105",
+        color: "#E0E7FF",
         marginBottom: 6,
     },
     progressBackground: {
         height: 10,
-        backgroundColor: "rgba(0,0,0,0.15)",
+        backgroundColor: "grey",
         borderRadius: 6,
         overflow: "hidden",
     },
@@ -249,25 +351,17 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 12,
         fontWeight: "700",
-        color: "#475569",
-    },
-
-    /* Time Box */
-    timeBox: {
-        marginTop: 20,
-        padding: 14,
-        borderRadius: 12,
-        backgroundColor: "rgba(0,0,0,0.08)",
+        color: "#E0E7FF",
     },
     timeLabel: {
         fontSize: 12,
-        color: "#475569",
+        color: "#ffffff",
     },
     timeValue: {
         marginTop: 4,
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "800",
-        color: "#000105",
+        color: "#ffffff",
     },
 
     /* Upgrade Section */

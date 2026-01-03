@@ -20,14 +20,22 @@ const tools = [
     { id: "1", title: "Crop Tool", icon: "crop", color: "#3B82F6", requiredTier: "Silver" },
     { id: "2", title: "Word Counter", icon: "font", color: "#10B981", requiredTier: "Silver" },
     { id: "3", title: "PDF Scanner", icon: "file-pdf", color: "#F59E0B", requiredTier: "Gold" },
-    { id: "4", title: "QR Generator", icon: "qrcode", color: "#8B5CF6", requiredTier: "Silver" },
-    { id: "5", title: "Video Trim", icon: "video", color: "#EF4444", requiredTier: "Premium" },
-    { id: "6", title: "Image Compress", icon: "compress-arrows-alt", color: "#6366F1", requiredTier: "Gold" },
-    { id: "7", title: "Translator", icon: "language", color: "#EC4899", requiredTier: "Silver" },
-    { id: "8", title: "Audio Rec", icon: "microphone", color: "#14B8A6", requiredTier: "Gold" },
-    { id: "9", title: "Zip Creator", icon: "file-archive", color: "#F43F5E", requiredTier: "Premium" },
-    { id: "10", title: "Notes Pro", icon: "sticky-note", color: "#8B5CF6", requiredTier: "Premium" },
+    { id: "4", title: "QR Code Generator", icon: "qrcode", color: "#8B5CF6", requiredTier: "Gold" },
+
+    // ✅ NEW
+    { id: "5", title: "QR Scanner", icon: "qrcode", color: "#22C55E", requiredTier: "Silver" },
+
+    { id: "6", title: "Video Trim", icon: "video", color: "#EF4444", requiredTier: "Platinum" },
+    { id: "7", title: "Image Compress", icon: "compress-arrows-alt", color: "#6366F1", requiredTier: "Gold" },
+    { id: "8", title: "Translator", icon: "language", color: "#EC4899", requiredTier: "Silver" },
+    { id: "9", title: "Audio Rec", icon: "microphone", color: "#14B8A6", requiredTier: "Platinum" },
+    { id: "10", title: "Zip Creator", icon: "file-archive", color: "#F43F5E", requiredTier: "Platinum" },
+    { id: "11", title: "Notes Pro", icon: "sticky-note", color: "#8B5CF6", requiredTier: "Platinum" },
+
+    // ✅ NEW
+    { id: "12", title: "Encoder / Decoder", icon: "code", color: "#0EA5E9", requiredTier: "Platinum" },
 ];
+
 
 const ToolboxsScreen: React.FC = () => {
     const [selectedTool, setSelectedTool] = useState<string | null>(null);

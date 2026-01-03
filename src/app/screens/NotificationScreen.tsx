@@ -34,7 +34,7 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
                     dispatch(setNotifications(JSON.parse(saved)));
                 }
             } catch (error) {
-                console.log("Error loading notifications: ", error);
+                // console.log("Error loading notifications: ", error);
             }
         };
 
@@ -106,23 +106,6 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
 
                 <Text style={styles.header}>Notifications</Text>
             </View>
-
-            {/* Actions */}
-            {/* <View style={styles.actions}>
-        <TouchableOpacity onPress={() => {
-            onMarkAsRead(notifications.id)
-        }}>
-          <Text style={styles.actionText}>Mark all as read</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => dispatch(clearNotifications())}>
-          <Text style={[styles.actionText, styles.clearText]}>
-            Clear all
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
-            {/* List */}
             <FlatList
                 data={notifications}
                 renderItem={renderNotification}
