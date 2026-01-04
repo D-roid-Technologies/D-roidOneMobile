@@ -97,7 +97,10 @@ const CareersScreen: React.FC = () => {
                     </Text>
                 </View>
 
-                <Text style={styles.sectionTitle}>Open Positions</Text>
+                <Text style={styles.sectionTitle}>Full Time Positions</Text>
+                <Text style={styles.bannerTextA}>
+                    Join our Full time positions by applying for any of the below.
+                </Text>
 
                 {openPositions.map((job) => (
                     <View key={job.id} style={styles.jobCard}>
@@ -117,12 +120,17 @@ const CareersScreen: React.FC = () => {
                                 <Text style={styles.detailText}>{job.location}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.applyButton}>
+                        <TouchableOpacity onPress={() => navigation.navigate("CareerDescriptionScreen", { position: job })} style={styles.applyButton}>
                             <Text style={styles.applyButtonText}>Apply Now</Text>
                             <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
                         </TouchableOpacity>
                     </View>
                 ))}
+
+                <Text style={styles.sectionTitle}>Intership Positions</Text>
+                <Text style={styles.bannerTextA}>
+                    Join our Intership positions by applying for any of the below.
+                </Text>
             </ScrollView>
         </View>
     );
@@ -183,6 +191,13 @@ const styles = StyleSheet.create({
         color: "#E0E7FF",
         textAlign: "center",
         fontWeight: "300",
+    },
+    bannerTextA: {
+        fontSize: 14,
+        color: "#E0E7FF",
+        textAlign: "left",
+        fontWeight: "300",
+        paddingBottom: 10
     },
 
     sectionTitle: {

@@ -16,6 +16,7 @@ import { AppDispatch } from "../redux/store";
 import { submitInternshipApplication } from "../redux/slice/internshipSlice";
 import { Picker } from "@react-native-picker/picker";
 import BackButton from "../components/BackButton";
+import { Ionicons } from "@expo/vector-icons";
 
 interface FormData {
   firstName: string;
@@ -293,10 +294,12 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        <View style={styles.header}>
-          <BackButton onPress={() => navigation?.goBack()} color="#ffffff" />
-          <Text style={styles.headerTitle}>Internship Application</Text>
-          <View style={{ width: 24 }} />
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={26} color="#ffffff" />
+          </TouchableOpacity>
+
+          <Text style={styles.header}>Career Form</Text>
         </View>
 
         <ScrollView
@@ -374,18 +377,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000105",
+    
   },
   keyboardView: {
     flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 16,
-    backgroundColor: "#000c3a",
-    borderBottomWidth: 1,
-    borderBottomColor: "#1a1a3a",
   },
   headerTitle: {
     fontSize: 18,
@@ -398,8 +393,20 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
   },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
+    paddingTop: 40
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#ffffff",
+  },
   section: {
-    backgroundColor: "#C7D2FE",
+    backgroundColor: "#000105",
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -407,7 +414,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#000c3a",
+    color: "#ffffff",
     marginBottom: 16,
   },
   inputContainer: {
@@ -416,7 +423,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#000c3a",
+    color: "#ffffff",
     marginBottom: 8,
   },
   required: {
@@ -428,8 +435,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#ffffff",
-    color: "#ffffff",
+    backgroundColor: "#C7D2FE",
+    color: "#000105",
   },
   textArea: {
     height: 100,
@@ -445,13 +452,13 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#ffffff",
+    borderColor: "#C7D2FE",
     borderRadius: 8,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#C7D2FE",
   },
   picker: {
     height: 50,
-    color: "#000c3a",
+    color: "#000105",
   },
   submitButton: {
     backgroundColor: "#C7D2FE",

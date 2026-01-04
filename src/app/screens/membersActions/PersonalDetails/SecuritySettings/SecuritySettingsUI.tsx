@@ -180,7 +180,7 @@ const sStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 12,
-    color: "#071D6A",
+    color: "#ffffff",
   },
 
   card: {

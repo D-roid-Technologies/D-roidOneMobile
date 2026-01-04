@@ -88,7 +88,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
                 {event.isInternship && (
                     <TouchableOpacity
                         style={styles.applyButton}
-                        onPress={() => (navigation as any).navigate("InternshipApplication")}
+                        onPress={() => (navigation as any).navigate("Careers")}
                     >
                         <Text style={styles.applyButtonText}>Apply Now</Text>
                         <Ionicons name="arrow-forward" size={20} color="#fff" />
