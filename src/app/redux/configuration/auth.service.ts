@@ -925,6 +925,44 @@ export class AuthService {
             return { success: false, error: error.message };
         }
     }
+    async updateHoursInformation(totalHours: number) {
+        try {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                throw new Error("No authenticated user found.");
+            }
+
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                throw new Error("User profile not found in the database.");
+            }
+
+            const existingData = userSnapshot.data();
+
+            // 🔄 Preserve structure but overwrite totalHours
+            const updatedProgress = {
+                ...existingData.user?.onboard?.progress,
+                totalHours: Number(totalHours.toFixed(5)),
+                updatedAt: new Date().toISOString(),
+            };
+
+            // 🔥 Overwrite value in Firestore
+            await updateDoc(userDocRef, {
+                "user.onboard.progress": updatedProgress,
+            });
+
+            return { success: true, data: updatedProgress };
+
+        } catch (error: any) {
+            console.error("Error updating hours:", error);
+
+            return { success: false, error: error.message };
+        }
+    }
+
 
 }
 

@@ -107,7 +107,7 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
                 <Text style={styles.header}>Notifications</Text>
             </View>
             <FlatList
-                data={notifications}
+                data={[...notifications].sort((a, b) => Number(a.isRead) - Number(b.isRead))}
                 renderItem={renderNotification}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingBottom: 20 }}

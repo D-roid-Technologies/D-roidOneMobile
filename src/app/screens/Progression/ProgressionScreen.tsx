@@ -91,33 +91,26 @@ const ProgressionHeader: React.FunctionComponent = () => {
         authService.updateProgressionInformation(newTier).then(() => {
             store.dispatch(setTier(newTier));
             createAndDispatchNotification(dispatch, {
-                title: `Payment Successful for ${newTier.tier}`,
-                message: `Your subscription for ${newTier.tier} has been completed successfully.`,
-            });
-            createAndDispatchNotification(dispatch, {
-                title: `Upgrade to your ${newTier.tier} membership is successful`,
+                title: `Downgrade to ${newTier.tier} membership is successful`,
                 message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
             });
             Toast.show({
                 type: "success",
-                text1: "Payment Successful!",
+                text1: "Downgrade Successful!",
                 text2: `You are now a ${newTier.tier} member.`,
                 visibilityTime: 8000,
             });
         }).catch(() => {
             Toast.show({
                 type: "error",
-                text1: "Payment Unsuccessful",
-                text2: "Payment was not successful, please try again.",
+                text1: "Downgrade Unsuccessful",
+                text2: "Downgrade was not successful, please try again.",
                 visibilityTime: 8000,
             });
 
+
             createAndDispatchNotification(dispatch, {
-                title: `Payment Unsuccessful for ${newTier.tier}`,
-                message: `Your subscription for ${newTier.tier} was unsuccessful.`,
-            });
-            createAndDispatchNotification(dispatch, {
-                title: `Upgrade to your ${newTier.tier} membership is unsuccessful`,
+                title: `Downgrade to ${newTier.tier} membership is unsuccessful`,
                 message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
             });
         })
@@ -205,7 +198,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     onPress={() => handlePlanSelect(goldPlan)}
                 >
                     <Text style={styles.tierTitle}>Gold Tier</Text>
-                    <Text style={styles.tierPrice}>₦6,250/month</Text>
+                    <Text style={styles.tierPrice}>₦7,480/month</Text>
                     <Text style={styles.tierDesc}>
                         Enjoy increased rewards, premium access, and more exclusive perks.
                     </Text>
@@ -216,7 +209,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                     onPress={() => handlePlanSelect(platinumPlan)}
                 >
                     <Text style={styles.tierTitle}>Platinum Tier</Text>
-                    <Text style={styles.tierPrice}>₦18,750/month</Text>
+                    <Text style={styles.tierPrice}>₦22,440/month</Text>
                     <Text style={styles.tierDesc}>
                         Unlock every premium feature, VIP support, and elite membership benefits.
                     </Text>

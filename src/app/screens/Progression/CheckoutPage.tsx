@@ -125,6 +125,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     onPaymentInitiated,
 }) => {
     const dispatch = useDispatch();
+
     const plan = selectedPlan || {
         id: "default",
         name: "Premium Tools Access",
@@ -141,9 +142,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         ],
     };
 
-    const SERVICE_ID = "service_o1jbklr";
-    const TEMPLATE_ID = "template_p8h58ur";
-    const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
+    // const SERVICE_ID = "service_o1jbklr";
+    // const TEMPLATE_ID = "template_p8h58ur";
+    // const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
     const PAYSTACK_PUBLIC_KEY = "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
 
     const [customerInfo, setCustomerInfo] = useState({
@@ -209,9 +210,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             });
             return;
         }
-
         const newRef = generateReferenceNumber();
-        // console.log("Generated Reference:", newRef);
 
         setReferenceNumber(newRef);
         setIsFormSubmitted(true);
@@ -224,17 +223,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     };
 
     const paymentHandledRef = useRef(false);
-
     const handlePaymentSuccess = useCallback(
         async (response: PaystackResponse) => {
 
-            // 🛑 Prevent double execution
             if (paymentHandledRef.current) return;
             paymentHandledRef.current = true;
 
             setShowPaystackModal(false);
-
-            // let newTier: TierType = "Silver";
             let newTier: any = {
                 tier: "Silver",
                 nextTier: "Gold",

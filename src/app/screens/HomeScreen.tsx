@@ -33,6 +33,8 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const userMain: any = useSelector((state: RootState) => state.user);
     const userTypee = userMain.userType;
     const membershipTier = useSelector((state: RootState) => state.membershipTier);
+    const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in ms
+    const intervalRef = useRef<number | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
     const count = useSelector((state: RootState) => state.notifications.notifications.length);
@@ -77,6 +79,26 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
             setTotalSeconds(0);
         }
     };
+
+    useEffect(() => {
+        intervalRef.current = setInterval(async () => {
+            try {
+                // 🔄 Send already-calculated hours to backend
+                await authService.updateHoursInformation(membershipTier.totalHours);
+
+                // console.log("✅ Hours synced:", membershipTier.totalHours);
+            } catch (error) {
+                console.error("Failed to sync hours:", error);
+            }
+        }, MINUTES_25);
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [membershipTier.totalHours]);
 
     const eventsPosts = [
         {
@@ -304,6 +326,36 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         { title: "Contact Us", icon: "envelope", color: "#06B6D4", type: "all" },
     ];
 
+    const moreFromDroid = [
+        {
+            title: "Explore More Apps",
+            subtitle: "Discover other apps by D'roid",
+            icon: "plus",
+            color: "#3B82F6",
+        },
+        {
+            title: "Ogoo",
+            subtitle: "D'roid’s health & personal AI companion",
+            icon: "heart",
+            color: "#EF4444",
+        },
+        {
+            title: "D'roid Companion",
+            subtitle: "D'roid’s mobile experience fused with Ogoo",
+            icon: "mobile",
+            color: "#8B5CF6",
+        },
+        {
+            title: "Partner with D'roid",
+            subtitle: "Collaborate, integrate, or build together",
+            icon: "handshake",
+            color: "#10B981",
+        },
+    ];
+
+
+    // const filteredMoreFromDroid = 
+
     const filteredQuickActions = quickActions.filter(
         (action) => action.type === "all" || action.type === userTypee.toLowerCase()
     );
@@ -331,10 +383,12 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     // Sign out handler function
     const handleSignOut = async () => {
         setIsModalVisible(false);
-        dispatch(logoutUser());
-        await signOut(auth).then(() => {
-            navigation.navigate("Login")
-        })
+        await authService.updateHoursInformation(membershipTier.totalHours).then(async () => {
+            await signOut(auth).then(() => {
+                navigation.navigate("Login");
+                dispatch(logoutUser());
+            })
+        });
     };
 
     useEffect(() => {
@@ -441,15 +495,17 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                     <View style={styles.statCard}>
                         <Text style={styles.statTitle}>Membership</Text>
                         <Text style={styles.statValue}>{membershipTier.tier}</Text>
-                        <Text style={styles.statChange}>
-                            {membershipTier.nextTier ? `Next: ${membershipTier.nextTier}` : "Top Tier"}
-                        </Text>
+                        {membershipTier.tier === "Platinum" ? null : (
+                            <Text style={styles.statChange}>
+                                {membershipTier.nextTier ? `Next: ${membershipTier.nextTier}` : "Top Tier"}
+                            </Text>
+                        )}
                     </View>
 
                     {/* Total Hours */}
                     <View style={styles.statCard}>
                         <Text style={styles.statTitle}>Total Hours</Text>
-                        <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours.toFixed(3)} Hours</Text>
+                        <Text style={styles.statValue}>{membershipTier.status}: {membershipTier.totalHours.toFixed(2)} Hours</Text>
                         <Text style={styles.statChange}>
                             Membership: {membershipTier.progressPercentage}%
                         </Text>
@@ -523,6 +579,30 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                     </Text>
                 </TouchableOpacity>
 
+                <View style={styles.moreFromDroid}>
+                    <Text style={styles.sectionTitle}>More from D'roid</Text>
+                    <View style={styles.quickActionsContainer}>
+                        {moreFromDroid.map((action, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.actionCard}
+                                onPress={() => handleQuickAction(action.title)}
+                            >
+                                <View
+                                    style={[styles.iconWrapper, { backgroundColor: action.color + "20" }]}
+                                >
+                                    <FontAwesome5
+                                        name={action.icon as any}
+                                        size={20}
+                                        color={action.color}
+                                    />
+                                </View>
+                                <Text style={styles.actionText}>{action.title}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </View>
+
             </ScrollView>
 
             <BottomSheetModal
@@ -540,7 +620,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 </View>
 
                 {/* Action Buttons */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.modalButton}
                     onPress={() => {
                         setIsModalVisible(false);
@@ -559,7 +639,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 >
                     <Ionicons name="settings-outline" size={24} color="#000c3a" />
                     <Text style={styles.modalButtonText}>Settings</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity
                     style={[styles.modalButton, styles.signOutButton]}
@@ -629,11 +709,10 @@ const styles = StyleSheet.create({
         padding: 16,
         width: "48%",
         marginBottom: 12,
-        height: 110
     },
     statTitle: { color: "#C7D2FE", fontWeight: "900", marginBottom: 20 },
-    statValue: { fontSize: 16, fontWeight: "400", color: "#e6e6e8" },
-    statChange: { fontSize: 12, color: "#999", fontWeight: "600" },
+    statValue: { fontSize: 14, fontWeight: "400", color: "#e6e6e8" },
+    statChange: { fontSize: 14, color: "#999", fontWeight: "600" },
     quickActionsContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -780,4 +859,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#999',
     },
+    moreFromDroid: {
+        paddingTop: 20
+    }
 });
