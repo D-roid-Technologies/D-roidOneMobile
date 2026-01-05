@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  SafeAreaView,
   Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
@@ -17,6 +16,7 @@ import { submitInternshipApplication } from "../redux/slice/internshipSlice";
 import { Picker } from "@react-native-picker/picker";
 import BackButton from "../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface FormData {
   firstName: string;
@@ -398,7 +398,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     marginBottom: 20,
-    paddingTop: 40
   },
   header: {
     fontSize: 24,

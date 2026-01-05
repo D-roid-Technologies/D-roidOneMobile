@@ -210,7 +210,7 @@ const CalendarScreen: React.FC = () => {
               <Text style={styles.modalButtonText}>Create Event</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.modalButton}
               onPress={() => {
                 setIsModalVisible(false);
@@ -219,7 +219,7 @@ const CalendarScreen: React.FC = () => {
             >
               <Ionicons name="search-outline" size={24} color="#000c3a" />
               <Text style={styles.modalButtonText}>Find Someone</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.modalCloseButton}

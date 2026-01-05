@@ -91,12 +91,14 @@ const CreateEventScreen: React.FC = () => {
         "high"
     ] as const
 
-    const dynamicDescriptionPlaceholder = {
+    const dynamicDescriptionPlaceholder: Record<Event["type"], string> = {
         Note: "Add Note",
         Task: "Describe Task",
         Appointment: "Add Appointment Notes",
         Meeting: "Add Meeting Notes",
-    }[type];
+        Internship: "Add Internship Details",
+    };
+
 
     const onSave = async () => {
         if (!title.trim()) return;
@@ -189,13 +191,14 @@ const CreateEventScreen: React.FC = () => {
 
                 {/* DESCRIPTION */}
                 <TextInput
-                    placeholder={dynamicDescriptionPlaceholder}
+                    placeholder={dynamicDescriptionPlaceholder[type]}
                     value={description}
                     onChangeText={setDescription}
                     style={[styles.input, { height: type === "Note" ? 120 : 80 }]}
                     multiline
                     placeholderTextColor="#777"
                 />
+
 
                 {/* EVENT TYPE PICKER */}
                 <View style={styles.pickerContainer}>
