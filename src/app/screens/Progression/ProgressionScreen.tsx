@@ -53,7 +53,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
     const goldPlan: Plan = {
         id: "gold",
         name: "Gold Tier",
-        price: 6250,
+        price: 7480,
         interval: "month",
         features: [
             "Increased rewards",
@@ -67,7 +67,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
     const platinumPlan: Plan = {
         id: "platinum",
         name: "Platinum Tier",
-        price: 18750,
+        price: 22440,
         interval: "month",
         features: [
             "All premium features",
