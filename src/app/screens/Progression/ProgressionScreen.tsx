@@ -5,10 +5,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
-    Platform,
-    AppState,
-    AppStateStatus
 } from "react-native";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -37,7 +33,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
 
     const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<Plan | undefined>(undefined);
-    const [text, setText] = useState<string>("Downgrade to Silver")
+    const [text, setText] = useState<string>("Downgrade to Silver");
 
     const handlePlanSelect = (plan: Plan) => {
         setSelectedPlan(plan);

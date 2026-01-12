@@ -564,10 +564,10 @@ export class AuthService {
             });
 
             // Save to local storage
-            await ReactNativeAsyncStorage.setItem(
-                "profileUpdated",
-                JSON.stringify(updatedPrimaryInfo)
-            );
+            // await ReactNativeAsyncStorage.setItem(
+            //     "profileUpdated",
+            //     JSON.stringify(updatedPrimaryInfo)
+            // );
 
             // Display success toast
             Toast.show({

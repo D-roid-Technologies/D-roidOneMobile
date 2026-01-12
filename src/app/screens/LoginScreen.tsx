@@ -143,8 +143,8 @@ const MemberLogin: React.FunctionComponent = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        paddingHorizontal: 20,
-        paddingTop: 60,
+        // paddingHorizontal: 20,
+        // paddingTop: 10,
         backgroundColor: "#000105",
     },
     backButton: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         paddingHorizontal: 20,
-        paddingTop: 60,
+        paddingTop: 40,
     },
     bottomButtonContainer: {
         padding: 20,
