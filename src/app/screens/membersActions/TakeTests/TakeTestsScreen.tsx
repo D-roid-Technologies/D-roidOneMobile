@@ -1,69 +1,79 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { selectMembershipTier, TierType } from '../../../redux/slice/membershiptierslice';
 import { useSelector } from 'react-redux';
 
+type MembershipTier = "Silver" | "Gold" | "Platinum";
+
+const tierOrder: MembershipTier[] = ["Silver", "Gold", "Platinum"];
+
+const hasAccess = (userTier: MembershipTier, contentTier: MembershipTier) => {
+    return tierOrder.indexOf(userTier) >= tierOrder.indexOf(contentTier);
+};
+
 const TakeTestsScreen: React.FC = () => {
     const navigation = useNavigation<any>();
     const [selectedCategory, setSelectedCategory] = useState('all');
     const membership = useSelector(selectMembershipTier);
-    const tiers: TierType[] = ["Silver", "Gold", "Platinum"];
+
     const isPlatinum = membership.tier === "Platinum";
     const isGoldOrAbove =
         membership.tier === "Gold" || membership.tier === "Platinum";
 
-
-
     const learningContent = [
         {
-            id: 'test-js',
-            type: 'test',
-            title: 'JavaScript Fundamentals',
-            category: 'programming',
+            id: "test-js",
+            type: "test",
+            title: "JavaScript Fundamentals",
+            category: "programming",
             durationMinutes: 30,
             questions: 20,
-            difficulty: 'Beginner',
+            difficulty: "Beginner",
+            membershipTier: "Silver" as MembershipTier,
         },
         {
-            id: 'course-rn',
-            type: 'course',
-            title: 'React Native Essentials',
-            category: 'programming',
+            id: "course-rn",
+            type: "course",
+            title: "React Native Essentials",
+            category: "programming",
             durationHours: 8,
             lessons: 12,
-            difficulty: 'Intermediate',
+            difficulty: "Intermediate",
+            membershipTier: "Gold" as MembershipTier,
         },
         {
-            id: 'test-uiux',
-            type: 'test',
-            title: 'UI/UX Principles',
-            category: 'design',
+            id: "test-uiux",
+            type: "test",
+            title: "UI/UX Principles",
+            category: "design",
             durationMinutes: 25,
             questions: 15,
-            difficulty: 'Beginner',
+            difficulty: "Beginner",
+            membershipTier: "Silver" as MembershipTier,
         },
         {
-            id: 'course-ts',
-            type: 'course',
-            title: 'Advanced TypeScript',
-            category: 'programming',
+            id: "course-ts",
+            type: "course",
+            title: "Advanced TypeScript",
+            category: "programming",
             durationHours: 10,
             lessons: 18,
-            difficulty: 'Advanced',
+            difficulty: "Advanced",
+            membershipTier: "Platinum" as MembershipTier,
         },
         {
-            id: 'test-logic',
-            type: 'test',
-            title: 'Problem Solving',
-            category: 'general',
+            id: "test-logic",
+            type: "test",
+            title: "Problem Solving",
+            category: "general",
             durationMinutes: 40,
             questions: 20,
-            difficulty: 'Intermediate',
+            difficulty: "Intermediate",
+            membershipTier: "Gold" as MembershipTier,
         },
     ];
-
 
     const categories = [
         { id: 'all', label: 'All Content' },
@@ -81,11 +91,11 @@ const TakeTestsScreen: React.FC = () => {
         }
     };
 
-    const filteredContent =
+    const filteredContent = (
         selectedCategory === 'all'
             ? learningContent
-            : learningContent.filter(item => item.category === selectedCategory);
-
+            : learningContent.filter(item => item.category === selectedCategory)
+    ).filter(item => hasAccess(membership.tier, item.membershipTier));
 
     return (
         <View style={styles.container}>
@@ -96,12 +106,12 @@ const TakeTestsScreen: React.FC = () => {
                 </TouchableOpacity>
                 <Text style={styles.header}>Courses and Tests</Text>
             </View>
+
             {/* Membership Tier Bar */}
             <View style={styles.tierBar}>
-                {tiers.map((tier) => {
+                {tierOrder.map((tier) => {
                     const isActive = membership.tier === tier;
-                    const isLocked =
-                        tiers.indexOf(tier) > tiers.indexOf(membership.tier);
+                    const isLocked = tierOrder.indexOf(tier) > tierOrder.indexOf(membership.tier);
 
                     return (
                         <View
@@ -123,7 +133,6 @@ const TakeTestsScreen: React.FC = () => {
                                 size={14}
                                 color={isActive ? "#10B981" : "#64748B"}
                             />
-
                             <Text
                                 style={[
                                     styles.tierText,
@@ -138,15 +147,9 @@ const TakeTestsScreen: React.FC = () => {
                 })}
             </View>
 
-
-            {/* Scrollable Content */}
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Categories */}
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.categoriesContainer}
-                >
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
                     {categories.map((category) => (
                         <TouchableOpacity
                             key={category.id}
@@ -156,10 +159,12 @@ const TakeTestsScreen: React.FC = () => {
                             ]}
                             onPress={() => setSelectedCategory(category.id)}
                         >
-                            <Text style={[
-                                styles.categoryText,
-                                selectedCategory === category.id && styles.categoryTextActive
-                            ]}>
+                            <Text
+                                style={[
+                                    styles.categoryText,
+                                    selectedCategory === category.id && styles.categoryTextActive
+                                ]}
+                            >
                                 {category.label}
                             </Text>
                         </TouchableOpacity>
@@ -173,7 +178,6 @@ const TakeTestsScreen: React.FC = () => {
                             <Text style={styles.testTitle}>{item.title}</Text>
 
                             <View style={{ alignItems: "flex-end", gap: 6 }}>
-                                {/* Difficulty */}
                                 <View
                                     style={[
                                         styles.difficultyBadge,
@@ -190,25 +194,23 @@ const TakeTestsScreen: React.FC = () => {
                                     </Text>
                                 </View>
 
-                                {/* Tier */}
                                 <View
                                     style={[
                                         styles.tierBadge,
-                                        { backgroundColor: getTierColor(membership.tier) + "20" },
+                                        { backgroundColor: getTierColor(item.membershipTier) + "20" },
                                     ]}
                                 >
                                     <Text
                                         style={[
                                             styles.tierBadgeText,
-                                            { color: getTierColor(membership.tier) },
+                                            { color: getTierColor(item.membershipTier) },
                                         ]}
                                     >
-                                        {membership.tier}
+                                        {item.membershipTier}
                                     </Text>
                                 </View>
                             </View>
                         </View>
-
 
                         <Text style={styles.typeLabel}>
                             {getTypeLabel(item.type)}
@@ -243,7 +245,24 @@ const TakeTestsScreen: React.FC = () => {
                             )}
                         </View>
 
-                        <TouchableOpacity style={styles.startButton}>
+                        <TouchableOpacity
+                            style={styles.startButton}
+                            onPress={() => {
+                                if (!hasAccess(membership.tier, item.membershipTier)) {
+                                    Alert.alert(
+                                        "Upgrade Required",
+                                        `This content requires a ${item.membershipTier} membership.`,
+                                        [{ text: "Upgrade", onPress: () => navigation.navigate("UpgradeMembership") }]
+                                    );
+                                    return;
+                                }
+
+                                navigation.navigate(
+                                    item.type === "course" ? "CourseDetail" : "TestDetail",
+                                    { id: item.id }
+                                );
+                            }}
+                        >
                             <Text style={styles.startButtonText}>
                                 {getPrimaryActionLabel(item.type)}
                             </Text>
@@ -253,7 +272,7 @@ const TakeTestsScreen: React.FC = () => {
                 ))}
             </ScrollView>
 
-            {/* 🔻 Bottom Action Bar */}
+            {/* Bottom Action Bar */}
             <View style={styles.bottomActions}>
                 <TouchableOpacity
                     style={[
@@ -278,7 +297,6 @@ const TakeTestsScreen: React.FC = () => {
                     </Text>
                 </TouchableOpacity>
 
-
                 <TouchableOpacity
                     style={[
                         styles.secondaryActionBtn,
@@ -301,23 +319,17 @@ const TakeTestsScreen: React.FC = () => {
                         Upload a Course
                     </Text>
                 </TouchableOpacity>
-
             </View>
         </View>
     );
-
 };
 
 const getTierColor = (tier: TierType) => {
     switch (tier) {
-        case "Silver":
-            return "#94A3B8";
-        case "Gold":
-            return "#000105";
-        case "Platinum":
-            return "#67E8F9";
-        default:
-            return "#CBD5E1";
+        case "Silver": return "#94A3B8";
+        case "Gold": return "#000105";
+        case "Platinum": return "#67E8F9";
+        default: return "#CBD5E1";
     }
 };
 
@@ -326,7 +338,6 @@ const getTypeLabel = (type: string) =>
 
 const getPrimaryActionLabel = (type: string) =>
     type === 'course' ? 'Start Course' : 'Start Test';
-
 
 export default TakeTestsScreen;
 
@@ -360,11 +371,10 @@ const styles = StyleSheet.create({
     disabledBtn: {
         opacity: 0.45,
     },
-    
+
     disabledText: {
         color: "#64748B",
     },
-    
 
     content: {
         paddingHorizontal: 20,
@@ -404,8 +414,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "900",
     },
-
-
     /* Test Card */
     testCard: {
         backgroundColor: "#C7D2FE",
@@ -561,4 +569,3 @@ const styles = StyleSheet.create({
     },
 
 });
-
