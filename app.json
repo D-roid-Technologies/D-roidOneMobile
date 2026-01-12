@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Droid One",
+    "name": "D'roid One",
     "slug": "DroidOne",
     "version": "0.0.5",
     "orientation": "portrait",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "blue"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true

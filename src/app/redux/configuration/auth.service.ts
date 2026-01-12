@@ -905,6 +905,7 @@ export class AuthService {
             // );
 
             // ✅ Success feedback
+            store.dispatch(setTier(updatedProgress))
             Toast.show({
                 type: "success",
                 text1: "Progress Updated",

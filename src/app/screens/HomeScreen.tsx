@@ -47,6 +47,10 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   );
 
   const checkIfTierExists = async () => {
+    const hasRun = localStorage.getItem("tierCheckDone");
+
+    if (hasRun) return; // exit if already run successfully
+
     if (membershipTier.tier !== "Silver") {
       await authService.updateProgressionInformation({
         tier: "Silver",
@@ -55,13 +59,15 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         status: "Active",
         desc: "You are making great progress on your membership journey.",
       });
+
+      // Mark as done
+      localStorage.setItem("tierCheckDone", "true");
     }
   };
 
   useEffect(() => {
     checkIfTierExists();
-    console.log("Membership Tier on Home Screen:", membershipTier.tier);
-  });
+  }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   useEffect(() => {
