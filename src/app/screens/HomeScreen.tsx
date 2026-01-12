@@ -129,6 +129,124 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
   const eventsPosts = [
     {
+      id: 23,
+      title: "Tech Webinar [January 2025]",
+      excerpt:
+        "An engaging tech-focused webinar designed to equip participants with in-demand digital and software development skills.",
+      date: "Saturday, 25th January 2025",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
+      category: "Events",
+      readTime: "5 min read",
+      image: ASSETS.images.nationalICT,
+      content: [
+        "The Tech Webinar [January 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
+
+        "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
+
+        "Participants will gain practical understanding through real-world examples, live demonstrations, and interactive Q&A sessions designed to simplify complex technical concepts.",
+
+        "Beyond learning, the webinar creates a collaborative environment where attendees can connect with fellow learners, developers, and industry experts, fostering meaningful professional relationships.",
+
+        "This event is open to beginners and experienced professionals alike. Register early and join us as we explore current technologies, sharpen skills, and prepare for the future of tech.",
+      ],
+    },
+
+    {
+      id: 22,
+      title: "Lift Up Tech Conference & Hackathon [2026]",
+      excerpt:
+        "A flagship tech event combining an inspiring conference with a hands-on hackathon experience.",
+      date: "June 2026",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
+      category: "Conference & Hackathon",
+      readTime: "7 min read",
+      image: ASSETS.images.nationalICT,
+      content: [
+        "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
+
+        "The conference segment features keynote talks, panel discussions, and workshops led by industry leaders, covering emerging technologies, career growth, and digital transformation.",
+
+        "Following the conference, the hackathon challenges participants to apply their knowledge by building solutions that address real societal and business challenges.",
+
+        "This event brings together developers, designers, entrepreneurs, students, and tech enthusiasts, creating a vibrant community of innovators and problem-solvers.",
+
+        "Lift Up Tech is more than an event — it’s a movement to empower talent, promote innovation, and shape the future of technology.",
+      ],
+    },
+    {
+      id: 21,
+      title: "D'roid Hackathon [February 2026]",
+      excerpt:
+        "A high-energy hackathon bringing developers and designers together to build impactful digital solutions.",
+      date: "Friday–Saturday, 20th–21st February 2026",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+      category: "Hackathon",
+      readTime: "6 min read",
+      image: ASSETS.images.nationalICT,
+      content: [
+        "The D'roid Hackathon [February 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
+
+        "Participants will work in teams to brainstorm, design, and develop functional solutions within a limited timeframe, encouraging creativity, teamwork, and rapid problem-solving.",
+
+        "The hackathon welcomes frontend and backend developers, UI/UX designers, and tech creatives of all skill levels, creating a diverse and inclusive innovation environment.",
+
+        "Mentors and judges from the tech industry will provide guidance, feedback, and evaluation, helping participants refine their ideas and technical implementations.",
+
+        "Outstanding teams will receive prizes, recognition, and opportunities to further develop their projects with support from D'roid Technologies.",
+      ],
+    },
+
+    {
+      id: 20,
+      title: "Health & Innovation Conference [2026]",
+      excerpt:
+        "A forward-looking conference exploring the intersection of health, technology, and innovation.",
+      date: "Saturday, 7th February 2026",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
+      category: "Events",
+      readTime: "6 min read",
+      image: ASSETS.images.nationalICT,
+      content: [
+        "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
+
+        "Sessions will cover topics such as digital health solutions, health data management, AI in healthcare, wellness technology, and the future of patient-centered care.",
+
+        "Attendees will gain insights from keynote speakers and panel discussions focused on solving real-world healthcare challenges using innovative and sustainable approaches.",
+
+        "The conference also encourages collaboration between health professionals and tech experts, creating a space for knowledge exchange and solution-driven conversations.",
+
+        "Whether you are a healthcare practitioner, tech enthusiast, or innovator, this conference offers valuable perspectives on shaping the future of health through technology.",
+      ],
+    },
+    {
+      id: 19,
+      title: "Entrepreneurial Webinar [2026]",
+      excerpt:
+        "A practical and inspiring webinar focused on building, scaling, and sustaining successful businesses.",
+      date: "Saturday, 24th January 2026",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
+      category: "Events",
+      readTime: "5 min read",
+      image: ASSETS.images.nationalICT,
+      content: [
+        "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today’s competitive market.",
+
+        "The webinar features experienced entrepreneurs and industry experts who will share insights on idea validation, funding strategies, brand building, digital marketing, and leveraging technology for business growth.",
+
+        "Participants will gain practical knowledge through real-life case studies, interactive discussions, and Q&A sessions that address common challenges faced by entrepreneurs at different stages of their journey.",
+
+        "Beyond learning, the webinar provides an opportunity to network with fellow entrepreneurs, innovators, and mentors, fostering collaborations and long-term professional relationships.",
+
+        "This event is open to students, professionals, and business owners. Secure your spot and take the next step toward building a sustainable and impactful business.",
+      ],
+    },
+
+    {
       id: 18,
       title: "Internship Program 2025 - Apply Now!",
       excerpt:
