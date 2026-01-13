@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -111,9 +110,9 @@ const generateUniqueId = (userType: string): string | null => {
 };
 
 const USER_TYPES = [
-  { label: "Select User Type", value: "" },
+  //   { label: "Select User Type", value: "" },
   { label: "Staff", value: "Staff" },
-  { label: "Organisation", value: "Organisation" },
+  //   { label: "Organisation", value: "Organisation" },
   { label: "Member", value: "Member" },
 ];
 
@@ -787,29 +786,6 @@ const styles = StyleSheet.create({
 
 export default SignUp;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import React, { useEffect, useState } from "react";
 // import {
 //     View,
@@ -907,7 +883,6 @@ export default SignUp;
 
 //     return `${prefix}${randomPart}-${suffix}`;
 // };
-
 
 // const SignUp: React.FunctionComponent = ({ navigation }: any) => {
 //     const [text, setText] = useState<string>("Sign Up");
@@ -1012,7 +987,6 @@ export default SignUp;
 //     const handleChange = (key: keyof any, value: string | boolean) => {
 //         setFormData((prev: any) => ({ ...prev, [key]: value }));
 //     };
-
 
 //     const validate = () => {
 //         let errors: FormErrors = {};
