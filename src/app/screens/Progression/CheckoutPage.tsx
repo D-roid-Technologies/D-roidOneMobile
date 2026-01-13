@@ -145,7 +145,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     // const SERVICE_ID = "service_o1jbklr";
     // const TEMPLATE_ID = "template_p8h58ur";
     // const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
-    const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
+
+    // const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
+    const PAYSTACK_PUBLIC_KEY = "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
 
     const [customerInfo, setCustomerInfo] = useState({
         name: "",
@@ -164,32 +166,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }));
     };
 
-    // const startMembershipCountdown = async () => {
-    //     if (plan.name.toLowerCase() === "silver") return;
-    
-    //     let remainingDays = 30;
-    //     setDaysLeft(remainingDays);
-    
-    //     while (remainingDays > 0) {
-    //         // wait 24 hours
-    //         await new Promise(resolve =>
-    //             setTimeout(resolve, 24 * 60 * 60 * 1000)
-    //         );
-    
-    //         remainingDays -= 1;
-    //         setDaysLeft(remainingDays);
-    //     }
-    
-    //     // Membership expired → downgrade to Silver
-    //     await authService.updateProgressionInformation({
-    //         tier: "Silver",
-    //         nextTier: "Gold",
-    //         progressPercentage: 33,
-    //         status: "Active",
-    //         desc: "You are making great progress on your membership journey.",
-    //     });
-    // };
-    
 
     const isFormValid = Boolean(
         customerInfo.name.trim() &&

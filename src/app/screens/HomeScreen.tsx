@@ -18,14 +18,16 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { ASSETS } from "../constants/Assets";
 // Updated Redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../redux/store";
+import { RootState, AppDispatch, store } from "../redux/store";
 import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
-import { addHours } from "../redux/slice/membershiptierslice";
+import { addHours, setTier } from "../redux/slice/membershiptierslice";
 import BottomSheetModal from "../components/BottomSheetModal";
 import { authService } from "../redux/configuration/auth.service";
+import { createAndDispatchNotification } from "../utils/Notifications";
+import Toast from "react-native-toast-message";
 
 const { height } = Dimensions.get("window"); // Get screen height for modal styling
 
@@ -35,6 +37,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   const membershipTier = useSelector(
     (state: RootState) => state.membershipTier
   );
+  const [text, setText] = useState("Activate Membership");
   const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in ms
   const intervalRef = useRef<number | null>(null);
 
@@ -65,9 +68,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     }
   };
 
-  useEffect(() => {
-    checkIfTierExists();
-  }, []);
+  // useEffect(() => {
+  //   checkIfTierExists();
+  // }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   useEffect(() => {
@@ -521,8 +524,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     },
   ];
 
-  // const filteredMoreFromDroid =
-
   const filteredQuickActions = quickActions.filter(
     (action) => action.type === "all" || action.type === userTypee.toLowerCase()
   );
@@ -546,6 +547,43 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     // Alert.alert("Action Required", `Navigating to ${title} screen.`);
     navigation.navigate(`${title}`);
   };
+
+  const onDowngradePress = () => {
+    let newTier: any = {
+      tier: "Silver",
+      nextTier: "Gold",
+      progressPercentage: 33,
+      status: "Active",
+      desc: "You are making great progress on your membership journey."
+    };
+    setText("...please wait!")
+    authService.updateProgressionInformation(newTier).then(() => {
+      store.dispatch(setTier(newTier));
+      createAndDispatchNotification(dispatch, {
+        title: `Downgrade to ${newTier.tier} membership is successful`,
+        message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
+      });
+      Toast.show({
+        type: "success",
+        text1: "Downgrade Successful!",
+        text2: `You are now a ${newTier.tier} member.`,
+        visibilityTime: 8000,
+      });
+    }).catch(() => {
+      Toast.show({
+        type: "error",
+        text1: "Downgrade Unsuccessful",
+        text2: "Downgrade was not successful, please try again.",
+        visibilityTime: 8000,
+      });
+
+
+      createAndDispatchNotification(dispatch, {
+        title: `Downgrade to ${newTier.tier} membership is unsuccessful`,
+        message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
+      });
+    })
+  }
 
   // Sign out handler function
   const handleSignOut = async () => {
@@ -668,13 +706,18 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           <View style={styles.statCard}>
             <Text style={styles.statTitle}>Membership</Text>
             <Text style={styles.statValue}>{membershipTier.tier}</Text>
-            {membershipTier.tier === "Platinum" ? null : (
+            {membershipTier.tier === "Platinum" ? null : membershipTier.nextTier ? (
               <Text style={styles.statChange}>
-                {membershipTier.nextTier
-                  ? `Next: ${membershipTier.nextTier}`
-                  : "Top Tier"}
+                {`Next: ${membershipTier.nextTier}`}
               </Text>
+            ) : (
+              <TouchableOpacity onPress={onDowngradePress}>
+                <Text style={[styles.statChange, styles.topTierButtonText]}>
+                  {text}
+                </Text>
+              </TouchableOpacity>
             )}
+
           </View>
 
           {/* Total Hours */}
@@ -1052,4 +1095,8 @@ const styles = StyleSheet.create({
   moreFromDroid: {
     paddingTop: 20,
   },
+  topTierButtonText: {
+    textDecorationLine: "underline",
+    fontWeight: "600",
+  }
 });
