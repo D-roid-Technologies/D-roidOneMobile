@@ -37,7 +37,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   const membershipTier = useSelector(
     (state: RootState) => state.membershipTier
   );
-  const [text, setText] = useState("Activate Membership");
+  const [text, setText] = useState("Tap to activate Membership");
   const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in ms
   const intervalRef = useRef<number | null>(null);
 
@@ -505,19 +505,13 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       color: "#3B82F6",
     },
     {
-      title: "Ogoo",
-      subtitle: "D'roid’s health & personal AI companion",
-      icon: "heart",
-      color: "#EF4444",
-    },
-    {
       title: "D'roid Companion",
       subtitle: "D'roid’s mobile experience fused with Ogoo",
       icon: "mobile",
       color: "#8B5CF6",
     },
     {
-      title: "Partner with D'roid",
+      title: "Partner with Us",
       subtitle: "Collaborate, integrate, or build together",
       icon: "handshake",
       color: "#10B981",
