@@ -11,6 +11,7 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
+const CARD_WIDTH = (width - 48) / 2; // 👈 responsive card width
 
 const apps = [
     {
@@ -24,30 +25,12 @@ const apps = [
     },
     {
         id: "3",
-        title: "D'roid Music",
-        subtitle: "Stream and manage music",
-        icon: "music",
+        title: "Knowledge City",
+        subtitle: "Learning which is streamlined to you",
+        icon: "book",
         color: "#F59E0B",
         owner: "D'roid",
-        type: "Fun",
-    },
-    {
-        id: "5",
-        title: "Chat Buddy",
-        subtitle: "Fun AI chatbot",
-        icon: "robot",
-        color: "#F472B6",
-        owner: "Other",
-        type: "AI",
-    },
-    {
-        id: "6",
-        title: "Task Manager",
-        subtitle: "Organize your day",
-        icon: "tasks",
-        color: "#FBBF24",
-        owner: "Other",
-        type: "Utility",
+        type: "Education",
     },
 ];
 
@@ -57,21 +40,30 @@ const ExploreMoreAppsScreen: React.FC = () => {
     const renderAppCard = ({ item }: any) => (
         <TouchableOpacity
             style={[styles.appCard, { backgroundColor: item.color }]}
-            onPress={() => console.log(`Opening ${item.title}`)}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate(`${item.title}`)}
         >
             {/* Icon */}
-            <FontAwesome5 name={item.icon as any} size={32} color="#fff" />
+            <View style={styles.iconWrapper}>
+                <FontAwesome5 name={item.icon as any} size={18} color="#ffffff" />
+            </View>
 
-            {/* Title and subtitle */}
+            {/* Title & subtitle */}
             <Text style={styles.appTitle}>{item.title}</Text>
-            <Text style={styles.appSubtitle}>{item.subtitle}</Text>
+            <Text style={styles.appSubtitle} numberOfLines={2}>
+                {item.subtitle}
+            </Text>
 
-            {/* Owner and type badges */}
+            {/* Divider */}
+            <View style={styles.divider} />
+
+            {/* Badges */}
             <View style={styles.badgesContainer}>
-                <View style={styles.badge}>
+                <View style={styles.badgePrimary}>
                     <Text style={styles.badgeText}>{item.owner}</Text>
                 </View>
-                <View style={[styles.badge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+
+                <View style={styles.badgeSecondary}>
                     <Text style={styles.badgeText}>{item.type}</Text>
                 </View>
             </View>
@@ -111,57 +103,84 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingTop: 40,
     },
+
     headerContainer: {
         flexDirection: "row",
         alignItems: "center",
         gap: 12,
         marginBottom: 20,
     },
+
     header: {
         fontSize: 24,
         fontWeight: "900",
         color: "#ffffff",
     },
 
-    /* App Cards */
     appCard: {
-        width: width / 2 - 20,
-        minHeight: 180,
+        width: CARD_WIDTH,              // ✅ responsive width
         borderRadius: 16,
-        justifyContent: "center",
+        padding: 14,                    // ⬇ reduced padding
+        marginBottom: 14,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+
+    iconWrapper: {
+        width: 38,
+        height: 38,
+        borderRadius: 12,
+        backgroundColor: "rgba(255,255,255,0.2)",
         alignItems: "center",
-        marginBottom: 16,
-        padding: 16,
-        position: "relative",
+        justifyContent: "center",
+        marginBottom: 10,
     },
+
     appTitle: {
-        color: "#fff",
-        fontWeight: "700",
-        fontSize: 16,
-        marginTop: 12,
-        textAlign: "center",
+        fontSize: 15,
+        fontWeight: "900",
+        color: "#ffffff",
+        marginBottom: 2,
     },
+
     appSubtitle: {
-        color: "#E0E0E0",
         fontSize: 12,
-        textAlign: "center",
-        marginTop: 4,
+        color: "rgba(255,255,255,0.85)",
+        lineHeight: 16,
+    },
+
+    divider: {
+        height: 1,
+        backgroundColor: "rgba(255,255,255,0.25)",
+        marginVertical: 10,
     },
 
     badgesContainer: {
         flexDirection: "row",
-        marginTop: 10,
         gap: 6,
+        flexWrap: "wrap",
     },
-    badge: {
-        backgroundColor: "rgba(0,0,0,0.3)",
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        borderRadius: 6,
+
+    badgePrimary: {
+        backgroundColor: "rgba(255,255,255,0.3)",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 14,
     },
+
+    badgeSecondary: {
+        backgroundColor: "rgba(255,255,255,0.15)",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 14,
+    },
+
     badgeText: {
-        fontSize: 10,
-        fontWeight: "600",
-        color: "#fff",
+        fontSize: 11,
+        fontWeight: "800",
+        color: "#ffffff",
     },
 });
