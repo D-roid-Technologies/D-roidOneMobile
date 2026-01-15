@@ -8,18 +8,17 @@ import {
   Image,
   StatusBar,
   Platform,
-  Modal, // <-- Added Modal
-  Dimensions, // <-- Added Dimensions for calculating height
+  Modal,
+  Dimensions,
   Alert,
   AppState,
-  AppStateStatus, // Using Alert for the simple quick action notification as per existing code
+  AppStateStatus,
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { ASSETS } from "../constants/Assets";
-// Updated Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch, store } from "../redux/store";
-import { logoutUser } from "../redux/slice/user"; // <-- Import logout action
+import { logoutUser } from "../redux/slice/user";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { loadNotifications } from "../redux/slice/notifications";
@@ -28,8 +27,9 @@ import BottomSheetModal from "../components/BottomSheetModal";
 import { authService } from "../redux/configuration/auth.service";
 import { createAndDispatchNotification } from "../utils/Notifications";
 import Toast from "react-native-toast-message";
+import EventRegistrationForm from "../components/EventRegistrationForm";
 
-const { height } = Dimensions.get("window"); // Get screen height for modal styling
+const { height } = Dimensions.get("window");
 
 const HomeScreen: React.FC = ({ navigation }: any) => {
   const userMain: any = useSelector((state: RootState) => state.user);
@@ -38,7 +38,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     (state: RootState) => state.membershipTier
   );
   const [text, setText] = useState("Tap to activate Membership");
-  const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in ms
+  const MINUTES_25 = 25 * 60 * 1000;
   const intervalRef = useRef<number | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -49,10 +49,16 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     (state: RootState) => state.notifications.unreadCount
   );
 
+  // New states for registration form
+  const [isRegistrationModalVisible, setIsRegistrationModalVisible] =
+    useState(false);
+  const [selectedEventForRegistration, setSelectedEventForRegistration] =
+    useState<any>(null);
+
   const checkIfTierExists = async () => {
     const hasRun = localStorage.getItem("tierCheckDone");
 
-    if (hasRun) return; // exit if already run successfully
+    if (hasRun) return;
 
     if (membershipTier.tier !== "Silver") {
       await authService.updateProgressionInformation({
@@ -63,14 +69,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         desc: "You are making great progress on your membership journey.",
       });
 
-      // Mark as done
       localStorage.setItem("tierCheckDone", "true");
     }
   };
-
-  // useEffect(() => {
-  //   checkIfTierExists();
-  // }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   useEffect(() => {
@@ -83,7 +84,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     const subscription = AppState.addEventListener(
       "change",
       (nextAppState: AppStateStatus) => {
-        // If the app is going away (background/inactive), sync seconds to Redux
         if (
           appState.current === "active" &&
           nextAppState.match(/inactive|background/)
@@ -103,7 +103,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     return () => {
       subscription.remove();
       clearInterval(interval);
-      // Also sync when the component unmounts
       syncTimeToRedux();
     };
   }, [totalSeconds]);
@@ -119,10 +118,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   useEffect(() => {
     intervalRef.current = setInterval(async () => {
       try {
-        // 🔄 Send already-calculated hours to backend
         await authService.updateHoursInformation(membershipTier.totalHours);
-
-        // console.log("✅ Hours synced:", membershipTier.totalHours);
       } catch (error) {
         console.error("Failed to sync hours:", error);
       }
@@ -150,13 +146,9 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       image: ASSETS.images.nationalICT,
       content: [
         "The Tech Webinar [January 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
-
         "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
-
         "Participants will gain practical understanding through real-world examples, live demonstrations, and interactive Q&A sessions designed to simplify complex technical concepts.",
-
         "Beyond learning, the webinar creates a collaborative environment where attendees can connect with fellow learners, developers, and industry experts, fostering meaningful professional relationships.",
-
         "This event is open to beginners and experienced professionals alike. Register early and join us as we explore current technologies, sharpen skills, and prepare for the future of tech.",
       ],
     },
@@ -473,27 +465,27 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       color: "#8B5CF6",
       type: "all",
     },
-    { title: "Tasks", icon: "tasks", color: "#4F46E5", type: "staff" }, // Indigo
+    { title: "Tasks", icon: "tasks", color: "#4F46E5", type: "staff" },
     {
       title: "Payslip",
       icon: "money-bill-alt",
       color: "#14B8A6",
       type: "staff",
-    }, // Teal
-    { title: "Onboarding", icon: "user-plus", color: "#EAB308", type: "staff" }, // Yellow
+    },
+    { title: "Onboarding", icon: "user-plus", color: "#EAB308", type: "staff" },
     {
       title: "Training",
       icon: "graduation-cap",
       color: "#EC4899",
       type: "staff",
-    }, // Pink
+    },
     {
       title: "Attendance",
       icon: "calendar-check",
       color: "#6366F1",
       type: "staff",
     },
-    { title: "Progression", icon: "chart-line", color: "#EF4444", type: "all" }, // Red
+    { title: "Progression", icon: "chart-line", color: "#EF4444", type: "all" },
     { title: "Contact Us", icon: "envelope", color: "#06B6D4", type: "all" },
   ];
 
@@ -506,7 +498,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     },
     {
       title: "D'roid Companion",
-      subtitle: "D'roid’s mobile experience fused with Ogoo",
+      subtitle: "D'roid's mobile experience fused with Ogoo",
       icon: "mobile",
       color: "#8B5CF6",
     },
@@ -537,8 +529,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   const greeting = getGreeting();
 
   const handleQuickAction = (title: string) => {
-    // NOTE: Changed alert() to a simple, non-blocking notification
-    // Alert.alert("Action Required", `Navigating to ${title} screen.`);
     navigation.navigate(`${title}`);
   };
 
@@ -548,38 +538,39 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       nextTier: "Gold",
       progressPercentage: 33,
       status: "Active",
-      desc: "You are making great progress on your membership journey."
+      desc: "You are making great progress on your membership journey.",
     };
-    setText("...please wait!")
-    authService.updateProgressionInformation(newTier).then(() => {
-      store.dispatch(setTier(newTier));
-      createAndDispatchNotification(dispatch, {
-        title: `Downgrade to ${newTier.tier} membership is successful`,
-        message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
-      });
-      Toast.show({
-        type: "success",
-        text1: "Downgrade Successful!",
-        text2: `You are now a ${newTier.tier} member.`,
-        visibilityTime: 8000,
-      });
-    }).catch(() => {
-      Toast.show({
-        type: "error",
-        text1: "Downgrade Unsuccessful",
-        text2: "Downgrade was not successful, please try again.",
-        visibilityTime: 8000,
-      });
+    setText("...please wait!");
+    authService
+      .updateProgressionInformation(newTier)
+      .then(() => {
+        store.dispatch(setTier(newTier));
+        createAndDispatchNotification(dispatch, {
+          title: `Downgrade to ${newTier.tier} membership is successful`,
+          message: `Your upgrade to ${newTier.tier} membership has been completed successfully.`,
+        });
+        Toast.show({
+          type: "success",
+          text1: "Downgrade Successful!",
+          text2: `You are now a ${newTier.tier} member.`,
+          visibilityTime: 8000,
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Downgrade Unsuccessful",
+          text2: "Downgrade was not successful, please try again.",
+          visibilityTime: 8000,
+        });
 
-
-      createAndDispatchNotification(dispatch, {
-        title: `Downgrade to ${newTier.tier} membership is unsuccessful`,
-        message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
+        createAndDispatchNotification(dispatch, {
+          title: `Downgrade to ${newTier.tier} membership is unsuccessful`,
+          message: `Your upgrade to ${newTier.tier} membership was unsuccessfully.`,
+        });
       });
-    })
-  }
+  };
 
-  // Sign out handler function
   const handleSignOut = async () => {
     setIsModalVisible(false);
     await authService
@@ -590,6 +581,35 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           dispatch(logoutUser());
         });
       });
+  };
+
+  // Handle event registration
+  const handleEventRegister = (event: any) => {
+    setSelectedEventForRegistration(event);
+    setIsRegistrationModalVisible(true);
+  };
+
+  const handleRegistrationSubmit = (formData: any) => {
+    // Here you would typically send the registration data to your backend
+    console.log("Registration submitted:", formData);
+
+    // Close the modal
+    setIsRegistrationModalVisible(false);
+    setSelectedEventForRegistration(null);
+
+    // Show success message
+    Toast.show({
+      type: "success",
+      text1: "Registration Successful!",
+      text2: "You've successfully registered for the event.",
+      visibilityTime: 5000,
+    });
+
+    // Optionally create a notification
+    createAndDispatchNotification(dispatch, {
+      title: "Event Registration Confirmed",
+      message: `You've successfully registered for ${formData.eventId ? eventsPosts.find((e) => e.id === formData.eventId)?.title : "the event"}.`,
+    });
   };
 
   useEffect(() => {
@@ -615,7 +635,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
             style={{ marginHorizontal: 6 }}
           >
             <View style={{ position: "relative" }}>
-              {/* Notification Icon */}
               <View
                 style={{
                   backgroundColor: "transparent",
@@ -630,7 +649,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 />
               </View>
 
-              {/* Badge */}
               {unreadCount > 0 && (
                 <View
                   style={{
@@ -696,11 +714,11 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         {/* Membership Overview */}
         <Text style={styles.sectionTitle}>Membership Overview</Text>
         <View style={styles.statsContainer}>
-          {/* Membership Status */}
           <View style={styles.statCard}>
             <Text style={styles.statTitle}>Membership</Text>
             <Text style={styles.statValue}>{membershipTier.tier}</Text>
-            {membershipTier.tier === "Platinum" ? null : membershipTier.nextTier ? (
+            {membershipTier.tier ===
+            "Platinum" ? null : membershipTier.nextTier ? (
               <Text style={styles.statChange}>
                 {`Next: ${membershipTier.nextTier}`}
               </Text>
@@ -711,10 +729,8 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 </Text>
               </TouchableOpacity>
             )}
-
           </View>
 
-          {/* Total Hours */}
           <View style={styles.statCard}>
             <Text style={styles.statTitle}>Total Hours</Text>
             <Text style={styles.statValue}>
@@ -758,15 +774,17 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         {eventsPosts
           .sort(
             (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          ) // Sort by date ascending
-          .slice(0, 3) // Take top 3
+          )
+          .slice(0, 3)
           .map((event: any, index: React.Key | null | undefined) => (
             <TouchableOpacity
               onPress={() => navigation.navigate("EventDescription", { event })}
               key={index}
               style={styles.eventCard}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+              >
                 <Image
                   source={event.image}
                   style={{ width: 100, height: 100, borderRadius: 8 }}
@@ -775,13 +793,14 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 <View style={{ marginLeft: 12, flex: 1 }}>
                   <Text style={styles.eventTitle}>{event.title}</Text>
                   <Text style={styles.eventDate}>{event.date}</Text>
+
+                  {/* Register Button moved to event description page */}
                 </View>
               </View>
               <Ionicons name="chevron-forward" size={18} color="#999" />
             </TouchableOpacity>
           ))}
 
-        {/* Button to see all events */}
         <TouchableOpacity
           style={{
             marginHorizontal: 16,
@@ -800,6 +819,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           </Text>
         </TouchableOpacity>
 
+        {/* More from Droid */}
         <View style={styles.moreFromDroid}>
           <Text style={styles.sectionTitle}>More from D'roid</Text>
           <View style={styles.quickActionsContainer}>
@@ -828,11 +848,11 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         </View>
       </ScrollView>
 
+      {/* Profile Modal */}
       <BottomSheetModal
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       >
-        {/* User Info */}
         <View style={styles.modalUserInfo}>
           <View style={[styles.avatar, styles.modalAvatar]}>
             <Text style={styles.avatarText}>{userMain.initials}</Text>
@@ -844,28 +864,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           <Text style={styles.modalUserDetail}>{userMain.email}</Text>
         </View>
 
-        {/* Action Buttons */}
-        {/* <TouchableOpacity
-                    style={styles.modalButton}
-                    onPress={() => {
-                        setIsModalVisible(false);
-                        navigation.navigate('Profile');
-                    }}
-                >
-                    <Ionicons name="person-circle-outline" size={24} color="#000c3a" />
-                    <Text style={styles.modalButtonText}>View Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.modalButton}
-                    onPress={() => {
-                        setIsModalVisible(false);
-                        navigation.navigate('Settings');
-                    }}
-                >
-                    <Ionicons name="settings-outline" size={24} color="#000c3a" />
-                    <Text style={styles.modalButtonText}>Settings</Text>
-                </TouchableOpacity> */}
-
         <TouchableOpacity
           style={[styles.modalButton, styles.signOutButton]}
           onPress={handleSignOut}
@@ -876,7 +874,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           </Text>
         </TouchableOpacity>
 
-        {/* Close button (optional, but good for UX) */}
         <TouchableOpacity
           style={styles.modalCloseButton}
           onPress={() => setIsModalVisible(false)}
@@ -884,6 +881,26 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           <Text style={styles.modalCloseButtonText}>Close</Text>
         </TouchableOpacity>
       </BottomSheetModal>
+
+      {/* Registration Modal */}
+      <Modal
+        visible={isRegistrationModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => {
+          setIsRegistrationModalVisible(false);
+          setSelectedEventForRegistration(null);
+        }}
+      >
+        <EventRegistrationForm
+          selectedEvent={selectedEventForRegistration}
+          onClose={() => {
+            setIsRegistrationModalVisible(false);
+            setSelectedEventForRegistration(null);
+          }}
+          onSubmit={handleRegistrationSubmit}
+        />
+      </Modal>
     </View>
   );
 };
@@ -974,10 +991,28 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: "#ffffff",
     marginBlock: 10,
-    height: 120,
+    minHeight: 120,
   },
   eventTitle: { fontSize: 16, fontWeight: "400", color: "#000c3a" },
-  eventDate: { fontSize: 12, color: "#666", fontWeight: "300" },
+  eventDate: {
+    fontSize: 12,
+    color: "#666",
+    fontWeight: "300",
+    marginVertical: 4,
+  },
+  registerButton: {
+    backgroundColor: "#203499",
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    marginTop: 8,
+    alignSelf: "flex-start",
+  },
+  registerButtonText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "600",
+  },
   analyticsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -994,11 +1029,10 @@ const styles = StyleSheet.create({
   analyticsValue: { fontSize: 22, fontWeight: "700", color: "#203499" },
   analyticsLabel: { fontSize: 12, color: "#555" },
   greetingContainer: {
-    backgroundColor: "#000c3a", // primary color
+    backgroundColor: "#000c3a",
     borderRadius: 0,
     padding: 20,
     marginBottom: 20,
-    // marginTop: 5,
     height: 140,
   },
   greetingText: {
@@ -1030,7 +1064,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: "300",
   },
-  // --- MODAL STYLES (New) ---
   modalUserInfo: {
     alignItems: "center",
     paddingVertical: 10,
@@ -1060,7 +1093,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 10,
-    backgroundColor: "#F3F4F6", // Light gray background
+    backgroundColor: "#F3F4F6",
     marginBottom: 10,
     paddingHorizontal: 15,
   },
@@ -1071,11 +1104,11 @@ const styles = StyleSheet.create({
     color: "#000c3a",
   },
   signOutButton: {
-    backgroundColor: "#FFEBEE", // Light red for sign out context
+    backgroundColor: "#FFEBEE",
     marginTop: 10,
   },
   signOutButtonText: {
-    color: "#FF6F61", // Red text
+    color: "#FF6F61",
   },
   modalCloseButton: {
     marginTop: 20,
@@ -1092,5 +1125,5 @@ const styles = StyleSheet.create({
   topTierButtonText: {
     textDecorationLine: "underline",
     fontWeight: "600",
-  }
+  },
 });

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -111,8 +110,9 @@ const generateUniqueId = (userType: string): string | null => {
 };
 
 const USER_TYPES = [
-  { label: "Select User Type", value: "" },
+  //   { label: "Select User Type", value: "" },
   { label: "Staff", value: "Staff" },
+  //   { label: "Organisation", value: "Organisation" },
   { label: "Member", value: "Member" },
 ];
 
@@ -318,12 +318,14 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
     setText("Creating your D'roid Account...");
 
     try {
-      await authService.handleUserRegistration(updatedFormData, userLocation).then(async () => {
-        await startCountdown(5, (value) => {
-          setText(`User Created. Redirecting in ${value}s...`);
+      await authService
+        .handleUserRegistration(updatedFormData, userLocation)
+        .then(async () => {
+          await startCountdown(5, (value) => {
+            setText(`User Created. Redirecting in ${value}s...`);
+          });
+          navigation.navigate("BottomTabs");
         });
-        navigation.navigate("BottomTabs");
-      })
     } catch (error: any) {
       setText("Sign Up");
     }
@@ -381,7 +383,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                   style={[
                     styles.optionItem,
                     formData.userType === type.value &&
-                    styles.optionItemSelected,
+                      styles.optionItemSelected,
                     type.value === "" && styles.optionItemDisabled,
                   ]}
                   onPress={() => type.value && handleUserTypeSelect(type.value)}
@@ -391,7 +393,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
                     style={[
                       styles.optionText,
                       formData.userType === type.value &&
-                      styles.optionTextSelected,
+                        styles.optionTextSelected,
                       type.value === "" && styles.optionTextDisabled,
                     ]}
                   >
@@ -460,7 +462,7 @@ const SignUp: React.FunctionComponent = ({ navigation }: any) => {
       contentContainerStyle={styles.container}
       enableOnAndroid
       keyboardShouldPersistTaps="handled"
-    // extraScrollHeight={120}
+      // extraScrollHeight={120}
     >
       <ScrollView
         contentContainerStyle={styles.container}
