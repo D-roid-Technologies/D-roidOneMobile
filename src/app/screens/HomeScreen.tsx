@@ -794,16 +794,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                   <Text style={styles.eventTitle}>{event.title}</Text>
                   <Text style={styles.eventDate}>{event.date}</Text>
 
-                  {/* Register Button */}
-                  <TouchableOpacity
-                    style={styles.registerButton}
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      handleEventRegister(event);
-                    }}
-                  >
-                    <Text style={styles.registerButtonText}>Register</Text>
-                  </TouchableOpacity>
+                  {/* Register Button moved to event description page */}
                 </View>
               </View>
               <Ionicons name="chevron-forward" size={18} color="#999" />

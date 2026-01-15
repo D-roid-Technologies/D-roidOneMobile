@@ -137,7 +137,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
             onPress={() => handleEventRegister(event)}
           >
             <Text style={styles.registerButtonText}>Register for Event</Text>
-            <Ionicons name="calendar" size={20} color="#fff" />
+            {/* <Ionicons name="calendar" size={20} color="#fff" /> */}
           </TouchableOpacity>
         )}
       </ScrollView>
