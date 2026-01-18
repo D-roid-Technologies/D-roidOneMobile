@@ -7,39 +7,41 @@ const CareersScreen: React.FC = () => {
     const navigation = useNavigation<any>();
 
     const openPositions = [
-        {
-            id: 1,
-            title: "Senior React Native Developer",
-            department: "Engineering",
-            type: "Full-time",
-            location: "Remote",
-            experienceLevel: "Senior",
-            salaryRange: "₦600,000 – ₦900,000 / month",
-            postedDate: "2025-01-10",
-            deadline: "2025-02-15",
-            description:
-                "We are looking for a Senior React Native Developer to lead the development of high-performance mobile applications for D'roid One users.",
-            responsibilities: [
-                "Develop and maintain React Native applications",
-                "Collaborate with backend and UI/UX teams",
-                "Optimize application performance",
-                "Mentor junior developers",
-            ],
-            requirements: [
-                "4+ years of React Native experience",
-                "Strong knowledge of TypeScript",
-                "Experience with Firebase and Redux",
-                "Published apps on App Store or Play Store",
-            ],
-            benefits: [
-                "Remote work flexibility",
-                "Health insurance",
-                "Paid annual leave",
-                "Learning & development budget",
-            ],
-            contactEmail: "careers@droidtechnologies.com",
-            status: "Open",
-        },
+        /* Full-time Positions */
+        // {
+        //     id: 1,
+        //     title: "Senior React Native Developer",
+        //     department: "Engineering",
+        //     type: "Full-time",
+        //     location: "Remote",
+        //     experienceLevel: "Senior",
+        //     salaryRange: "₦600,000 – ₦900,000 / month",
+        //     postedDate: "2025-01-10",
+        //     deadline: "2025-02-15",
+        //     description:
+        //         "We are looking for a Senior React Native Developer to lead the development of high-performance mobile applications for D'roid One users.",
+        //     responsibilities: [
+        //         "Develop and maintain React Native applications",
+        //         "Collaborate with backend and UI/UX teams",
+        //         "Optimize application performance",
+        //         "Mentor junior developers",
+        //     ],
+        //     requirements: [
+        //         "4+ years of React Native experience",
+        //         "Strong knowledge of TypeScript",
+        //         "Experience with Firebase and Redux",
+        //         "Published apps on App Store or Play Store",
+        //     ],
+        //     benefits: [
+        //         "Remote work flexibility",
+        //         "Health insurance",
+        //         "Paid annual leave",
+        //         "Learning & development budget",
+        //     ],
+        //     contactEmail: "careers@droidtechnologies.com",
+        //     status: "Open",
+        // },
+
         {
             id: 2,
             title: "UI/UX Designer",
@@ -73,7 +75,75 @@ const CareersScreen: React.FC = () => {
             contactEmail: "careers@droidtechnologies.com",
             status: "Open",
         },
+
+        /* Contract Positions */
+        {
+            id: 3,
+            title: "Frontend React Developer (Contract)",
+            department: "Engineering",
+            type: "Contract",
+            location: "Remote",
+            experienceLevel: "Mid-level",
+            salaryRange: "₦500,000 / month",
+            postedDate: "2025-01-12",
+            deadline: "2025-02-20",
+            description:
+                "We need a contract Frontend React Developer for a 6-month project building scalable web apps for D'roid clients.",
+            responsibilities: [
+                "Build React components",
+                "Integrate APIs",
+                "Collaborate with design and backend teams",
+                "Ensure code quality and best practices",
+            ],
+            requirements: [
+                "3+ years of React experience",
+                "Good understanding of Redux or Zustand",
+                "Knowledge of TypeScript",
+            ],
+            benefits: [
+                "Remote work",
+                "Flexible schedule",
+                "Project-based contract",
+            ],
+            contactEmail: "careers@droidtechnologies.com",
+            status: "Open",
+        },
+
+        /* Internship Positions */
+        {
+            id: 4,
+            title: "Frontend Developer Intern",
+            department: "Engineering",
+            type: "Internship",
+            location: "Hybrid",
+            experienceLevel: "Student/Entry-level",
+            salaryRange: "Stipend: ₦150,000 / month",
+            postedDate: "2025-01-15",
+            deadline: "2025-02-28",
+            description:
+                "Looking for a motivated Frontend Developer Intern to assist in building web applications and gain hands-on experience with React and TypeScript.",
+            responsibilities: [
+                "Assist in developing frontend features",
+                "Fix bugs and improve UI components",
+                "Collaborate with senior developers",
+                "Participate in code reviews",
+            ],
+            requirements: [
+                "Basic knowledge of HTML, CSS, JavaScript",
+                "Familiarity with React",
+                "Eager to learn and take on challenges",
+            ],
+            benefits: [
+                "Mentorship from senior developers",
+                "Learning & development opportunities",
+                "Flexible schedule",
+                "Stipend provided",
+            ],
+            contactEmail: "careers@droidtechnologies.com",
+            status: "Open",
+        },
     ];
+
 
 
     return (
@@ -102,35 +172,131 @@ const CareersScreen: React.FC = () => {
                     Join our Full time positions by applying for any of the below.
                 </Text>
 
-                {openPositions.map((job) => (
-                    <View key={job.id} style={styles.jobCard}>
-                        <View style={styles.jobHeader}>
-                            <Text style={styles.jobTitle}>{job.title}</Text>
-                            <View style={styles.typeBadge}>
-                                <Text style={styles.typeText}>{job.type}</Text>
+                {openPositions.filter(job => job.type === "Full-time").length === 0 ? (
+                    <Text style={[styles.bannerTextA, { fontStyle: "italic", color: "#F59E0B" }]}>
+                        No position is available
+                    </Text>
+                ) : (
+                    openPositions
+                        .filter(job => job.type === "Full-time")
+                        .map((job) => (
+                            <View key={job.id} style={styles.jobCard}>
+                                <View style={styles.jobHeader}>
+                                    <Text style={styles.jobTitle}>{job.title}</Text>
+                                    <View style={styles.typeBadge}>
+                                        <Text style={styles.typeText}>{job.type}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.jobDetails}>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="business-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.department}</Text>
+                                    </View>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="location-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.location}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate("CareerDescriptionScreen", { position: job })
+                                    }
+                                    style={styles.applyButton}
+                                >
+                                    <Text style={styles.applyButtonText}>Apply Now</Text>
+                                    <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
+                                </TouchableOpacity>
                             </View>
-                        </View>
-                        <View style={styles.jobDetails}>
-                            <View style={styles.detailItem}>
-                                <Ionicons name="business-outline" size={14} color="#999" />
-                                <Text style={styles.detailText}>{job.department}</Text>
-                            </View>
-                            <View style={styles.detailItem}>
-                                <Ionicons name="location-outline" size={14} color="#999" />
-                                <Text style={styles.detailText}>{job.location}</Text>
-                            </View>
-                        </View>
-                        <TouchableOpacity onPress={() => navigation.navigate("CareerDescriptionScreen", { position: job })} style={styles.applyButton}>
-                            <Text style={styles.applyButtonText}>Apply Now</Text>
-                            <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
-                        </TouchableOpacity>
-                    </View>
-                ))}
+                        ))
+                )}
 
-                <Text style={styles.sectionTitle}>Intership Positions</Text>
+                {/* Contract Positions */}
+                <Text style={styles.sectionTitle}>Contract Positions</Text>
                 <Text style={styles.bannerTextA}>
-                    Join our Intership positions by applying for any of the below.
+                    Join our contract positions by applying for any of the below.
                 </Text>
+
+                {openPositions.filter(job => job.type === "Contract").length === 0 ? (
+                    <Text style={[styles.bannerTextA, { fontStyle: "italic", color: "#F59E0B" }]}>
+                        No position is available
+                    </Text>
+                ) : (
+                    openPositions
+                        .filter(job => job.type === "Contract")
+                        .map((job) => (
+                            <View key={job.id} style={styles.jobCard}>
+                                <View style={styles.jobHeader}>
+                                    <Text style={styles.jobTitle}>{job.title}</Text>
+                                    <View style={styles.typeBadge}>
+                                        <Text style={styles.typeText}>{job.type}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.jobDetails}>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="business-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.department}</Text>
+                                    </View>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="location-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.location}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate("CareerDescriptionScreen", { position: job })
+                                    }
+                                    style={styles.applyButton}
+                                >
+                                    <Text style={styles.applyButtonText}>Apply Now</Text>
+                                    <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                )}
+
+                {/* Internship Positions */}
+                <Text style={styles.sectionTitle}>Internship Positions</Text>
+                <Text style={styles.bannerTextA}>
+                    Join our internship positions by applying for any of the below.
+                </Text>
+
+                {openPositions.filter(job => job.type === "Internship").length === 0 ? (
+                    <Text style={[styles.bannerTextA, { fontStyle: "italic", color: "#F59E0B" }]}>
+                        No position is available
+                    </Text>
+                ) : (
+                    openPositions
+                        .filter(job => job.type === "Internship")
+                        .map((job) => (
+                            <View key={job.id} style={styles.jobCard}>
+                                <View style={styles.jobHeader}>
+                                    <Text style={styles.jobTitle}>{job.title}</Text>
+                                    <View style={styles.typeBadge}>
+                                        <Text style={styles.typeText}>{job.type}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.jobDetails}>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="business-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.department}</Text>
+                                    </View>
+                                    <View style={styles.detailItem}>
+                                        <Ionicons name="location-outline" size={14} color="#999" />
+                                        <Text style={styles.detailText}>{job.location}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate("CareerDescriptionScreen", { position: job })
+                                    }
+                                    style={styles.applyButton}
+                                >
+                                    <Text style={styles.applyButtonText}>Apply Now</Text>
+                                    <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                )}
             </ScrollView>
         </View>
     );

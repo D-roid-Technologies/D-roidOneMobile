@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Picker } from "@react-native-picker/picker";
+import { authService } from "../redux/configuration/auth.service";
+import { createAndDispatchNotification } from "../utils/Notifications";
+import { useDispatch } from "react-redux";
 
 const PartnerWithDroid: React.FC = ({ navigation }: any) => {
     const [form, setForm] = useState({
@@ -24,17 +27,42 @@ const PartnerWithDroid: React.FC = ({ navigation }: any) => {
         message: "",
     });
 
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
     const handleChange = (key: keyof typeof form, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
-    const handleSubmit = () => {
+    const dispatch = useDispatch();
+
+    const handleSubmit = async () => {
         const partnerRequest = {
             ...form,
             submittedAt: new Date().toISOString(),
         };
+        setIsSubmitting(true)
 
-        console.log("Partner with D'roid submission:", partnerRequest);
+        await authService.updateUserForms(partnerRequest).then(() => {
+            createAndDispatchNotification(dispatch, {
+                title: `Form Successful`,
+                message: `${partnerRequest.message} submitted successfully.`,
+            });
+            setForm({
+                fullName: "",
+                email: "",
+                phone: "",
+                companyName: "",
+                partnershipType: "",
+                country: "",
+                website: "",
+                experienceYears: "",
+                budgetRange: "",
+                message: "",
+            })
+            setIsSubmitting(false)
+        })
+
+        // console.log("Partner with D'roid submission:", partnerRequest);
     };
 
     return (
@@ -145,7 +173,7 @@ const PartnerWithDroid: React.FC = ({ navigation }: any) => {
             {/* Fixed Bottom Button */}
             <View style={styles.bottomBar}>
                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.submitText}>Submit Partnership Request</Text>
+                    <Text style={styles.submitText}>{isSubmitting ? `...Submiting Form` : `Submit Partnership Request`}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -158,6 +186,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000105",
+        paddingTop: 40
     },
 
     headerContainer: {

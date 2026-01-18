@@ -963,8 +963,64 @@ export class AuthService {
             return { success: false, error: error.message };
         }
     }
+    async updateUserForms(userFormObject: any) {
+        try {
+            const currentUser = auth.currentUser;
 
+            if (!currentUser) {
+                throw new Error("No authenticated user found.");
+            }
 
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                throw new Error("User profile not found in the database.");
+            }
+
+            const existingData = userSnapshot.data();
+
+            // Ensure userforms is an array
+            const existingForms =
+                existingData?.user?.onboard?.userforms || [];
+
+            // Build new form entry
+            const newFormEntry = {
+                ...userFormObject,
+                createdAt: new Date().toISOString(),
+            };
+
+            // Append new form
+            const updatedForms = [...existingForms, newFormEntry];
+
+            // 🔄 Update Firestore
+            await updateDoc(userDocRef, {
+                "user.onboard.userForms": updatedForms,
+            });
+
+            // Optional: dispatch to redux if needed
+            // store.dispatch(setUserForms(updatedForms));
+
+            Toast.show({
+                type: "success",
+                text1: "Form Saved",
+                text2: "Your form has been successfully submitted.",
+            });
+
+            return { success: true, data: updatedForms };
+
+        } catch (error: any) {
+            console.error("Error updating user forms:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Save Failed",
+                text2: error.message || "Unable to save your form.",
+            });
+
+            return { success: false, error: error.message };
+        }
+    }
 }
 
 export const authService = new AuthService();

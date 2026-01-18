@@ -16,6 +16,7 @@ import EventRegistrationForm from "../components/EventRegistrationForm";
 import { useDispatch } from "react-redux";
 import { createAndDispatchNotification } from "../utils/Notifications";
 import Toast from "react-native-toast-message";
+import { authService } from "../redux/configuration/auth.service";
 
 const EventDescriptionScreen: React.FunctionComponent = () => {
   const route = useRoute();
@@ -32,22 +33,17 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
     setIsRegistrationModalVisible(true);
   };
 
-  const handleRegistrationSubmit = (formData: any) => {
-    console.log("Registration submitted:", formData);
+  const handleRegistrationSubmit = async (formData: any) => {
+    // console.log("Registration submitted:", formData);
 
     setIsRegistrationModalVisible(false);
 
-    Toast.show({
-      type: "success",
-      text1: "Registration Successful!",
-      text2: "You've successfully registered for the event.",
-      visibilityTime: 5000,
-    });
-
-    createAndDispatchNotification(dispatch, {
-      title: "Event Registration Confirmed",
-      message: `You've successfully registered for ${event?.title || "the event"}.`,
-    });
+    await authService.updateUserForms(formData).then(() => {
+      createAndDispatchNotification(dispatch, {
+        title: "Event Registration Confirmed",
+        message: `You've successfully registered for ${event?.title || "The event"}.`,
+      });
+    })
   };
 
   if (!event) {
