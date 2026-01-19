@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword, signOut, initializeAuth, sendEmailVerification, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
-import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { logoutUser, setUser } from "../slice/user";
 import { store } from "../store";
@@ -39,6 +39,13 @@ const getCurrentDateTime = () => {
         formattedDateTime: `${formattedDate} ${formattedTime}`,
     };
 };
+
+interface User {
+    uid: string;
+    name: string;
+    email: string;
+    droidId: string;
+}
 
 const registrationTime = new Date();
 
@@ -963,8 +970,118 @@ export class AuthService {
             return { success: false, error: error.message };
         }
     }
+    async updateUserForms(userFormObject: any) {
+        try {
+            const currentUser = auth.currentUser;
 
+            if (!currentUser) {
+                throw new Error("No authenticated user found.");
+            }
 
+            const userDocRef = doc(db, "droidaccount", currentUser.uid);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (!userSnapshot.exists()) {
+                throw new Error("User profile not found in the database.");
+            }
+
+            const existingData = userSnapshot.data();
+
+            // Ensure userforms is an array
+            const existingForms =
+                existingData?.user?.onboard?.userforms || [];
+
+            // Build new form entry
+            const newFormEntry = {
+                ...userFormObject,
+                createdAt: new Date().toISOString(),
+            };
+
+            // Append new form
+            const updatedForms = [...existingForms, newFormEntry];
+
+            // 🔄 Update Firestore
+            await updateDoc(userDocRef, {
+                "user.onboard.userForms": updatedForms,
+            });
+
+            // Optional: dispatch to redux if needed
+            // store.dispatch(setUserForms(updatedForms));
+
+            Toast.show({
+                type: "success",
+                text1: "Form Saved",
+                text2: "Your form has been successfully submitted.",
+            });
+
+            return { success: true, data: updatedForms };
+
+        } catch (error: any) {
+            console.error("Error updating user forms:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Save Failed",
+                text2: error.message || "Unable to save your form.",
+            });
+
+            return { success: false, error: error.message };
+        }
+    }
+    async searchUsers(searchText: string) {
+        try {
+            if (!searchText) {
+                throw new Error("Please provide an email or D'roid ID to search.");
+            }
+
+            const usersRef = collection(db, "droidaccount");
+
+            // Query for email and droidId
+            const qEmail = query(usersRef, where("user.primaryInformation.email", "==", searchText));
+            const qDroidId = query(usersRef, where("user.primaryInformation.staffId", "==", searchText));
+
+            // Fetch both queries concurrently
+            const [emailSnapshot, droidSnapshot] = await Promise.all([
+                getDocs(qEmail),
+                getDocs(qDroidId),
+            ]);
+
+            // Map results
+            const emailResults: User[] = emailSnapshot.docs.map((doc) => ({
+                uid: doc.id,
+                ...doc.data().user,
+            }));
+
+            const droidResults: User[] = droidSnapshot.docs.map((doc) => ({
+                uid: doc.id,
+                ...doc.data().user,
+            }));
+
+            // Merge and remove duplicates
+            const mergedResults = [
+                ...emailResults,
+                ...droidResults.filter((d) => !emailResults.some((e) => e.uid === d.uid)),
+            ];
+
+            Toast.show({
+                type: "success",
+                text1: "Search Completed",
+                text2: `${mergedResults.length} user(s) found.`,
+            });
+
+            return { success: true, data: mergedResults };
+        } catch (error: any) {
+            console.error("Error searching users:", error);
+
+            Toast.show({
+                type: "error",
+                text1: "Search Failed",
+                text2: error.message || "Unable to search users.",
+            });
+
+            return { success: false, error: error.message };
+        }
+    };
 }
 
 export const authService = new AuthService();

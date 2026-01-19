@@ -163,7 +163,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
       category: "Conference & Hackathon",
       readTime: "7 min read",
-      image: ASSETS.images.nationalICT,
+      image: ASSETS.images.techNormads,
       content: [
         "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
 
@@ -186,7 +186,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
       category: "Hackathon",
       readTime: "6 min read",
-      image: ASSETS.images.nationalICT,
+      image: ASSETS.images.makaTonBootcamp,
       content: [
         "The D'roid Hackathon [February 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
 
@@ -233,7 +233,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.nationalICT,
+      image: ASSETS.images.liftOffConference,
       content: [
         "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today’s competitive market.",
 

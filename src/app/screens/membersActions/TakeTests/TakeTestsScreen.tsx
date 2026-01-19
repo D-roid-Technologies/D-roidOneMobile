@@ -172,21 +172,24 @@ const TakeTestsScreen: React.FC = () => {
                 </ScrollView>
 
                 {/* Content Cards */}
+                {/* Content Cards - Styled like CareersScreen job cards */}
                 {filteredContent.map((item) => (
-                    <View key={item.id} style={styles.testCard}>
-                        <View style={styles.testHeader}>
-                            <Text style={styles.testTitle}>{item.title}</Text>
+                    <View key={item.id} style={styles.jobCard}>
+                        {/* Header */}
+                        <View style={styles.jobHeader}>
+                            <Text style={styles.jobTitle}>{item.title}</Text>
 
-                            <View style={{ alignItems: "flex-end", gap: 6 }}>
+                            <View style={{ flexDirection: 'row', gap: 6 }}>
+                                {/* Difficulty Badge */}
                                 <View
                                     style={[
-                                        styles.difficultyBadge,
+                                        styles.typeBadge,
                                         { backgroundColor: getDifficultyColor(item.difficulty) + "20" },
                                     ]}
                                 >
                                     <Text
                                         style={[
-                                            styles.difficultyText,
+                                            styles.typeText,
                                             { color: getDifficultyColor(item.difficulty) },
                                         ]}
                                     >
@@ -194,15 +197,16 @@ const TakeTestsScreen: React.FC = () => {
                                     </Text>
                                 </View>
 
+                                {/* Membership Tier Badge */}
                                 <View
                                     style={[
-                                        styles.tierBadge,
+                                        styles.typeBadge,
                                         { backgroundColor: getTierColor(item.membershipTier) + "20" },
                                     ]}
                                 >
                                     <Text
                                         style={[
-                                            styles.tierBadgeText,
+                                            styles.typeText,
                                             { color: getTierColor(item.membershipTier) },
                                         ]}
                                     >
@@ -212,41 +216,38 @@ const TakeTestsScreen: React.FC = () => {
                             </View>
                         </View>
 
-                        <Text style={styles.typeLabel}>
-                            {getTypeLabel(item.type)}
-                        </Text>
+                        {/* Type Label */}
+                        <Text style={styles.bannerTextA}>{getTypeLabel(item.type)}</Text>
 
-                        <View style={styles.testInfo}>
-                            <View style={styles.infoItem}>
-                                <Ionicons name="time-outline" size={16} color="#999" />
-                                <Text style={styles.infoText}>
-                                    {'durationMinutes' in item
+                        {/* Info */}
+                        <View style={styles.jobDetails}>
+                            <View style={styles.detailItem}>
+                                <Ionicons name="time-outline" size={14} color="#999" />
+                                <Text style={styles.detailText}>
+                                    {"durationMinutes" in item
                                         ? `${item.durationMinutes} min`
                                         : `${item.durationHours} hrs`}
                                 </Text>
                             </View>
 
-                            {'questions' in item && (
-                                <View style={styles.infoItem}>
-                                    <Ionicons name="help-circle-outline" size={16} color="#999" />
-                                    <Text style={styles.infoText}>
-                                        {item.questions} questions
-                                    </Text>
+                            {"questions" in item && (
+                                <View style={styles.detailItem}>
+                                    <Ionicons name="help-circle-outline" size={14} color="#999" />
+                                    <Text style={styles.detailText}>{item.questions} questions</Text>
                                 </View>
                             )}
 
-                            {'lessons' in item && (
-                                <View style={styles.infoItem}>
-                                    <Ionicons name="book-outline" size={16} color="#999" />
-                                    <Text style={styles.infoText}>
-                                        {item.lessons} lessons
-                                    </Text>
+                            {"lessons" in item && (
+                                <View style={styles.detailItem}>
+                                    <Ionicons name="book-outline" size={14} color="#999" />
+                                    <Text style={styles.detailText}>{item.lessons} lessons</Text>
                                 </View>
                             )}
                         </View>
 
+                        {/* Start/Apply Button */}
                         <TouchableOpacity
-                            style={styles.startButton}
+                            style={styles.applyButton}
                             onPress={() => {
                                 if (!hasAccess(membership.tier, item.membershipTier)) {
                                     Alert.alert(
@@ -263,13 +264,14 @@ const TakeTestsScreen: React.FC = () => {
                                 );
                             }}
                         >
-                            <Text style={styles.startButtonText}>
+                            <Text style={styles.applyButtonText}>
                                 {getPrimaryActionLabel(item.type)}
                             </Text>
-                            <Ionicons name="play-circle-outline" size={20} color="#fff" />
+                            <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
                         </TouchableOpacity>
                     </View>
                 ))}
+
             </ScrollView>
 
             {/* Bottom Action Bar */}
@@ -567,5 +569,78 @@ const styles = StyleSheet.create({
     tierTextLocked: {
         color: "#64748B",
     },
+    /* Reused CareersScreen styles */
+    jobCard: {
+        backgroundColor: "#C7D2FE",
+        padding: 16,
+        borderRadius: 10,
+        marginBottom: 12,
+    },
+
+    jobHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 10,
+    },
+
+    jobTitle: {
+        fontSize: 16,
+        fontWeight: "800",
+        color: "#000105",
+        flex: 1,
+        marginRight: 8,
+    },
+
+    typeBadge: {
+        backgroundColor: "rgba(245, 158, 11, 0.25)",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+    typeText: {
+        fontSize: 12,
+        color: "#000c3a",
+        fontWeight: "700",
+    },
+
+    jobDetails: {
+        flexDirection: "row",
+        gap: 16,
+        marginBottom: 14,
+    },
+    bannerTextA: {
+        fontSize: 14,
+        color: "#E0E7FF",
+        textAlign: "left",
+        fontWeight: "300",
+        paddingBottom: 10
+    },
+    detailItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+    },
+    detailText: {
+        fontSize: 13,
+        color: "#334155",
+        fontWeight: "400",
+    },
+
+    applyButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 6,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: "#E5E7EB",
+    },
+    applyButtonText: {
+        fontSize: 14,
+        fontWeight: "700",
+        color: "#000c3a",
+    },
+
 
 });

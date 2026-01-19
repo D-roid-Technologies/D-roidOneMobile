@@ -120,7 +120,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
     }
 
     onSubmit({ ...formData, eventId: selectedEvent.id });
-    Alert.alert("Success", "Registration submitted successfully!");
+    // Alert.alert("Success", "Registration submitted successfully!");
   };
 
   const renderCommonFields = () => (

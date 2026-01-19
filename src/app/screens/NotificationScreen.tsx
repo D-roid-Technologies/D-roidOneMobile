@@ -12,9 +12,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import {
     setNotifications,
-    markNotificationAsRead,
-    markAllAsRead,
-    clearNotifications,
 } from "../redux/slice/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -49,6 +46,17 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
         await authService.markNotificationAsReadInFirebase(id);
     };
 
+    const getNotificationTimestamp = (item: any) => {
+        if (!item.date) return 0;
+
+        // If time exists, combine date + time
+        const dateTimeString = item.time
+            ? `${item.date} ${item.time}`
+            : item.date;
+
+        const timestamp = new Date(dateTimeString).getTime();
+        return isNaN(timestamp) ? 0 : timestamp;
+    };
     const renderNotification = ({ item }: any) => (
         <View style={[styles.item, item.isRead ? styles.read : styles.unread]}>
             {/* Header row */}
@@ -107,7 +115,16 @@ const NotificationScreen: React.FC = ({ navigation }: any) => {
                 <Text style={styles.header}>Notifications</Text>
             </View>
             <FlatList
-                data={[...notifications].sort((a, b) => Number(a.isRead) - Number(b.isRead))}
+                // data={[...notifications].sort((a, b) => Number(a.isRead) - Number(b.isRead))}
+                data={[...notifications].sort((a, b) => {
+                    // 1️⃣ Unread first
+                    if (a.isRead !== b.isRead) {
+                        return Number(a.isRead) - Number(b.isRead);
+                    }
+
+                    // 2️⃣ Newest first
+                    return getNotificationTimestamp(b) - getNotificationTimestamp(a);
+                })}
                 renderItem={renderNotification}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingBottom: 20 }}

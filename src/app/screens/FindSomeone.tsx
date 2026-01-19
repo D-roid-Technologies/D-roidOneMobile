@@ -4,12 +4,12 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    ScrollView,
     FlatList,
     StyleSheet,
     Alert,
 } from "react-native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { authService } from "../redux/configuration/auth.service";
 
 interface User {
     id: string;
@@ -40,87 +40,93 @@ const FindSomeoneScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<User[]>([]);
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (!query) {
             Alert.alert("Enter Email or D'roid ID to search");
             return;
         }
-        const filtered = mockUsers.filter(
-            (user) =>
-                user.email.toLowerCase() === query.toLowerCase() ||
-                user.droidId.toLowerCase() === query.toLowerCase()
-        );
-        setResults(filtered);
+        await authService.searchUsers(query)
+        // const filtered = mockUsers.filter(
+        //     (user) =>
+        //         user.email.toLowerCase() === query.toLowerCase() ||
+        //         user.droidId.toLowerCase() === query.toLowerCase()
+        // );
+        // setResults(filtered);
     };
 
     const handleBook = (user: User, day: string) => {
         Alert.alert("Booking Confirmed", `You booked ${user.name} on ${day}`);
-        // Here you could integrate with a calendar API
     };
 
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={styles.header}>
+            <View style={styles.headerContainer}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={26} color="#fff" />
+                    <Ionicons name="chevron-back" size={26} color="#ffffff" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Find Someone</Text>
-                <View style={{ width: 26 }} /> {/* placeholder */}
+
+                <Text style={styles.header}>Find Someone</Text>
             </View>
 
             {/* Search */}
             <View style={styles.searchContainer}>
                 <TextInput
-                    style={styles.input}
+                    style={styles.inputWithButton}
                     placeholder="Enter email or D'roid ID"
                     placeholderTextColor="#888"
                     value={query}
                     onChangeText={setQuery}
                 />
-                <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+                <TouchableOpacity
+                    style={styles.searchButtonInside}
+                    onPress={handleSearch}
+                >
                     <Ionicons name="search" size={20} color="#fff" />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
-                {results.length === 0 && query ? (
-                    <Text style={styles.noResults}>No user found.</Text>
-                ) : null}
-
-                <FlatList
-                    data={results}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View style={styles.userCard}>
-                            <View style={styles.userInfo}>
-                                <Text style={styles.userName}>{item.name}</Text>
-                                <Text style={styles.userEmail}>{item.email}</Text>
-                                <Text style={styles.userDroidId}>{item.droidId}</Text>
-                            </View>
-
-                            <View style={styles.freeDaysContainer}>
-                                <Text style={styles.freeDaysTitle}>Free Days:</Text>
-                                <FlatList
-                                    data={item.freeDays}
-                                    horizontal
-                                    keyExtractor={(d) => d}
-                                    renderItem={({ item: day }) => (
-                                        <TouchableOpacity
-                                            style={styles.dayButton}
-                                            onPress={() => handleBook(item, day)}
-                                        >
-                                            <Text style={styles.dayText}>{day}</Text>
-                                        </TouchableOpacity>
-                                    )}
-                                    contentContainerStyle={{ gap: 8 }}
-                                />
-                            </View>
+            {/* Results */}
+            <FlatList
+                data={results}
+                keyExtractor={(user) => user.id}
+                contentContainerStyle={{ padding: 20 }}
+                ListEmptyComponent={() =>
+                    query ? <Text style={styles.noResults}>No user found.</Text> : null
+                }
+                ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                renderItem={({ item: user }) => (
+                    <View style={styles.userCard}>
+                        {/* User Info */}
+                        <View style={styles.userInfo}>
+                            <Text style={styles.userName}>{user.name}</Text>
+                            <Text style={styles.userEmail}>{user.email}</Text>
+                            <Text style={styles.userDroidId}>{user.droidId}</Text>
                         </View>
-                    )}
-                    ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-                />
-            </ScrollView>
+
+                        {/* Free Days */}
+                        <View style={styles.freeDaysContainer}>
+                            <Text style={styles.freeDaysTitle}>Free Days:</Text>
+                            <FlatList
+                                data={user.freeDays}
+                                horizontal
+                                keyExtractor={(day) => day}
+                                showsHorizontalScrollIndicator={false}
+                                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+                                contentContainerStyle={{ paddingVertical: 4 }}
+                                renderItem={({ item: day }) => (
+                                    <TouchableOpacity
+                                        style={styles.dayButton}
+                                        onPress={() => handleBook(user, day)} // ✅ pass correct user
+                                    >
+                                        <Text style={styles.dayText}>{day}</Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </View>
+                    </View>
+                )}
+            />
         </View>
     );
 };
@@ -131,14 +137,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000105",
+        paddingTop: 40,
     },
-    header: {
+    headerContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        backgroundColor: "#000c3a",
+        gap: 12,
+        marginBottom: 20,
+        paddingLeft: 10
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: "900",
+        color: "#ffffff",
     },
     headerTitle: {
         fontSize: 20,
@@ -146,9 +157,30 @@ const styles = StyleSheet.create({
         color: "#fff",
     },
     searchContainer: {
-        flexDirection: "row",
         margin: 16,
-        gap: 8,
+        // position: "relative",
+    },
+
+    inputWithButton: {
+        backgroundColor: "#C7D2FE",
+        borderRadius: 12,
+        paddingHorizontal: 32,
+        paddingVertical: 10,
+        color: "#000105",
+        fontSize: 16,
+        height: 70
+    },
+
+    searchButtonInside: {
+        position: "absolute",
+        right: 12,
+        top: "40%",
+        transform: [{ translateY: -12 }], // center vertically
+        backgroundColor: "#06B6D4",
+        borderRadius: 8,
+        padding: 8,
+        justifyContent: "center",
+        alignItems: "center",
     },
     input: {
         flex: 1,
@@ -165,21 +197,25 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     noResults: {
-        color: "#fff",
+        color: "#F59E0B",
         textAlign: "center",
+        fontStyle: "italic",
         marginTop: 20,
+        fontWeight: "600",
     },
+
+    /* User Card - matches CareersScreen style */
     userCard: {
         backgroundColor: "#C7D2FE",
-        borderRadius: 12,
         padding: 16,
+        borderRadius: 12,
     },
     userInfo: {
         marginBottom: 12,
     },
     userName: {
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: "800",
         color: "#000105",
     },
     userEmail: {
@@ -191,12 +227,13 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#475569",
     },
+
     freeDaysContainer: {
         marginTop: 8,
     },
     freeDaysTitle: {
         fontSize: 14,
-        fontWeight: "600",
+        fontWeight: "700",
         color: "#000105",
         marginBottom: 4,
     },
