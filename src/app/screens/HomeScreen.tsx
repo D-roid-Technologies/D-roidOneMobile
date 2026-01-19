@@ -143,7 +143,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.nationalICT,
+      image: ASSETS.images.chessOne,
       content: [
         "The Tech Webinar [January 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
         "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
@@ -163,7 +163,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
       category: "Conference & Hackathon",
       readTime: "7 min read",
-      image: ASSETS.images.techNormads,
+      image: ASSETS.images.cumsaEvent,
       content: [
         "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
 
@@ -186,7 +186,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
       category: "Hackathon",
       readTime: "6 min read",
-      image: ASSETS.images.makaTonBootcamp,
+      image: ASSETS.images.chessOne,
       content: [
         "The D'roid Hackathon [February 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
 
@@ -210,7 +210,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "6 min read",
-      image: ASSETS.images.nationalICT,
+      image: ASSETS.images.internship,
       content: [
         "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
 
@@ -233,7 +233,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.liftOffConference,
+      image: ASSETS.images.cumsaEvent,
       content: [
         "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today’s competitive market.",
 
