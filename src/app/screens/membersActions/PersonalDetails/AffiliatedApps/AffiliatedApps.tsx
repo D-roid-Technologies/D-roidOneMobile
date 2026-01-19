@@ -68,7 +68,6 @@ const AffiliatedApps: React.FC = () => {
         }
       } catch (error) {
         console.error("Failed to load affiliated apps:", error);
-        Alert.alert("Error", "Failed to load affiliated apps.");
       } finally {
         setInitialLoad(false);
       }
@@ -104,7 +103,7 @@ const AffiliatedApps: React.FC = () => {
         ...prev,
         [app]: !nextValue,
       }));
-      Alert.alert("Error", `Failed to update ${app}`);
+      // Alert.alert("Error", `Failed to update ${app}`);
     }
   };
 
@@ -115,9 +114,8 @@ const AffiliatedApps: React.FC = () => {
     setIsSubmitting(true);
     try {
       setSubmitted(true);
-      Alert.alert("Saved", "Affiliated apps updated.");
     } catch {
-      Alert.alert("Error", "Unable to save changes.");
+      // Alert.alert("Error", "Unable to save changes.");
     } finally {
       setIsSubmitting(false);
     }
@@ -247,7 +245,7 @@ const styles = StyleSheet.create({
   },
 
   muted: {
-    color: "#071D6A",
+    color: "#ffffff",
     marginTop: 8,
   },
 
@@ -261,7 +259,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 8,
     marginBottom: 4,
-    color: "#071D6A",
+    color: "#ffffff",
   },
 });
 

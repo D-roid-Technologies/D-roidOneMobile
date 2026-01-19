@@ -67,9 +67,9 @@ const SecuritySettingsUI: React.FC<SecuritySettingsUIProps> = ({
           : ({ securitySettings } as any)
       );
       setSubmitted(true);
-      Alert.alert("Saved", "Security settings updated.");
+      // Alert.alert("Saved", "Security settings updated.");
     } catch {
-      Alert.alert("Error", "Failed to update security settings.");
+      // Alert.alert("Error", "Failed to update security settings.");
     } finally {
       setIsSubmitting(false);
     }

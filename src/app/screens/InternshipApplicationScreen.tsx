@@ -17,6 +17,8 @@ import { Picker } from "@react-native-picker/picker";
 import BackButton from "../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { authService } from "../redux/configuration/auth.service";
+import { createAndDispatchNotification } from "../utils/Notifications";
 
 interface FormData {
   firstName: string;
@@ -43,7 +45,7 @@ interface ValidationErrors {
   [key: string]: string;
 }
 
-const InternshipApplicationScreen = ({ navigation }: any) => {
+const InternshipApplicationScreen: React.FC = ({ navigation }: any) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [formData, setFormData] = useState<FormData>({
@@ -155,7 +157,7 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
     return isValid;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) {
       Alert.alert("Validation Error", "Please fill all required fields correctly");
       return;
@@ -169,64 +171,34 @@ const InternshipApplicationScreen = ({ navigation }: any) => {
       submittedAt: new Date().toISOString(),
     };
 
+    await authService.updateUserForms(applicationData).then(() => {
+      createAndDispatchNotification(dispatch, {
+        title: `Form Successful`,
+        message: `Your form has been submitted successfully.`,
+      });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        dateOfBirth: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        educationLevel: "",
+        institution: "",
+        fieldOfStudy: "",
+        graduationYear: "",
+        desiredDepartment: "",
+        startDate: "",
+        duration: "",
+        coverLetter: "",
+        skills: "",
+      })
+    })
+
     dispatch(submitInternshipApplication(applicationData));
-
-    // console.log("=================================");
-    // console.log("📋 INTERNSHIP APPLICATION DATA");
-    // console.log("=================================");
-    // console.log("Application ID:", applicationData.id);
-    // console.log("Name:", `${applicationData.firstName} ${applicationData.lastName}`);
-    // console.log("Email:", applicationData.email);
-    // console.log("Phone:", applicationData.phone);
-    // console.log("Date of Birth:", applicationData.dateOfBirth);
-    // console.log("Address:", `${applicationData.address}, ${applicationData.city}, ${applicationData.state} ${applicationData.zipCode}`);
-    // console.log("Education Level:", applicationData.educationLevel);
-    // console.log("Institution:", applicationData.institution);
-    // console.log("Field of Study:", applicationData.fieldOfStudy);
-    // console.log("Graduation Year:", applicationData.graduationYear);
-    // console.log("Desired Department:", applicationData.desiredDepartment);
-    // console.log("Preferred Start Date:", applicationData.startDate);
-    // console.log("Duration:", applicationData.duration);
-    // console.log("Skills:", applicationData.skills);
-    // console.log("Cover Letter:", applicationData.coverLetter);
-    // console.log("Status:", applicationData.applicationStatus);
-    // console.log("Submitted At:", applicationData.submittedAt);
-    // console.log("=================================");
-
-    Alert.alert(
-      "Success!",
-      "Your internship application has been submitted successfully.",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            setFormData({
-              firstName: "",
-              lastName: "",
-              email: "",
-              phone: "",
-              dateOfBirth: "",
-              address: "",
-              city: "",
-              state: "",
-              zipCode: "",
-              educationLevel: "",
-              institution: "",
-              fieldOfStudy: "",
-              graduationYear: "",
-              desiredDepartment: "",
-              startDate: "",
-              duration: "",
-              coverLetter: "",
-              skills: "",
-            });
-            setTouchedFields(new Set());
-            setErrors({});
-            navigation?.goBack();
-          },
-        },
-      ]
-    );
   };
 
   const renderInput = (
@@ -377,7 +349,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000105",
-    
+
   },
   keyboardView: {
     flex: 1,

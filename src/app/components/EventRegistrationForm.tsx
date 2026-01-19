@@ -102,7 +102,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
   const handleSubmit = () => {
     // Basic validation
     if (!formData.fullName || !formData.email || !formData.phoneNumber) {
-      Alert.alert("Error", "Please fill in all required fields");
+      // Alert.alert("Error", "Please fill in all required fields");
       return;
     }
 
@@ -115,7 +115,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
 
     // Check if selectedEvent exists
     if (!selectedEvent) {
-      Alert.alert("Error", "No event selected");
+      // Alert.alert("Error", "No event selected");
       return;
     }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
-import type { UserType } from "../../../utils/Types";
+import { UserType } from "../../../../constants/TypesAndInerface";
 import type { ValidationErrors } from "../PersonalDetailsScreen";
 import Dropdown from "./Dropdown";
 

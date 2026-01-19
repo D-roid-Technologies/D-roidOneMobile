@@ -25,7 +25,7 @@ export const tools = [
     { id: "5", title: "Currency Converter", icon: "exchange-alt", color: "#EF4444", requiredTier: "Platinum" },
     { id: "6", title: "Unit Converter", icon: "ruler-combined", color: "#6366F1", requiredTier: "Silver" },
     { id: "7", title: "Investment Calc", icon: "chart-line", color: "#EC4899", requiredTier: "Platinum" },
-    { id: "8", title: "Discount Calc", icon: "percentage", color: "#14B8A6", requiredTier: "Silver" },
+    { id: "8", title: "Discount Calc", icon: "percentage", color: "#14B8A6", requiredTier: "Gold" },
     { id: "9", title: "Fuel Cost Calc", icon: "gas-pump", color: "#F43F5E", requiredTier: "Platinum" },
     { id: "10", title: "Mortgage Calc", icon: "home", color: "#8B5CF6", requiredTier: "Platinum" },
 ];

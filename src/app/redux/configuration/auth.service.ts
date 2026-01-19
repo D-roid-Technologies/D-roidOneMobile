@@ -569,14 +569,10 @@ export class AuthService {
             await updateDoc(userDocRef, {
                 "user.primaryInformation": updatedPrimaryInfo,
             });
+            store.dispatch(
+                setUser({ ...updatedPrimaryInfo })
+            );
 
-            // Save to local storage
-            // await ReactNativeAsyncStorage.setItem(
-            //     "profileUpdated",
-            //     JSON.stringify(updatedPrimaryInfo)
-            // );
-
-            // Display success toast
             Toast.show({
                 type: "success",
                 text1: "Profile Updated",

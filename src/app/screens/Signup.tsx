@@ -31,7 +31,7 @@ const Toast = {
     text1: string;
     text2: string;
   }) => {
-    Alert.alert(config.text1, config.text2);
+    // Alert.alert(config.text1, config.text2);
   },
 };
 

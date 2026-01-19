@@ -42,7 +42,7 @@ const FindSomeoneScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     const handleSearch = async () => {
         if (!query) {
-            Alert.alert("Enter Email or D'roid ID to search");
+            // Alert.alert("Enter Email or D'roid ID to search");
             return;
         }
         await authService.searchUsers(query)
@@ -55,7 +55,7 @@ const FindSomeoneScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     };
 
     const handleBook = (user: User, day: string) => {
-        Alert.alert("Booking Confirmed", `You booked ${user.name} on ${day}`);
+        // Alert.alert("Booking Confirmed", `You booked ${user.name} on ${day}`);
     };
 
     return (

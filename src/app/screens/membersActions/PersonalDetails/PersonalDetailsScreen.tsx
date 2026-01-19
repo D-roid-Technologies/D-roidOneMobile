@@ -487,9 +487,8 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
   const handleSubmit = useCallback(async () => {
     if (!formData) return;
 
-    const allFields = new Set<string>();
-    Object.keys(formData).forEach((key) => allFields.add(key));
-    setTouchedFields(allFields);
+    // Mark all fields as touched
+    setTouchedFields(new Set(Object.keys(formData)));
     setSubmitStatus(null);
 
     if (!validateForm()) {
@@ -500,47 +499,30 @@ const PersonalDetailsScreen: React.FunctionComponent<PersonalDetailsScreenProps>
     setIsSubmitting(true);
 
     try {
-      await authService.updatePrimaryInformation(formData);
+      const result = await authService.updatePrimaryInformation(formData);
 
-      setSubmitStatus("success");
-      await AsyncStorage.setItem(
-        "profileUpdated",
-        JSON.stringify(formData)
-      );
+      if (!result?.success) {
+        throw new Error(result?.error || "Profile update failed");
+      }
 
-      const now = new Date();
-      const notification: NotificationItem = {
-        id: String(Date.now()),
-        title: "Profile Updated Successfully",
-        message: `Your personal details have been updated. Changes include: ${formData.firstName} ${formData.lastName}, ${formData.email}`,
-        date: now.toISOString().split("T")[0],
-        time: now.toISOString(),
-        type: "success",
-        isRead: false,
-      };
-
-      // Add notification and persist to AsyncStorage
-      dispatch(addNotification(notification));
-      dispatch(persistNotifications([notification, ...notifications]));
-
+      // setSubmitStatus("success");
       setErrors({});
       setTouchedFields(new Set());
-    } catch (error) {
+
+    } catch (error: any) {
       console.error("Failed to update profile:", error);
+
       setSubmitStatus("error");
-
-      const errorMessage = error instanceof Error
-        ? error.message
-        : "Failed to update information. Please try again.";
-
       setErrors((prev) => ({
         ...prev,
-        submit: errorMessage,
+        submit: error.message || "Failed to update information. Please try again.",
       }));
+
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, dispatch, notifications, validateForm]);
+  }, [formData, validateForm]);
+
 
   const renderProfileTab = () => {
     if (!formData) return null;
@@ -877,8 +859,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#071D6A",
+    color: "#ffffff",
     marginBottom: 4,
+    marginTop: 8
   },
   input: {
     width: "100%",
