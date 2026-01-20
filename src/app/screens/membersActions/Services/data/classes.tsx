@@ -16,13 +16,13 @@ export const classes: ClassItem[] = [
     category: "backend",
     icon: <Server color="#2667cc" size={24} />,
   },
-  {
-    id: "cls_cloud",
-    title: "Database & Cloud",
-    description: "Robust data solutions with MySQL, MongoDB, Firebase, and scalable cloud architecture.",
-    category: "cloud",
-    icon: <Database color="#2667cc" size={24} />,
-  },
+  // {
+  //   id: "cls_cloud",
+  //   title: "Database & Cloud",
+  //   description: "Robust data solutions with MySQL, MongoDB, Firebase, and scalable cloud architecture.",
+  //   category: "cloud",
+  //   icon: <Database color="#2667cc" size={24} />,
+  // },
   {
     id: "cls_cross",
     title: "Cross-Platform App",
