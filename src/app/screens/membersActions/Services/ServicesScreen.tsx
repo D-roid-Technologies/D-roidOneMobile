@@ -2,6 +2,10 @@ import React, { useMemo, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Clock, Users, Award } from "lucide-react-native";
+import ContactFormModal from "../Services/components/ContactFormModal";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
+import { createAndDispatchNotification } from "../../../utils/Notifications";
 
 import type {
   ServicesScreenProps,
@@ -29,29 +33,87 @@ import {
 import ServiceCard from "./ServiceCard";
 import BackButton from "./components/BackButton";
 import WhatsAppButton from "./WhatsAppButton";
-import ServiceDetailView, { ServiceDetailData } from "./components/ServiceDetailView";
+import ServiceDetailView, {
+  ServiceDetailData,
+} from "./components/ServiceDetailView";
 import StoryReader from "./components/StoryReader";
 
-const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPhone }) => {
+const ServicesScreen: React.FC<ServicesScreenProps> = ({
+  onOpenSayIt,
+  whatsappPhone,
+}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [view, setView] = useState<ViewState>("HOME");
 
-  const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(null);
+  const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(
+    null
+  );
   const [activeClass, setActiveClass] = useState<ClassItem | null>(null);
   const [activeTech, setActiveTech] = useState<TechItem | null>(null);
 
-  const [activeTraining, setActiveTraining] = useState<TrainingItem | null>(null);
+  const [activeTraining, setActiveTraining] = useState<TrainingItem | null>(
+    null
+  );
 
-  const [activeConsulting, setActiveConsulting] = useState<ConsultingItem | null>(null);
+  const [activeConsulting, setActiveConsulting] =
+    useState<ConsultingItem | null>(null);
 
   const [activeStory, setActiveStory] = useState<StoryItem | null>(null);
 
-  const openContact = () => {
+  // contact form
+  const [isContactModalVisible, setIsContactModalVisible] = useState(false);
+  const [contactServiceInfo, setContactServiceInfo] = useState<{
+    title: string;
+    type?: string;
+  }>({ title: "", type: "" });
+
+  // Update the openContact function
+  const openContact = (serviceTitle?: string, serviceType?: string) => {
     if (onOpenSayIt) return onOpenSayIt();
-    // Navigate to Contact screen if available, otherwise fallback
-    // @ts-ignore
-    navigation.navigate("Contact");
+
+    // Set service info and show modal
+    setContactServiceInfo({
+      title:
+        serviceTitle ||
+        activeTech?.title ||
+        activeTraining?.title ||
+        activeConsulting?.title ||
+        "Service",
+      type: serviceType || activeClass?.title,
+    });
+    setIsContactModalVisible(true);
   };
+
+  // Add handler for form submission
+  const handleContactFormSubmit = (formData: any) => {
+    console.log("Contact form submitted:", formData);
+
+    // Here you would typically send the data to your backend
+    // For example using your authService or a similar service
+
+    Toast.show({
+      type: "success",
+      text1: "Inquiry Sent!",
+      text2: "We'll get back to you within 24 hours.",
+      visibilityTime: 5000,
+    });
+
+    // Optionally create a notification
+    createAndDispatchNotification(dispatch, {
+      title: "Service Inquiry Sent",
+      message: `Your inquiry about ${formData.serviceTitle} has been received.`,
+    });
+
+    setIsContactModalVisible(false);
+  };
+
+  // const openContact = () => {
+  //   if (onOpenSayIt) return onOpenSayIt();
+  //   // Navigate to Contact screen if available, otherwise fallback
+  //   // @ts-ignore
+  //   navigation.navigate("Contact");
+  // };
 
   const title = useMemo(() => {
     switch (view) {
@@ -179,9 +241,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     const stacks = TECH_STACKS[activeClass.category] || [];
     return (
       <View style={styles.sectionWrap}>
-        <Text style={styles.subHeader}>
-          {activeClass.title} Capabilities
-        </Text>
+        <Text style={styles.subHeader}>{activeClass.title} Capabilities</Text>
         <FlatList
           data={stacks}
           keyExtractor={(i) => i.id}
@@ -221,7 +281,8 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
       <ServiceDetailView
         data={detailData}
         contactLabel="Contact about this Tech Stack"
-        onContact={openContact}
+        // onContact={openContact}
+        onContact={() => openContact(activeTech?.title, activeClass?.title)}
       />
     );
   };
@@ -248,7 +309,9 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
 
   const renderTrainingDetail = () => {
     if (!activeTraining) return null;
-    const program = trainingPrograms.find((p) => p.id === activeTraining.program);
+    const program = trainingPrograms.find(
+      (p) => p.id === activeTraining.program
+    );
 
     // Fallback data if program details missing
     if (!program) return null;
@@ -273,7 +336,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     return (
       <ServiceDetailView
         data={detailData}
-        onContact={openContact}
+        onContact={() => openContact(program?.title, "Training")}
       />
     );
   };
@@ -331,7 +394,9 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
           onPress={() => {
             // Find specific story logic
             // We match based on ID (case-insensitive for safety)
-            const found = stories.find((s) => s.id.toLowerCase() === item.id.toLowerCase());
+            const found = stories.find(
+              (s) => s.id.toLowerCase() === item.id.toLowerCase()
+            );
             if (found) {
               // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
               // We will use the full story in renderAnimationDetail anyway
@@ -350,7 +415,9 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
     // Find the full story object from our rich data source that matches the active ID
     // The IDs in animationItems are like 'brothers', 'Cityboy', etc.
     // The match was fixed in data.tsx, so activeStory.id should strictly match.
-    const fullStory = stories.find(s => s.id.toLowerCase() === activeStory.id.toLowerCase());
+    const fullStory = stories.find(
+      (s) => s.id.toLowerCase() === activeStory.id.toLowerCase()
+    );
 
     if (!fullStory) {
       // Fallback or error handling if somehow data is missing
@@ -359,16 +426,13 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
           <Text>Story data not found for {activeStory.title}</Text>
           <BackButton onPress={() => setView("ANIMATION")} />
         </View>
-      )
+      );
     }
 
     return (
-      <StoryReader
-        story={fullStory}
-        onClose={() => setView("ANIMATION")}
-      />
+      <StoryReader story={fullStory} onClose={() => setView("ANIMATION")} />
     );
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -394,6 +458,14 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({ onOpenSayIt, whatsappPh
       {view === "ANIMATION_DETAIL" && renderAnimationDetail()}
 
       <WhatsAppButton phone={whatsappPhone} />
+      {/* Contact Form Modal */}
+      <ContactFormModal
+        visible={isContactModalVisible}
+        onClose={() => setIsContactModalVisible(false)}
+        serviceTitle={contactServiceInfo.title}
+        serviceType={contactServiceInfo.type}
+        onSubmit={handleContactFormSubmit}
+      />
     </View>
   );
 };
@@ -506,4 +578,3 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-
