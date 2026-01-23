@@ -89,9 +89,6 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const handleContactFormSubmit = (formData: any) => {
     console.log("Contact form submitted:", formData);
 
-    // Here you would typically send the data to your backend
-    // For example using your authService or a similar service
-
     Toast.show({
       type: "success",
       text1: "Inquiry Sent!",
@@ -99,7 +96,6 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
       visibilityTime: 5000,
     });
 
-    // Optionally create a notification
     createAndDispatchNotification(dispatch, {
       title: "Service Inquiry Sent",
       message: `Your inquiry about ${formData.serviceTitle} has been received.`,
@@ -107,13 +103,6 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
 
     setIsContactModalVisible(false);
   };
-
-  // const openContact = () => {
-  //   if (onOpenSayIt) return onOpenSayIt();
-  //   // Navigate to Contact screen if available, otherwise fallback
-  //   // @ts-ignore
-  //   navigation.navigate("Contact");
-  // };
 
   const title = useMemo(() => {
     switch (view) {
@@ -392,14 +381,13 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
           title={item.title}
           description={item.description}
           onPress={() => {
-            // Find specific story logic
             // We match based on ID (case-insensitive for safety)
             const found = stories.find(
               (s) => s.id.toLowerCase() === item.id.toLowerCase()
             );
             if (found) {
               // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
-              // We will use the full story in renderAnimationDetail anyway
+
               setActiveStory(found);
               setView("ANIMATION_DETAIL");
             }
@@ -412,9 +400,6 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const renderAnimationDetail = () => {
     if (!activeStory) return null;
 
-    // Find the full story object from our rich data source that matches the active ID
-    // The IDs in animationItems are like 'brothers', 'Cityboy', etc.
-    // The match was fixed in data.tsx, so activeStory.id should strictly match.
     const fullStory = stories.find(
       (s) => s.id.toLowerCase() === activeStory.id.toLowerCase()
     );
@@ -507,7 +492,7 @@ const styles = StyleSheet.create({
 
   /* FlatList Grid */
   list: {
-    paddingBottom: 140, // spacing for floating WhatsApp button
+    paddingBottom: 140,
   },
   columnWrapper: {
     justifyContent: "space-between",
