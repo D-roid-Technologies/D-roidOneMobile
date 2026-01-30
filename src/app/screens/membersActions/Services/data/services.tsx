@@ -2,25 +2,25 @@ import { ServiceItem } from "../types";
 
 export const SERVICES: ServiceItem[] = [
   {
-    id: "svc_software",
+    id: "dt_software",
     key: "software",
     title: "Software Development",
     description: "Explore our software services.",
   },
   {
-    id: "svc_training",
+    id: "dt_training",
     key: "training",
     title: "Training Programs",
     description: "Browse structured training programs.",
   },
+  // {
+  //   id: "dt_animation",
+  //   key: "animation",
+  //   title: "Animation / Short Stories",
+  //   description: "Browse animation and short story catalog.",
+  // },
   {
-    id: "svc_animation",
-    key: "animation",
-    title: "Animation / Short Stories",
-    description: "Browse animation and short story catalog.",
-  },
-  {
-    id: "svc_consulting",
+    id: "dt_consulting",
     key: "consulting",
     title: "Consulting",
     description:

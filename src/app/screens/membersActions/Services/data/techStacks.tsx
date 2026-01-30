@@ -9,9 +9,6 @@ import {
   Database,
   Cloud,
   ShieldCheck,
-  Activity,
-  HardDrive,
-  Coins,
   Atom,
   Layers,
   Puzzle,
@@ -176,62 +173,6 @@ export const techStacks: Record<string, TechItem[]> = {
       ],
     },
   ],
-  // cloud: [
-  //   {
-  //     id: "tech_db_arch",
-  //     category: "cloud",
-  //     title: "Database Design & Architecture",
-  //     description:
-  //       "At D'roid Technologies, we specialize in designing and implementing robust database architectures that form the foundation of your data infrastructure. Our team works with both SQL (PostgreSQL, MySQL) and NoSQL (MongoDB, Redis) databases to create efficient, scalable, and secure data storage solutions. We focus on proper schema design, normalization, indexing strategies, and data modeling to ensure optimal performance and data integrity.",
-  //     icon: <Server color="#2667cc" size={24} />,
-  //     bullets: ["SQL & NoSQL expertise", "Schema normalization", "Data integrity"],
-  //   },
-  //   {
-  //     id: "tech_cloud_mig",
-  //     category: "cloud",
-  //     title: "Cloud Infrastructure & Migration",
-  //     description:
-  //       "Our cloud infrastructure and migration services help businesses transition to and optimize their cloud presence. We work with leading cloud providers like AWS, Azure, and Google Cloud to design scalable, secure, and cost-effective cloud architectures. Our team handles everything from initial cloud strategy and migration planning to implementation and ongoing optimization.",
-  //     icon: <Cloud color="#2667cc" size={24} />,
-  //     bullets: ["AWS / Azure / GCP", "Migration planning", "Cost-effective architecture"],
-  //   },
-  //   {
-  //     id: "tech_db_perf",
-  //     category: "cloud",
-  //     title: "Database Performance Optimization",
-  //     description:
-  //       "Database performance optimization is crucial for maintaining fast and efficient data operations. Our team specializes in identifying and resolving performance bottlenecks through query optimization, index tuning, and caching strategies. We implement advanced techniques like query optimization, connection pooling, and database sharding.",
-  //     icon: <Activity color="#2667cc" size={24} />,
-  //     bullets: ["Query optimization", "Index tuning", "Database sharding"],
-  //   },
-  //   {
-  //     id: "tech_cloud_sec",
-  //     category: "cloud",
-  //     title: "Cloud Security & Compliance",
-  //     description:
-  //       "Security and compliance are paramount in cloud environments. Our team implements comprehensive security measures including encryption, access control, and threat detection systems. We ensure compliance with industry standards and regulations like GDPR, HIPAA, and SOC 2.",
-  //     icon: <ShieldCheck color="#2667cc" size={24} />,
-  //     bullets: ["Encryption & Access Control", "Threat detection", "GDPR / HIPAA / SOC 2"],
-  //   },
-  //   {
-  //     id: "tech_db_backup",
-  //     category: "cloud",
-  //     title: "Database Backup & Recovery",
-  //     description:
-  //       "Reliable backup and recovery solutions are essential for business continuity. We design and implement comprehensive backup strategies that ensure your data is protected against loss or corruption. Our solutions include automated backup scheduling, point-in-time recovery capabilities, and disaster recovery planning.",
-  //     icon: <HardDrive color="#2667cc" size={24} />,
-  //     bullets: ["Automated backups", "Disaster recovery", "Point-in-time recovery"],
-  //   },
-  //   {
-  //     id: "tech_cloud_cost",
-  //     category: "cloud",
-  //     title: "Cloud Cost Optimization",
-  //     description:
-  //       "Cloud cost optimization is crucial for maintaining an efficient and cost-effective cloud infrastructure. Our team analyzes your cloud usage patterns and implements strategies to optimize costs without compromising performance. We focus on resource right-sizing, reserved instance planning, and implementing auto-scaling solutions.",
-  //     icon: <Coins color="#2667cc" size={24} />,
-  //     bullets: ["Resource right-sizing", "Auto-scaling", "Cost analysis"],
-  //   },
-  // ],
   crossPlatform: [
     {
       id: "tech_rn",
@@ -258,42 +199,6 @@ export const techStacks: Record<string, TechItem[]> = {
         "Beautiful widgets",
         "Multi-platform compilation",
       ],
-    },
-    {
-      id: "tech_hybrid",
-      category: "crossPlatform",
-      title: "Hybrid App Development",
-      description:
-        "Our hybrid app development approach combines the best of web and native technologies to create efficient, cost-effective mobile solutions. Using frameworks like Ionic or Capacitor, we build applications that can be deployed across multiple platforms while maintaining access to native device features.",
-      icon: <Layers color="#2667cc" size={24} />,
-      bullets: ["Ionic / Capacitor", "Web technologies", "Cost-effective"],
-    },
-    {
-      id: "tech_uiux_cross",
-      category: "crossPlatform",
-      title: "Cross-Platform UI/UX Design",
-      description:
-        "Cross-platform UI/UX design is crucial for delivering consistent, engaging user experiences across different devices and platforms. Our team creates adaptive design systems that maintain visual consistency while respecting platform-specific design guidelines.",
-      icon: <PenTool color="#2667cc" size={24} />,
-      bullets: ["Adaptive design", "Platform guidelines", "Visual consistency"],
-    },
-    {
-      id: "tech_native_mod",
-      category: "crossPlatform",
-      title: "Native Module Integration",
-      description:
-        "Native module integration is essential for accessing platform-specific features and optimizing performance. Our team specializes in bridging the gap between cross-platform code and native functionality. We develop custom native modules for features like camera access, push notifications, and biometrics.",
-      icon: <Puzzle color="#2667cc" size={24} />,
-      bullets: ["Camera & Push Notifications", "Biometrics", "Native bridging"],
-    },
-    {
-      id: "tech_perf_cross",
-      category: "crossPlatform",
-      title: "Performance Optimization",
-      description:
-        "Performance optimization is critical for delivering smooth, responsive cross-platform applications. Our team implements advanced optimization techniques including lazy loading, memory management, and efficient state handling. We focus on reducing bundle size and optimizing asset loading.",
-      icon: <Zap color="#2667cc" size={24} />,
-      bullets: ["Lazy loading", "Memory management", "Bundle size reduction"],
     },
   ],
 };

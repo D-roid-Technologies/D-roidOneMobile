@@ -50,19 +50,6 @@ interface User {
 const registrationTime = new Date();
 
 export class AuthService {
-
-    private createOnboardingNotification() {
-        return {
-            id: Date.now(),
-            title: "Complete Your Onboarding",
-            message:
-                "Please complete your staff onboarding information to access all features.",
-            type: "warning",
-            date: new Date().toISOString().split("T")[0],
-            time: new Date().toISOString(),
-            isRead: false,
-        };
-    }
     async handleUserRegistration(
         userData: UserType,
         locationData: LocationState
