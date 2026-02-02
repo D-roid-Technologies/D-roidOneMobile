@@ -44,6 +44,7 @@ import PartnerWithDroid from "../screens/PartnerWithDroid";
 import DroidCompanion from "../screens/DroidCompanion";
 import AboutOgoScreen from "../screens/AboutOgoScreen";
 import KnowledgeCityOverview from "../screens/KnowledgeCityOverview";
+import CoursesScreen from "../screens/membersActions/Training/CoursesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,7 @@ const RootNavigator: React.FC = () => {
           />
           <Stack.Screen name="Careers" component={CareersScreen} />
           <Stack.Screen name="Trainings / Tests" component={TakeTestsScreen} />
+          <Stack.Screen name="Courses" component={CoursesScreen} />
           <Stack.Screen name="Contact Us" component={ContactUsScreen} />
 
           {/* Quick Actions - Staff Screens */}
@@ -111,7 +113,10 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen name="Partner with Us" component={PartnerWithDroid} />
           <Stack.Screen name="D'roid Companion" component={DroidCompanion} />
           <Stack.Screen name="Ogoo" component={AboutOgoScreen} />
-          <Stack.Screen name="Knowledge City" component={KnowledgeCityOverview} />
+          <Stack.Screen
+            name="Knowledge City"
+            component={KnowledgeCityOverview}
+          />
         </Stack.Navigator>
       </SafeAreaView>
     </NavigationContainer>
