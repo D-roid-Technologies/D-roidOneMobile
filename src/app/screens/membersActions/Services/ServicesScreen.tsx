@@ -256,10 +256,9 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const renderTechDetail = () => {
     if (!activeTech) return null;
 
-    // Transform TechItem to ServiceDetailData
     const detailData: ServiceDetailData = {
       title: activeTech.title,
-      subTitle: activeClass?.title, // e.g. "Frontend Development"
+      subTitle: activeClass?.title,
       summary: activeTech.description,
       icon: activeTech.icon,
       benefits: activeTech.bullets,
@@ -270,7 +269,6 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
       <ServiceDetailView
         data={detailData}
         contactLabel="Contact about this Tech Stack"
-        // onContact={openContact}
         onContact={() => openContact(activeTech?.title, activeClass?.title)}
       />
     );

@@ -23,7 +23,7 @@ export interface TrainingProgram {
   benefits: string[];
 }
 
-export const trainingList: TrainingItem[] = [
+export const trainingList: any[] = [
   {
     id: "tr_frontend",
     title: "Frontend Developer Training",

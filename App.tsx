@@ -3,7 +3,6 @@ import RootNavigator from './src/app/navigation/RootNavigator';
 import Toast from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { store } from './src/app/redux/store';
-import { initializeAuth } from 'firebase/auth';
 export default function App() {
   return (
     <Provider store={store}>
@@ -12,7 +11,5 @@ export default function App() {
         <Toast />
       </SafeAreaProvider>
     </Provider>
-
   );
 }
-

@@ -175,7 +175,7 @@ export default ServiceDetailView;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#000c3a",
+    backgroundColor: "#ffffff",
     borderRadius: 16,
     padding: 20,
     shadowColor: "#000",
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   containerExpanded: {
-    borderColor: "#3B82F6",
+    borderColor: "#000c3a",
   },
   header: {
     flexDirection: "row",
@@ -211,11 +211,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#000c3a",
     flex: 1,
   },
   subTitle: {
-    color: "#94a3b8",
+    color: "#000c3a",
     fontSize: 14,
     marginBottom: 16,
     lineHeight: 20,
@@ -245,12 +245,12 @@ const styles = StyleSheet.create({
   },
   statText: {
     fontSize: 13,
-    color: "#e2e8f0",
+    color: "#000c3a",
     fontWeight: "500",
     marginLeft: 6,
   },
   summary: {
-    color: "#cbd5e1",
+    color: "#000c3a",
     lineHeight: 22,
     marginBottom: 24,
     fontSize: 15,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#3B82F6",
+    color: "#000c3a",
     marginBottom: 16,
   },
   toolsWrapper: {
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   toolBadge: {
-    backgroundColor: "#3B82F6",
+    backgroundColor: "#000c3a",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   benefitText: {
-    color: "#cbd5e1",
+    color: "#000c3a",
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
