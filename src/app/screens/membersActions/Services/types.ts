@@ -18,6 +18,8 @@ export interface ServiceItem {
   title: string;
   description: string;
   fees?: string;
+  icon?: ReactNode;
+  color?: string;
 }
 
 export interface ClassItem {

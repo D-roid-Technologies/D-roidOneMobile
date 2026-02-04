@@ -143,7 +143,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       title: "DevDive Internship Program [2026]",
       excerpt:
         "A hands-on, tuition-free internship program designed to help aspiring developers transition from theory to real-world software development.",
-      date: "Application closes: Thursday, 6th February 2026",
+      date: "1st - 28th February 2026",
       author: "D'roid Technologies",
       authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
       category: "Programs",

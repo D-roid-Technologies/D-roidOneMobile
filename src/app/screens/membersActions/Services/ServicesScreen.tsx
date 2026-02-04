@@ -6,6 +6,8 @@ import ContactFormModal from "../Services/components/ContactFormModal";
 import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
 import { createAndDispatchNotification } from "../../../utils/Notifications";
+import { Ionicons } from "@expo/vector-icons";
+import ServicesNewCard from "./components/ServicesNewCard";
 
 import type {
   ServicesScreenProps,
@@ -196,9 +198,21 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
       contentContainerStyle={styles.list}
       columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
-        <ServiceCard
+        // <ServiceCard
+        //   title={item.title}
+        //   description={item.description}
+        //   onPress={() => {
+        //     if (item.key === "software") setView("SOFTWARE_CLASSES");
+        //     if (item.key === "training") setView("TRAININGS");
+        //     if (item.key === "animation") setView("ANIMATION");
+        //     if (item.key === "consulting") setView("CONSULTING");
+        //   }}
+        // />
+        <ServicesNewCard
           title={item.title}
           description={item.description}
+          icon={item.icon} // Added icon
+          color={item.color} // Added colors
           onPress={() => {
             if (item.key === "software") setView("SOFTWARE_CLASSES");
             if (item.key === "training") setView("TRAININGS");
