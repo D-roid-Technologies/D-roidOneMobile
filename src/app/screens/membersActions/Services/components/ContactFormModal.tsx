@@ -17,6 +17,7 @@ interface ContactFormModalProps {
   onClose: () => void;
   serviceTitle: string;
   serviceType?: string;
+  fees?: string;
   onSubmit: (formData: ContactFormData) => void;
 }
 
@@ -27,6 +28,7 @@ interface ContactFormData {
   message: string;
   serviceTitle: string;
   serviceType?: string;
+  fees?: string;
 }
 
 const ContactFormModal: React.FC<ContactFormModalProps> = ({
@@ -34,6 +36,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onClose,
   serviceTitle,
   serviceType,
+  fees,
   onSubmit,
 }) => {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -43,6 +46,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
     message: "",
     serviceTitle,
     serviceType,
+    fees,
   });
 
   const [errors, setErrors] = useState<Partial<ContactFormData>>({});
@@ -87,6 +91,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
         message: "",
         serviceTitle,
         serviceType,
+        fees,
       });
       setErrors({});
     }
@@ -100,6 +105,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       message: "",
       serviceTitle,
       serviceType,
+      fees,
     });
     setErrors({});
     onClose();
@@ -124,6 +130,10 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               <Text style={styles.modalSubtitle}>
                 Interested in {serviceTitle}?
               </Text>
+              {/* fees */}
+              <View>
+                <Text style={styles.modalFees}>Service Fee : {fees}</Text>
+              </View>
             </View>
             <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
               <Ionicons name="close" size={28} color="#071D6A" />
@@ -225,14 +235,28 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </View>
 
             {/* Submit Button */}
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.submitButtonText}>Send Inquiry</Text>
-              <Ionicons name="send" size={20} color="#ffffff" />
-            </TouchableOpacity>
+            <View style={styles.submitButtonContainer}>
+              <View>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleSubmit}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.submitButtonText}>Send Inquiry</Text>
+                  <Ionicons name="send" size={20} color="#ffffff" />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleSubmit}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.submitButtonText}>Make Payment</Text>
+                  {/* <Ionicons name="send" size={20} color="#ffffff" /> */}
+                </TouchableOpacity>
+              </View>
+            </View>
 
             {/* Info Text */}
             <Text style={styles.infoText}>
@@ -284,6 +308,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#64748B",
     fontWeight: "400",
+  },
+  modalFees: {
+    fontSize: 14,
+    color: "#071D6A",
+    fontWeight: "700",
+    marginTop: 6,
+    marginBottom: 8,
   },
   closeButton: {
     padding: 4,
@@ -342,11 +373,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 8,
   },
+  submitButtonContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 12,
+  },
+  submitButtonWrapper: {
+    flex: 1,
+    marginBottom: 12,
+  },
   submitButton: {
     backgroundColor: "#203499",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 18,
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,

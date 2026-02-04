@@ -6,12 +6,14 @@ export const SERVICES: ServiceItem[] = [
     key: "software",
     title: "Software Development",
     description: "Explore our software services.",
+    fees: "Starting from 250,000 NGN",
   },
   {
     id: "dt_training",
     key: "training",
     title: "Training Programs",
     description: "Browse structured training programs.",
+    fees: "Starting from 250,000 NGN",
   },
   // {
   //   id: "dt_animation",
@@ -25,5 +27,6 @@ export const SERVICES: ServiceItem[] = [
     title: "Consulting",
     description:
       "Get expert guidance across product, engineering, and execution.",
+    fees: "Starting from 250,000 NGN",
   },
 ];

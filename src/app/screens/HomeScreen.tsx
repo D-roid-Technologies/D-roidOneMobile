@@ -28,10 +28,11 @@ import { authService } from "../redux/configuration/auth.service";
 import { createAndDispatchNotification } from "../utils/Notifications";
 import Toast from "react-native-toast-message";
 import EventRegistrationForm from "../components/EventRegistrationForm";
+import WhatsAppButton from "./membersActions/Services/WhatsAppButton";
 
 const { height } = Dimensions.get("window");
 
-const HomeScreen: React.FC = ({ navigation }: any) => {
+const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   const userMain: any = useSelector((state: RootState) => state.user);
   const userTypee = userMain.userType;
   const membershipTier = useSelector(
@@ -137,6 +138,26 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
   }, [membershipTier.totalHours]);
 
   const eventsPosts = [
+    {
+      id: 24,
+      title: "DevDive Internship Program [2026]",
+      excerpt:
+        "A hands-on, tuition-free internship program designed to help aspiring developers transition from theory to real-world software development.",
+      date: "Application closes: Thursday, 6th February 2026",
+      author: "D'roid Technologies",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
+      category: "Programs",
+      readTime: "6 min read",
+      image: ASSETS.images.cumsaEvent,
+      content: [
+        "DevDive is a comprehensive, tuition-free 3-month internship program by D'roid Technologies, created to bridge the gap between theoretical knowledge and professional software development practice in Nigeria.",
+        "The program is designed to address common barriers faced by aspiring tech professionals, including limited access to quality training, unstable infrastructure, and lack of real-world project experience.",
+        "Participants will gain hands-on experience by working on real products, collaborating with mentors, and applying industry-standard tools, workflows, and best practices.",
+        "DevDive emphasizes practical learning, resilience building, and portfolio development, ensuring interns are equipped with skills that are relevant and immediately applicable in the tech industry.",
+        "Open to motivated beginners and early-stage developers, DevDive offers a supportive environment focused on growth, accountability, and career readiness. Apply early and take the first step toward building a sustainable tech career.",
+      ],
+    },
+
     {
       id: 23,
       title: "Tech Webinar [July 2025]",
@@ -982,6 +1003,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
           onSubmit={handleRegistrationSubmit}
         />
       </Modal>
+      <WhatsAppButton phone={whatsappPhone} />
     </View>
   );
 };
