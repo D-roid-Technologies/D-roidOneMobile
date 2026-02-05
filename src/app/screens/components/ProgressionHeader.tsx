@@ -53,7 +53,7 @@ const ProgressionHeader: React.FunctionComponent = () => {
                 ]}
               />
             </View>
-            <Text style={styles.priceLabel}>Current Plan</Text>
+            {/* <Text style={styles.priceLabel}>Current Plan</Text> */}
           </View>
 
           {/* Total Time on App */}
