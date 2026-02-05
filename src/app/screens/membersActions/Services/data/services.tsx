@@ -5,13 +5,19 @@ export const SERVICES: ServiceItem[] = [
     id: "dt_software",
     key: "software",
     title: "Software Development",
-    description: "Explore our software services.",
+    description: "",
+    fees: "Starting from 250,000 NGN",
+    icon: "laptop-code",
+    color: "#3B82F6",
   },
   {
     id: "dt_training",
     key: "training",
     title: "Training Programs",
-    description: "Browse structured training programs.",
+    description: "",
+    fees: "Starting from 250,000 NGN",
+    icon: "graduation-cap",
+    color: "#10B981",
   },
   // {
   //   id: "dt_animation",
@@ -23,7 +29,9 @@ export const SERVICES: ServiceItem[] = [
     id: "dt_consulting",
     key: "consulting",
     title: "Consulting",
-    description:
-      "Get expert guidance across product, engineering, and execution.",
+    description: "",
+    fees: "Starting from 250,000 NGN",
+    icon: "lightbulb",
+    color: "#F59E0B",
   },
 ];

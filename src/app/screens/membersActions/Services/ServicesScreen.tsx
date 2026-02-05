@@ -6,6 +6,8 @@ import ContactFormModal from "../Services/components/ContactFormModal";
 import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
 import { createAndDispatchNotification } from "../../../utils/Notifications";
+import { Ionicons } from "@expo/vector-icons";
+import ServicesNewCard from "./components/ServicesNewCard";
 
 import type {
   ServicesScreenProps,
@@ -47,13 +49,13 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const [view, setView] = useState<ViewState>("HOME");
 
   const [activeCategory, setActiveCategory] = useState<TechCategoryKey | null>(
-    null
+    null,
   );
   const [activeClass, setActiveClass] = useState<ClassItem | null>(null);
   const [activeTech, setActiveTech] = useState<TechItem | null>(null);
 
   const [activeTraining, setActiveTraining] = useState<TrainingItem | null>(
-    null
+    null,
   );
 
   const [activeConsulting, setActiveConsulting] =
@@ -66,10 +68,15 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const [contactServiceInfo, setContactServiceInfo] = useState<{
     title: string;
     type?: string;
-  }>({ title: "", type: "" });
+    fees?: string;
+  }>({ title: "", type: "", fees: "" });
 
   // Update the openContact function
-  const openContact = (serviceTitle?: string, serviceType?: string) => {
+  const openContact = (
+    serviceTitle?: string,
+    serviceType?: string,
+    fees?: string,
+  ) => {
     if (onOpenSayIt) return onOpenSayIt();
 
     // Set service info and show modal
@@ -81,6 +88,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
         activeConsulting?.title ||
         "Service",
       type: serviceType || activeClass?.title,
+      fees: fees,
     });
     setIsContactModalVisible(true);
   };
@@ -190,9 +198,21 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
       contentContainerStyle={styles.list}
       columnWrapperStyle={styles.columnWrapper}
       renderItem={({ item }) => (
-        <ServiceCard
+        // <ServiceCard
+        //   title={item.title}
+        //   description={item.description}
+        //   onPress={() => {
+        //     if (item.key === "software") setView("SOFTWARE_CLASSES");
+        //     if (item.key === "training") setView("TRAININGS");
+        //     if (item.key === "animation") setView("ANIMATION");
+        //     if (item.key === "consulting") setView("CONSULTING");
+        //   }}
+        // />
+        <ServicesNewCard
           title={item.title}
           description={item.description}
+          icon={item.icon} // Added icon
+          color={item.color} // Added colors
           onPress={() => {
             if (item.key === "software") setView("SOFTWARE_CLASSES");
             if (item.key === "training") setView("TRAININGS");
@@ -297,7 +317,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   const renderTrainingDetail = () => {
     if (!activeTraining) return null;
     const program = trainingPrograms.find(
-      (p) => p.id === activeTraining.program
+      (p) => p.id === activeTraining.program,
     );
 
     // Fallback data if program details missing
@@ -381,7 +401,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
           onPress={() => {
             // We match based on ID (case-insensitive for safety)
             const found = stories.find(
-              (s) => s.id.toLowerCase() === item.id.toLowerCase()
+              (s) => s.id.toLowerCase() === item.id.toLowerCase(),
             );
             if (found) {
               // @ts-ignore - mismatch between Story (full) and StoryItem (lite)
@@ -399,7 +419,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
     if (!activeStory) return null;
 
     const fullStory = stories.find(
-      (s) => s.id.toLowerCase() === activeStory.id.toLowerCase()
+      (s) => s.id.toLowerCase() === activeStory.id.toLowerCase(),
     );
 
     if (!fullStory) {
@@ -447,6 +467,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
         onClose={() => setIsContactModalVisible(false)}
         serviceTitle={contactServiceInfo.title}
         serviceType={contactServiceInfo.type}
+        fees={contactServiceInfo.fees}
         onSubmit={handleContactFormSubmit}
       />
     </View>

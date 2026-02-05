@@ -24,75 +24,138 @@ const hasAccess = (userTier: MembershipTier, contentTier: MembershipTier) => {
   return tierOrder.indexOf(userTier) >= tierOrder.indexOf(contentTier);
 };
 
-const TakeTestsScreen: React.FC = () => {
+const CoursesScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [downloadModalVisible, setDownloadModalVisible] = useState(false);
-  const [selectedContent, setSelectedContent] = useState<any>(null);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const membership = useSelector(selectMembershipTier);
 
   const isPlatinum = membership.tier === "Platinum";
   const isGoldOrAbove =
     membership.tier === "Gold" || membership.tier === "Platinum";
 
-  const learningContent = [
-    {
-      id: "test-js",
-      type: "test",
-      title: "JavaScript Fundamentals",
-      category: "programming",
-      durationMinutes: 30,
-      questions: 20,
-      difficulty: "Beginner",
-      membershipTier: "Silver" as MembershipTier,
-    },
+  const courses = [
     {
       id: "course-rn",
-      type: "course",
       title: "React Native Essentials",
       category: "programming",
       durationHours: 8,
       lessons: 12,
       difficulty: "Intermediate",
       membershipTier: "Gold" as MembershipTier,
-    },
-    {
-      id: "test-uiux",
-      type: "test",
-      title: "UI/UX Principles",
-      category: "design",
-      durationMinutes: 25,
-      questions: 15,
-      difficulty: "Beginner",
-      membershipTier: "Silver" as MembershipTier,
+      description:
+        "Master the fundamentals of React Native and build cross-platform mobile applications.",
+      instructor: "John Doe",
     },
     {
       id: "course-ts",
-      type: "course",
       title: "Advanced TypeScript",
       category: "programming",
       durationHours: 10,
       lessons: 18,
       difficulty: "Advanced",
       membershipTier: "Platinum" as MembershipTier,
+      description:
+        "Deep dive into TypeScript's advanced features and type system.",
+      instructor: "Jane Smith",
     },
     {
-      id: "test-logic",
-      type: "test",
-      title: "Problem Solving",
-      category: "general",
-      durationMinutes: 40,
-      questions: 20,
+      id: "course-js",
+      title: "JavaScript Fundamentals",
+      category: "programming",
+      durationHours: 6,
+      lessons: 10,
+      difficulty: "Beginner",
+      membershipTier: "Silver" as MembershipTier,
+      description:
+        "Learn the core concepts of JavaScript programming from scratch.",
+      instructor: "Mike Johnson",
+    },
+    {
+      id: "course-uiux",
+      title: "UI/UX Design Principles",
+      category: "design",
+      durationHours: 7,
+      lessons: 14,
       difficulty: "Intermediate",
       membershipTier: "Gold" as MembershipTier,
+      description:
+        "Master user interface and user experience design principles.",
+      instructor: "Sarah Williams",
+    },
+    {
+      id: "course-figma",
+      title: "Figma for Beginners",
+      category: "design",
+      durationHours: 5,
+      lessons: 8,
+      difficulty: "Beginner",
+      membershipTier: "Silver" as MembershipTier,
+      description: "Learn to create stunning designs using Figma.",
+      instructor: "David Lee",
+    },
+    {
+      id: "course-react",
+      title: "React Advanced Patterns",
+      category: "programming",
+      durationHours: 12,
+      lessons: 20,
+      difficulty: "Advanced",
+      membershipTier: "Platinum" as MembershipTier,
+      description: "Explore advanced React patterns and best practices.",
+      instructor: "Emily Chen",
+    },
+    {
+      id: "course-nodejs",
+      title: "Node.js Backend Development",
+      category: "programming",
+      durationHours: 9,
+      lessons: 15,
+      difficulty: "Intermediate",
+      membershipTier: "Gold" as MembershipTier,
+      description: "Build scalable backend applications with Node.js.",
+      instructor: "Robert Brown",
+    },
+    {
+      id: "course-python",
+      title: "Python for Everyone",
+      category: "programming",
+      durationHours: 8,
+      lessons: 12,
+      difficulty: "Beginner",
+      membershipTier: "Silver" as MembershipTier,
+      description: "Start your programming journey with Python.",
+      instructor: "Lisa Anderson",
+    },
+    {
+      id: "course-branding",
+      title: "Brand Identity Design",
+      category: "design",
+      durationHours: 6,
+      lessons: 10,
+      difficulty: "Intermediate",
+      membershipTier: "Gold" as MembershipTier,
+      description: "Create compelling brand identities and visual systems.",
+      instructor: "Mark Taylor",
+    },
+    {
+      id: "course-webdev",
+      title: "Full Stack Web Development",
+      category: "programming",
+      durationHours: 15,
+      lessons: 25,
+      difficulty: "Advanced",
+      membershipTier: "Platinum" as MembershipTier,
+      description: "Become a full stack developer with modern technologies.",
+      instructor: "Anna Martinez",
     },
   ];
 
   const categories = [
-    { id: "all", label: "All Content" },
+    { id: "all", label: "All Courses" },
     { id: "programming", label: "Programming" },
     { id: "design", label: "Design" },
-    { id: "general", label: "General" },
   ];
 
   const getDifficultyColor = (difficulty: string) => {
@@ -108,17 +171,17 @@ const TakeTestsScreen: React.FC = () => {
     }
   };
 
-  const filteredContent = (
+  const filteredCourses = (
     selectedCategory === "all"
-      ? learningContent
-      : learningContent.filter((item) => item.category === selectedCategory)
+      ? courses
+      : courses.filter((item) => item.category === selectedCategory)
   ).filter((item) => hasAccess(membership.tier, item.membershipTier));
 
-  const handleStartContent = (item: any) => {
-    if (!hasAccess(membership.tier, item.membershipTier)) {
+  const handleStartCourse = (course: any) => {
+    if (!hasAccess(membership.tier, course.membershipTier)) {
       Alert.alert(
         "Upgrade Required",
-        `This content requires a ${item.membershipTier} membership.`,
+        `This course requires a ${course.membershipTier} membership.`,
         [
           {
             text: "Upgrade",
@@ -129,18 +192,14 @@ const TakeTestsScreen: React.FC = () => {
       return;
     }
 
-    setSelectedContent(item);
+    setSelectedCourse(course);
     setDownloadModalVisible(true);
   };
 
   const handleDownload = () => {
-    // Handle download logic here
+    // download logic here
     setDownloadModalVisible(false);
-    // You can add navigation or download logic here
-    // navigation.navigate(
-    //   selectedContent.type === "course" ? "CourseDetail" : "TestDetail",
-    //   { id: selectedContent.id }
-    // );
+    // navigation.navigate("CourseDetail", { id: selectedCourse.id });
   };
 
   return (
@@ -150,7 +209,7 @@ const TakeTestsScreen: React.FC = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={26} color="#ffffff" />
         </TouchableOpacity>
-        <Text style={styles.header}>Tests</Text>
+        <Text style={styles.header}>Courses</Text>
       </View>
 
       {/* Membership Tier Bar */}
@@ -222,12 +281,12 @@ const TakeTestsScreen: React.FC = () => {
           ))}
         </ScrollView>
 
-        {/* Content Cards */}
-        {filteredContent.map((item) => (
-          <View key={item.id} style={styles.jobCard}>
+        {/* Course Cards */}
+        {filteredCourses.map((course) => (
+          <View key={course.id} style={styles.courseCard}>
             {/* Header */}
-            <View style={styles.jobHeader}>
-              <Text style={styles.jobTitle}>{item.title}</Text>
+            <View style={styles.courseHeader}>
+              <Text style={styles.courseTitle}>{course.title}</Text>
 
               <View style={{ flexDirection: "row", gap: 6 }}>
                 {/* Difficulty Badge */}
@@ -236,17 +295,17 @@ const TakeTestsScreen: React.FC = () => {
                     styles.typeBadge,
                     {
                       backgroundColor:
-                        getDifficultyColor(item.difficulty) + "20",
+                        getDifficultyColor(course.difficulty) + "20",
                     },
                   ]}
                 >
                   <Text
                     style={[
                       styles.typeText,
-                      { color: getDifficultyColor(item.difficulty) },
+                      { color: getDifficultyColor(course.difficulty) },
                     ]}
                   >
-                    {item.difficulty}
+                    {course.difficulty}
                   </Text>
                 </View>
 
@@ -255,66 +314,114 @@ const TakeTestsScreen: React.FC = () => {
                   style={[
                     styles.typeBadge,
                     {
-                      backgroundColor: getTierColor(item.membershipTier) + "20",
+                      backgroundColor:
+                        getTierColor(course.membershipTier) + "20",
                     },
                   ]}
                 >
                   <Text
                     style={[
                       styles.typeText,
-                      { color: getTierColor(item.membershipTier) },
+                      { color: getTierColor(course.membershipTier) },
                     ]}
                   >
-                    {item.membershipTier}
+                    {course.membershipTier}
                   </Text>
                 </View>
               </View>
             </View>
 
-            {/* Type Label */}
-            <Text style={styles.bannerTextA}>{getTypeLabel(item.type)}</Text>
+            {/* Description */}
+            <Text style={styles.courseDescription}>{course.description}</Text>
+
+            {/* Instructor */}
+            <View style={styles.instructorRow}>
+              <Ionicons name="person-outline" size={14} color="#666" />
+              <Text style={styles.instructorText}>{course.instructor}</Text>
+            </View>
 
             {/* Info */}
-            <View style={styles.jobDetails}>
+            <View style={styles.courseDetails}>
               <View style={styles.detailItem}>
                 <Ionicons name="time-outline" size={14} color="#999" />
                 <Text style={styles.detailText}>
-                  {"durationMinutes" in item
-                    ? `${item.durationMinutes} min`
-                    : `${item.durationHours} hrs`}
+                  {course.durationHours} hrs
                 </Text>
               </View>
 
-              {"questions" in item && (
-                <View style={styles.detailItem}>
-                  <Ionicons name="help-circle-outline" size={14} color="#999" />
-                  <Text style={styles.detailText}>
-                    {item.questions} questions
-                  </Text>
-                </View>
-              )}
-
-              {"lessons" in item && (
-                <View style={styles.detailItem}>
-                  <Ionicons name="book-outline" size={14} color="#999" />
-                  <Text style={styles.detailText}>{item.lessons} lessons</Text>
-                </View>
-              )}
+              <View style={styles.detailItem}>
+                <Ionicons name="book-outline" size={14} color="#999" />
+                <Text style={styles.detailText}>{course.lessons} lessons</Text>
+              </View>
             </View>
 
-            {/* Start/Apply Button */}
+            {/* Start Button */}
             <TouchableOpacity
-              style={styles.applyButton}
-              onPress={() => handleStartContent(item)}
+              style={styles.startButton}
+              onPress={() => handleStartCourse(course)}
             >
-              <Text style={styles.applyButtonText}>
-                {getPrimaryActionLabel(item.type)}
-              </Text>
+              <Text style={styles.startButtonText}>Start Course</Text>
               <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
             </TouchableOpacity>
           </View>
         ))}
+
+        {filteredCourses.length === 0 && (
+          <View style={styles.emptyState}>
+            <Ionicons name="book-outline" size={64} color="#64748B" />
+            <Text style={styles.emptyStateText}>No courses available</Text>
+            <Text style={styles.emptyStateSubtext}>
+              Check back later or upgrade your membership
+            </Text>
+          </View>
+        )}
       </ScrollView>
+
+      {/* Bottom Action Bar */}
+      <View style={styles.bottomActions}>
+        <TouchableOpacity
+          style={[styles.primaryActionBtn, !isPlatinum && styles.disabledBtn]}
+          disabled={!isPlatinum}
+          onPress={() => navigation.navigate("CreateCourse")}
+        >
+          <Ionicons
+            name="create-outline"
+            size={18}
+            color={isPlatinum ? "#000105" : "#64748B"}
+          />
+          <Text
+            style={[
+              styles.primaryActionText,
+              !isPlatinum && styles.disabledText,
+            ]}
+          >
+            Create a Course
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.secondaryActionBtn,
+            !isGoldOrAbove && styles.disabledBtn,
+          ]}
+          disabled={!isGoldOrAbove}
+          onPress={() => navigation.navigate("UploadCourse")}
+        >
+          <Ionicons
+            name="cloud-upload-outline"
+            size={18}
+            color={isGoldOrAbove ? "#ffffff" : "#94A3B8"}
+          />
+          <Text
+            style={[
+              styles.secondaryActionText,
+              !isGoldOrAbove && styles.disabledText,
+            ]}
+          >
+            Upload a Course
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Download Modal */}
       <Modal
@@ -335,7 +442,7 @@ const TakeTestsScreen: React.FC = () => {
 
             {/* Icon */}
             <View style={styles.modalIconContainer}>
-              <Ionicons name="download-outline" size={48} color="#8B5CF6" />
+              <Ionicons name="download-outline" size={48} color="#ffffff" />
             </View>
 
             {/* Title */}
@@ -344,8 +451,7 @@ const TakeTestsScreen: React.FC = () => {
             {/* Description */}
             <Text style={styles.modalDescription}>
               You are about to download the Knowledge City app to access this
-              {selectedContent?.type === "course" ? " course" : " test"} and
-              continue your learning journey.
+              course and continue your learning journey.
             </Text>
 
             {/* Download Button */}
@@ -376,7 +482,7 @@ const getTierColor = (tier: TierType) => {
     case "Silver":
       return "#94A3B8";
     case "Gold":
-      return "#000105";
+      return "#F59E0B";
     case "Platinum":
       return "#67E8F9";
     default:
@@ -384,12 +490,7 @@ const getTierColor = (tier: TierType) => {
   }
 };
 
-const getTypeLabel = (type: string) => (type === "course" ? "Course" : "Test");
-
-const getPrimaryActionLabel = (type: string) =>
-  type === "course" ? "Start Course" : "Start Test";
-
-export default TakeTestsScreen;
+export default CoursesScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -410,14 +511,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#ffffff",
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "900",
-    color: "#ffffff",
-  },
-  placeholder: {
-    width: 24,
-  },
+
   disabledBtn: {
     opacity: 0.45,
   },
@@ -454,30 +548,64 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
 
-  tierBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+  /* Tier Bar */
+  tierBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 16,
+    marginBottom: 20,
+    padding: 12,
+    borderRadius: 14,
+    backgroundColor: "#020617",
   },
 
-  tierBadgeText: {
-    fontSize: 12,
-    fontWeight: "900",
+  tierChip: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    paddingVertical: 10,
+    borderRadius: 10,
   },
-  /* Test Card */
-  testCard: {
+
+  tierActive: {
+    backgroundColor: "#022C22",
+  },
+
+  tierLocked: {
+    opacity: 0.45,
+  },
+
+  tierText: {
+    fontSize: 13,
+    fontWeight: "800",
+    color: "#CBD5E1",
+  },
+
+  tierTextActive: {
+    color: "#10B981",
+  },
+
+  tierTextLocked: {
+    color: "#64748B",
+  },
+
+  /* Course Cards */
+  courseCard: {
     backgroundColor: "#C7D2FE",
     padding: 16,
-    borderRadius: 12,
-    marginBottom: 14,
+    borderRadius: 10,
+    marginBottom: 12,
   },
-  testHeader: {
+
+  courseHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: 10,
   },
-  testTitle: {
+
+  courseTitle: {
     fontSize: 16,
     fontWeight: "800",
     color: "#000105",
@@ -485,52 +613,68 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 
-  difficultyBadge: {
-    paddingHorizontal: 10,
+  typeBadge: {
+    backgroundColor: "rgba(245, 158, 11, 0.25)",
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
-  difficultyText: {
+  typeText: {
     fontSize: 12,
-    fontWeight: "800",
+    color: "#000c3a",
+    fontWeight: "700",
   },
 
-  testInfo: {
+  courseDescription: {
+    fontSize: 14,
+    color: "#475569",
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+
+  instructorRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 12,
+  },
+
+  instructorText: {
+    fontSize: 13,
+    color: "#666",
+    fontWeight: "500",
+  },
+
+  courseDetails: {
     flexDirection: "row",
     gap: 16,
     marginBottom: 14,
   },
-  infoItem: {
+
+  detailItem: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
   },
-  infoText: {
+  detailText: {
     fontSize: 13,
     color: "#334155",
     fontWeight: "400",
   },
 
-  /* Start Button */
   startButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: "#000105",
     gap: 6,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
   },
   startButtonText: {
     fontSize: 14,
-    fontWeight: "800",
-    color: "#ffffff",
-  },
-  typeLabel: {
-    fontSize: 12,
     fontWeight: "700",
-    color: "#475569",
-    marginBottom: 6,
+    color: "#000c3a",
   },
 
   /* Bottom Action Bar */
@@ -576,118 +720,25 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#ffffff",
   },
-  /* Tier Bar */
-  tierBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 16,
-    marginBottom: 20,
-    padding: 12,
-    borderRadius: 14,
-    backgroundColor: "#020617",
-  },
 
-  tierChip: {
-    flex: 1,
+  /* Empty State */
+  emptyState: {
     alignItems: "center",
     justifyContent: "center",
-    gap: 4,
-    paddingVertical: 10,
-    borderRadius: 10,
+    paddingVertical: 60,
   },
 
-  tierActive: {
-    backgroundColor: "#022C22",
-  },
-
-  tierLocked: {
-    opacity: 0.45,
-  },
-
-  tierText: {
-    fontSize: 13,
-    fontWeight: "800",
+  emptyStateText: {
+    fontSize: 18,
+    fontWeight: "700",
     color: "#CBD5E1",
+    marginTop: 16,
   },
 
-  tierTextActive: {
-    color: "#10B981",
-  },
-
-  tierTextLocked: {
+  emptyStateSubtext: {
+    fontSize: 14,
     color: "#64748B",
-  },
-  /* Reused CareersScreen styles */
-  jobCard: {
-    backgroundColor: "#C7D2FE",
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 12,
-  },
-
-  jobHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 10,
-  },
-
-  jobTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#000105",
-    flex: 1,
-    marginRight: 8,
-  },
-
-  typeBadge: {
-    backgroundColor: "rgba(245, 158, 11, 0.25)",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  typeText: {
-    fontSize: 12,
-    color: "#000c3a",
-    fontWeight: "700",
-  },
-
-  jobDetails: {
-    flexDirection: "row",
-    gap: 16,
-    marginBottom: 14,
-  },
-  bannerTextA: {
-    fontSize: 14,
-    color: "#E0E7FF",
-    textAlign: "left",
-    fontWeight: "300",
-    paddingBottom: 10,
-  },
-  detailItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  detailText: {
-    fontSize: 13,
-    color: "#334155",
-    fontWeight: "400",
-  },
-
-  applyButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
-  },
-  applyButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#000c3a",
+    marginTop: 8,
   },
 
   /* Modal Styles */
@@ -720,7 +771,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#F3E8FF",
+    backgroundColor: "#264fa1",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,

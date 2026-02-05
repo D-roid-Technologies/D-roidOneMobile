@@ -17,6 +17,9 @@ export interface ServiceItem {
   key: string;
   title: string;
   description: string;
+  fees?: string;
+  icon?: ReactNode;
+  color?: string;
 }
 
 export interface ClassItem {
@@ -27,7 +30,11 @@ export interface ClassItem {
   icon?: ReactNode;
 }
 
-export type TechCategoryKey = "frontend" | "backend" | "cloud" | "crossPlatform";
+export type TechCategoryKey =
+  | "frontend"
+  | "backend"
+  | "cloud"
+  | "crossPlatform";
 
 export interface TechItem {
   id: string;
@@ -36,6 +43,7 @@ export interface TechItem {
   description: string;
   icon: ReactNode;
   bullets: string[];
+  fees?: string;
 }
 
 export interface TrainingItem {
@@ -64,6 +72,7 @@ export interface ConsultingItem {
   description: string;
   bullets: string[];
   icon?: ReactNode; // Added optional icon for consistency
+  fees?: string; // Added optional fees for consistency
 }
 
 export interface StoryItem {

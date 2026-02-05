@@ -11,7 +11,7 @@ interface Props {
 }
 
 const WhatsAppButton: React.FC<Props> = ({
-  phone = "2348012345678",
+  phone = "2349165275635",
   message = "Hello, I would like to make an enquiry.",
 }) => {
   const openWhatsApp = async () => {
@@ -22,7 +22,10 @@ const WhatsAppButton: React.FC<Props> = ({
 
   return (
     <View pointerEvents="box-none" style={styles.wrap}>
-      <Pressable onPress={openWhatsApp} style={({ pressed }) => [styles.fab, pressed && styles.pressed]}>
+      <Pressable
+        onPress={openWhatsApp}
+        style={({ pressed }) => [styles.fab, pressed && styles.pressed]}
+      >
         <Text style={styles.label}>WhatsApp</Text>
       </Pressable>
     </View>
