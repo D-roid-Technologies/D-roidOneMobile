@@ -8,10 +8,10 @@ export const ASSETS = {
     PrimarySchoolRukpokwu: require("../images/jpg/PrimarySchoolRukpokwu.jpeg"),
     nationalICT2: require("../images/png/ICT-TWO.png"),
     // NEW IMAGES
-    // aiForDevelopers: require("../images/png/AI-for-developers.png"),
-    // liftOffConference: require("../images/png/lift-off.png"),
-    // makaTonBootcamp: require("../images/png/maka-ton-bootcamp.png"),
-    // techNormads: require("../images/png/tech-normads.png"),
+    aiForDevelopers: require("../images/png/AI-for-developers.png"),
+    liftOffConference: require("../images/png/lift-off.png"),
+    makaTonBootcamp: require("../images/png/maka-ton-bootcamp.png"),
+    techNormads: require("../images/png/tech-normads.png"),
     // devDive: require("../images/png/devDive.png"),
   },
 };

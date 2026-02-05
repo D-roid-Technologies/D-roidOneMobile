@@ -36,7 +36,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   const userMain: any = useSelector((state: RootState) => state.user);
   const userTypee = userMain.userType;
   const membershipTier = useSelector(
-    (state: RootState) => state.membershipTier,
+    (state: RootState) => state.membershipTier
   );
   const [text, setText] = useState("Tap to activate Membership");
   const MINUTES_25 = 25 * 60 * 1000;
@@ -44,10 +44,10 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const count = useSelector(
-    (state: RootState) => state.notifications.notifications.length,
+    (state: RootState) => state.notifications.notifications.length
   );
   const unreadCount = useSelector(
-    (state: RootState) => state.notifications.unreadCount,
+    (state: RootState) => state.notifications.unreadCount
   );
 
   // New states for registration form
@@ -96,7 +96,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
           syncTimeToRedux();
         }
         appState.current = nextAppState;
-      },
+      }
     );
 
     const interval = setInterval(() => {
@@ -140,7 +140,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   const eventsPosts = [
     {
       id: 24,
-      title: "DevDive Internship Program [2026]",
+      title: "DevDive Internship Program",
       excerpt:
         "A hands-on, tuition-free internship program designed to help aspiring developers transition from theory to real-world software development.",
       date: "1st - 28th February 2026",
@@ -148,7 +148,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
       category: "Programs",
       readTime: "6 min read",
-      image: ASSETS.images.cumsaEvent,
+      image: ASSETS.images.aiForDevelopers,
       content: [
         "DevDive is a comprehensive, tuition-free 3-month internship program by D'roid Technologies, created to bridge the gap between theoretical knowledge and professional software development practice in Nigeria.",
         "The program is designed to address common barriers faced by aspiring tech professionals, including limited access to quality training, unstable infrastructure, and lack of real-world project experience.",
@@ -160,7 +160,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
 
     {
       id: 23,
-      title: "Tech Webinar [July 2025]",
+      title: "Tech Webinar - July 2026",
       excerpt:
         "An engaging tech-focused webinar designed to equip participants with in-demand digital and software development skills.",
       date: "Saturday, 25th July 2026",
@@ -168,7 +168,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.chessOne,
+      image: ASSETS.images.makaTonBootcamp,
       content: [
         "The Tech Webinar [July 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
         "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
@@ -536,8 +536,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   ];
 
   const filteredQuickActions = quickActions.filter(
-    (action) =>
-      action.type === "all" || action.type === userTypee.toLowerCase(),
+    (action) => action.type === "all" || action.type === userTypee.toLowerCase()
   );
 
   const getGreeting = (): string => {
@@ -807,7 +806,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
         {eventsPosts
           .sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
           )
           .slice(0, 3)
           .map((event: any, index: React.Key | null | undefined) => (
