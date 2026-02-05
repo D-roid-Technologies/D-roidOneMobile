@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -26,6 +27,8 @@ const hasAccess = (userTier: MembershipTier, contentTier: MembershipTier) => {
 const TakeTestsScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [downloadModalVisible, setDownloadModalVisible] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<any>(null);
   const membership = useSelector(selectMembershipTier);
 
   const isPlatinum = membership.tier === "Platinum";
@@ -111,6 +114,35 @@ const TakeTestsScreen: React.FC = () => {
       : learningContent.filter((item) => item.category === selectedCategory)
   ).filter((item) => hasAccess(membership.tier, item.membershipTier));
 
+  const handleStartContent = (item: any) => {
+    if (!hasAccess(membership.tier, item.membershipTier)) {
+      Alert.alert(
+        "Upgrade Required",
+        `This content requires a ${item.membershipTier} membership.`,
+        [
+          {
+            text: "Upgrade",
+            onPress: () => navigation.navigate("UpgradeMembership"),
+          },
+        ],
+      );
+      return;
+    }
+
+    setSelectedContent(item);
+    setDownloadModalVisible(true);
+  };
+
+  const handleDownload = () => {
+    // Handle download logic here
+    setDownloadModalVisible(false);
+    // You can add navigation or download logic here
+    // navigation.navigate(
+    //   selectedContent.type === "course" ? "CourseDetail" : "TestDetail",
+    //   { id: selectedContent.id }
+    // );
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -191,7 +223,6 @@ const TakeTestsScreen: React.FC = () => {
         </ScrollView>
 
         {/* Content Cards */}
-        {/* Content Cards - Styled like CareersScreen job cards */}
         {filteredContent.map((item) => (
           <View key={item.id} style={styles.jobCard}>
             {/* Header */}
@@ -274,26 +305,7 @@ const TakeTestsScreen: React.FC = () => {
             {/* Start/Apply Button */}
             <TouchableOpacity
               style={styles.applyButton}
-              onPress={() => {
-                if (!hasAccess(membership.tier, item.membershipTier)) {
-                  Alert.alert(
-                    "Upgrade Required",
-                    `This content requires a ${item.membershipTier} membership.`,
-                    [
-                      {
-                        text: "Upgrade",
-                        onPress: () => navigation.navigate("UpgradeMembership"),
-                      },
-                    ],
-                  );
-                  return;
-                }
-
-                navigation.navigate(
-                  item.type === "course" ? "CourseDetail" : "TestDetail",
-                  { id: item.id },
-                );
-              }}
+              onPress={() => handleStartContent(item)}
             >
               <Text style={styles.applyButtonText}>
                 {getPrimaryActionLabel(item.type)}
@@ -304,51 +316,57 @@ const TakeTestsScreen: React.FC = () => {
         ))}
       </ScrollView>
 
-      {/* Bottom Action Bar */}
-      <View style={styles.bottomActions}>
-        <TouchableOpacity
-          style={[styles.primaryActionBtn, !isPlatinum && styles.disabledBtn]}
-          disabled={!isPlatinum}
-          onPress={() => navigation.navigate("CreateCourse")}
-        >
-          <Ionicons
-            name="create-outline"
-            size={18}
-            color={isPlatinum ? "#000105" : "#64748B"}
-          />
-          <Text
-            style={[
-              styles.primaryActionText,
-              !isPlatinum && styles.disabledText,
-            ]}
-          >
-            Create a Course
-          </Text>
-        </TouchableOpacity>
+      {/* Download Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={downloadModalVisible}
+        onRequestClose={() => setDownloadModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Close Button */}
+            {/* <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setDownloadModalVisible(false)}
+            >
+              <Ionicons name="close" size={24} color="#64748B" />
+            </TouchableOpacity> */}
 
-        <TouchableOpacity
-          style={[
-            styles.secondaryActionBtn,
-            !isGoldOrAbove && styles.disabledBtn,
-          ]}
-          disabled={!isGoldOrAbove}
-          onPress={() => navigation.navigate("UploadCourse")}
-        >
-          <Ionicons
-            name="cloud-upload-outline"
-            size={18}
-            color={isGoldOrAbove ? "#ffffff" : "#94A3B8"}
-          />
-          <Text
-            style={[
-              styles.secondaryActionText,
-              !isGoldOrAbove && styles.disabledText,
-            ]}
-          >
-            Upload a Course
-          </Text>
-        </TouchableOpacity>
-      </View>
+            {/* Icon */}
+            <View style={styles.modalIconContainer}>
+              <Ionicons name="download-outline" size={48} color="#8B5CF6" />
+            </View>
+
+            {/* Title */}
+            <Text style={styles.modalTitle}>Download Knowledge City App</Text>
+
+            {/* Description */}
+            <Text style={styles.modalDescription}>
+              You are about to download the Knowledge City app to access this
+              {selectedContent?.type === "course" ? " course" : " test"} and
+              continue your learning journey.
+            </Text>
+
+            {/* Download Button */}
+            <TouchableOpacity
+              style={styles.downloadButton}
+              onPress={handleDownload}
+            >
+              <Ionicons name="download" size={20} color="#ffffff" />
+              <Text style={styles.downloadButtonText}>Download Now</Text>
+            </TouchableOpacity>
+
+            {/* Cancel Button */}
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setDownloadModalVisible(false)}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -670,5 +688,87 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: "#000c3a",
+  },
+
+  /* Modal Styles */
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  modalContent: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 24,
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+    position: "relative",
+  },
+
+  modalCloseButton: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    zIndex: 1,
+  },
+
+  modalIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#F3E8FF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#000105",
+    textAlign: "center",
+    marginBottom: 12,
+  },
+
+  modalDescription: {
+    fontSize: 15,
+    color: "#64748B",
+    textAlign: "center",
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+
+  downloadButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: "#264fa1",
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    width: "100%",
+    marginBottom: 12,
+  },
+
+  downloadButtonText: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#ffffff",
+  },
+
+  cancelButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  cancelButtonText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#64748B",
   },
 });
