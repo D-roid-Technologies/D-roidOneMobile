@@ -132,7 +132,9 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               </Text>
               {/* fees */}
               <View>
-                <Text style={styles.modalFees}>Service Fee : {fees}</Text>
+                <Text style={styles.modalFees}>
+                  Service Fee : {fees} ₦500,000 - ₦1,000,000
+                </Text>
               </View>
             </View>
             <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
