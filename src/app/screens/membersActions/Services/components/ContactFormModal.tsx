@@ -237,8 +237,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </View>
 
             {/* Submit Button */}
-            <View style={styles.submitButtonContainer}>
-              <View>
+            <View>
                 <TouchableOpacity
                   style={styles.submitButton}
                   onPress={handleSubmit}
@@ -248,17 +247,19 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
                   <Ionicons name="send" size={20} color="#ffffff" />
                 </TouchableOpacity>
               </View>
-              <View>
+            {/* <View style={styles.submitButtonContainer}> */}
+              
+              {/* <View>
                 <TouchableOpacity
                   style={styles.submitButton}
                   onPress={handleSubmit}
                   activeOpacity={0.8}
                 >
                   <Text style={styles.submitButtonText}>Make Payment</Text>
-                  {/* <Ionicons name="send" size={20} color="#ffffff" /> */}
+                 
                 </TouchableOpacity>
-              </View>
-            </View>
+              </View> */}
+            {/* </View> */}
 
             {/* Info Text */}
             <Text style={styles.infoText}>
