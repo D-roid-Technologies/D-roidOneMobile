@@ -1,3 +1,4 @@
+import { MessageCircleMore } from "lucide-react-native";
 import React from "react";
 import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -8,11 +9,13 @@ import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 interface Props {
   phone?: string; // international format without "+", e.g. 2348012345678
   message?: string;
+  // name?: string;
 }
 
 const WhatsAppButton: React.FC<Props> = ({
   phone = "2349165275635",
   message = "Hello, I would like to make an enquiry.",
+  // name = "WhatsApp",
 }) => {
   const openWhatsApp = async () => {
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -26,7 +29,8 @@ const WhatsAppButton: React.FC<Props> = ({
         onPress={openWhatsApp}
         style={({ pressed }) => [styles.fab, pressed && styles.pressed]}
       >
-        <Text style={styles.label}>WhatsApp</Text>
+        {/* <Text style={styles.label}>WhatsApp</Text> */}
+        <MessageCircleMore size={40} color="#25D366" fontWeight="800" />
       </Pressable>
     </View>
   );
@@ -41,7 +45,7 @@ const styles = StyleSheet.create({
     bottom: 18,
   },
   fab: {
-    backgroundColor: "#16a34a",
+    backgroundColor: "#000",
     borderRadius: 999,
     paddingVertical: 12,
     paddingHorizontal: 16,

@@ -250,7 +250,7 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
     const stacks = TECH_STACKS[activeClass.category] || [];
     return (
       <View style={styles.sectionWrap}>
-        <Text style={styles.subHeader}>{activeClass.title} Capabilities</Text>
+        <Text style={styles.subHeader}>{activeClass.title} Services</Text>
         <FlatList
           data={stacks}
           keyExtractor={(i) => i.id}

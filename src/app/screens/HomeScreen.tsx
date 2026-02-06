@@ -36,7 +36,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   const userMain: any = useSelector((state: RootState) => state.user);
   const userTypee = userMain.userType;
   const membershipTier = useSelector(
-    (state: RootState) => state.membershipTier
+    (state: RootState) => state.membershipTier,
   );
   const [text, setText] = useState("Tap to activate Membership");
   const MINUTES_25 = 25 * 60 * 1000;
@@ -44,10 +44,10 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const count = useSelector(
-    (state: RootState) => state.notifications.notifications.length
+    (state: RootState) => state.notifications.notifications.length,
   );
   const unreadCount = useSelector(
-    (state: RootState) => state.notifications.unreadCount
+    (state: RootState) => state.notifications.unreadCount,
   );
 
   // New states for registration form
@@ -96,7 +96,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
           syncTimeToRedux();
         }
         appState.current = nextAppState;
-      }
+      },
     );
 
     const interval = setInterval(() => {
@@ -168,7 +168,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.makaTonBootcamp,
+      image: ASSETS.images.techNormads,
       content: [
         "The Tech Webinar [July 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
         "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
@@ -188,7 +188,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
       category: "Conference ",
       readTime: "7 min read",
-      image: ASSETS.images.cumsaEvent,
+      image: ASSETS.images.liftOffConference,
       content: [
         "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
 
@@ -211,7 +211,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
       category: "Hackathon",
       readTime: "6 min read",
-      image: ASSETS.images.chessOne,
+      image: ASSETS.images.makaTonBootcamp,
       content: [
         "The D'roid Hackathon [September 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
 
@@ -536,7 +536,8 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   ];
 
   const filteredQuickActions = quickActions.filter(
-    (action) => action.type === "all" || action.type === userTypee.toLowerCase()
+    (action) =>
+      action.type === "all" || action.type === userTypee.toLowerCase(),
   );
 
   const getGreeting = (): string => {
@@ -806,7 +807,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
         {eventsPosts
           .sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
           )
           .slice(0, 3)
           .map((event: any, index: React.Key | null | undefined) => (
