@@ -267,7 +267,7 @@ const CareersScreen: React.FC = () => {
                   style={styles.applyButton}
                 >
                   <Text style={styles.applyButtonText}>Apply Now</Text>
-                  <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
+                  <Ionicons name="arrow-forward" size={16} color="#000c3a" />
                 </TouchableOpacity>
               </View>
             ))
@@ -319,7 +319,7 @@ const CareersScreen: React.FC = () => {
                   style={styles.applyButton}
                 >
                   <Text style={styles.applyButtonText}>Apply Now</Text>
-                  <Ionicons name="arrow-forward" size={16} color="#F59E0B" />
+                  <Ionicons name="arrow-forward" size={16} color="#000c3a" />
                 </TouchableOpacity>
               </View>
             ))
@@ -425,14 +425,14 @@ const styles = StyleSheet.create({
   },
 
   typeBadge: {
-    backgroundColor: "rgba(245, 158, 11, 0.25)",
+    backgroundColor: "#000c3a",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   typeText: {
     fontSize: 12,
-    color: "#000c3a",
+    color: "#F59E0B",
     fontWeight: "700",
   },
 

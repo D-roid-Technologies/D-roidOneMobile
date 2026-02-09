@@ -131,10 +131,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
                 Interested in {serviceTitle}?
               </Text>
               {/* fees */}
-              <View>
-                <Text style={styles.modalFees}>
-                  Service Fee : {fees} ₦500,000 - ₦1,000,000
-                </Text>
+              <View style={styles.modalFees}>
+                {/* <Text style={styles.modalFees}>
+                  Service Fee : {fees} ₦500,000 - ₦5,000,000
+                </Text> */}
+                <Text style={styles.serviceInfoLabel}>Service Fee (Varies by Project):</Text>
+              <Text style={styles.serviceInfoValue}>₦500,000 - ₦5,000,000</Text>
               </View>
             </View>
             <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#071D6A",
     fontWeight: "700",
-    marginTop: 6,
+    marginTop: 8,
     marginBottom: 8,
   },
   closeButton: {

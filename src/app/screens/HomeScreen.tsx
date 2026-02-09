@@ -235,7 +235,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "6 min read",
-      image: ASSETS.images.internship,
+      image: ASSETS.images.droidHealthWebiner,
       content: [
         "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
 
@@ -258,7 +258,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.cumsaEvent,
+      image: ASSETS.images.interprenualWebiner,
       content: [
         "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today's competitive market.",
 
@@ -339,30 +339,30 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
         "The Calabar University Medical Students' Association (CUMSA) through the Office of the Financial Secretary proudly presents the CUMSA Financial Summit 2025. This forward-thinking event is designed to empower medical students and young professionals with the knowledge and tools to merge health, wealth, and global opportunities in today's fast-evolving world.",
       ],
     },
-    {
-      id: 10,
-      title: "Lift Off - Tech Conference",
-      excerpt:
-        "Highlights and key takeaways from this year's premier developer event.",
-      date: "Monday, 15th June 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-      category: "Events",
-      readTime: "6 min read",
-      image:
-        "https://media.istockphoto.com/id/1271984096/vector/help-to-succeed.jpg?s=612x612&w=0&k=20&c=X4MT1Uk3i70u-XOJE1phLMOcAkhjVAFvMA-bKOMLiDQ=",
-      featured: true,
-      //   readMoreLink: generateBlogLink("events", "Lift Off - Tech Conference"),
-      content: [
-        "LiftOff - Tech Conference, organized by D'roid Technologies, is a premier annual event dedicated to empowering individuals and helping them stand on their own two feet through the power of technology. The conference brings together innovators, professionals, entrepreneurs, and learners from across industries, creating an atmosphere of inspiration, collaboration, and transformation.",
+    // {
+    //   id: 10,
+    //   title: "Lift Off - Tech Conference",
+    //   excerpt:
+    //     "Highlights and key takeaways from this year's premier developer event.",
+    //   date: "Monday, 15th June 2026",
+    //   author: "D'roid Technologies",
+    //   authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+    //   category: "Events",
+    //   readTime: "6 min read",
+    //   image:
+    //     "https://media.istockphoto.com/id/1271984096/vector/help-to-succeed.jpg?s=612x612&w=0&k=20&c=X4MT1Uk3i70u-XOJE1phLMOcAkhjVAFvMA-bKOMLiDQ=",
+    //   featured: true,
+    //   //   readMoreLink: generateBlogLink("events", "Lift Off - Tech Conference"),
+    //   content: [
+    //     "LiftOff - Tech Conference, organized by D'roid Technologies, is a premier annual event dedicated to empowering individuals and helping them stand on their own two feet through the power of technology. The conference brings together innovators, professionals, entrepreneurs, and learners from across industries, creating an atmosphere of inspiration, collaboration, and transformation.",
 
-        "Every session is designed as a launchpad — from keynote speeches by industry leaders to hands-on workshops and panel discussions — participants are guided to explore cutting-edge innovations, practical tools, and success strategies that can fuel their personal and professional growth. Attendees not only gain valuable insights but also learn actionable skills to apply in real-world scenarios.",
+    //     "Every session is designed as a launchpad — from keynote speeches by industry leaders to hands-on workshops and panel discussions — participants are guided to explore cutting-edge innovations, practical tools, and success strategies that can fuel their personal and professional growth. Attendees not only gain valuable insights but also learn actionable skills to apply in real-world scenarios.",
 
-        "Beyond the talks and workshops, LiftOff emphasizes values of independence, resilience, and creativity. It offers participants an opportunity to network, collaborate, and challenge themselves while being supported by a community of like-minded innovators and changemakers.",
+    //     "Beyond the talks and workshops, LiftOff emphasizes values of independence, resilience, and creativity. It offers participants an opportunity to network, collaborate, and challenge themselves while being supported by a community of like-minded innovators and changemakers.",
 
-        "Individuals register with a participation fee, and the most outstanding participants — including entrepreneurs with innovative solutions, developers with impactful projects, and learners who demonstrate exceptional growth — receive awards, monetary prizes, and recognition on stage. Hosted twice each year, LiftOff stands as a beacon of empowerment, showcasing how technology can inspire people of all ages to rise, stand strong, and create their own path to success.",
-      ],
-    },
+    //     "Individuals register with a participation fee, and the most outstanding participants — including entrepreneurs with innovative solutions, developers with impactful projects, and learners who demonstrate exceptional growth — receive awards, monetary prizes, and recognition on stage. Hosted twice each year, LiftOff stands as a beacon of empowerment, showcasing how technology can inspire people of all ages to rise, stand strong, and create their own path to success.",
+    //   ],
+    // },
     {
       id: 11,
       title: "Tech Conference Calabar",
