@@ -1065,6 +1065,65 @@ export class AuthService {
             return { success: false, error: error.message };
         }
     };
+
+    //  service contact form submission
+    async submitContactForm(formData: any) {
+    try {
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+            throw new Error("No authenticated user found.");
+        }
+
+        const userDocRef = doc(db, "droidaccount", currentUser.uid);
+        const userSnapshot = await getDoc(userDocRef);
+
+        if (!userSnapshot.exists()) {
+            throw new Error("User profile not found in the database.");
+        }
+
+        const existingData = userSnapshot.data();
+
+        // Ensuring contact forms is an array
+        const existingContactForms = 
+            existingData?.user?.onboard?.contactForms || [];
+
+        // new contact form entry
+        const newContactForm = {
+            ...formData,
+            submittedAt: new Date().toISOString(),
+            status: "pending", //  track form status
+        };
+
+        // Append new form
+        const updatedContactForms = [...existingContactForms, newContactForm];
+
+        // 🔄 Update Firestore
+        await updateDoc(userDocRef, {
+            "user.onboard.contactForms": updatedContactForms,
+        });
+
+        Toast.show({
+            type: "success",
+            text1: "Inquiry Sent!",
+            text2: "We'll get back to you within 24 hours.",
+            visibilityTime: 5000,
+        });
+
+        return { success: true, data: updatedContactForms };
+
+    } catch (error: any) {
+        console.error("Error submitting contact form:", error);
+
+        Toast.show({
+            type: "error",
+            text1: "Submission Failed",
+            text2: error.message || "Unable to submit your inquiry.",
+        });
+
+        return { success: false, error: error.message };
+    }
+}
 }
 
 export const authService = new AuthService();

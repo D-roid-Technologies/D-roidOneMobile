@@ -39,6 +39,7 @@ import ServiceDetailView, {
   ServiceDetailData,
 } from "./components/ServiceDetailView";
 import StoryReader from "./components/StoryReader";
+import { authService } from "../../../redux/configuration/auth.service";
 
 const ServicesScreen: React.FC<ServicesScreenProps> = ({
   onOpenSayIt,
@@ -94,22 +95,39 @@ const ServicesScreen: React.FC<ServicesScreenProps> = ({
   };
 
   // Add handler for form submission
-  const handleContactFormSubmit = (formData: any) => {
-    console.log("Contact form submitted:", formData);
+  // const handleContactFormSubmit = (formData: any) => {
+  //   console.log("Contact form submitted:", formData);
 
-    Toast.show({
-      type: "success",
-      text1: "Inquiry Sent!",
-      text2: "We'll get back to you within 24 hours.",
-      visibilityTime: 5000,
-    });
+  //   Toast.show({
+  //     type: "success",
+  //     text1: "Inquiry Sent!",
+  //     text2: "We'll get back to you within 24 hours.",
+  //     visibilityTime: 5000,
+  //   });
 
-    createAndDispatchNotification(dispatch, {
-      title: "Service Inquiry Sent",
-      message: `Your inquiry about ${formData.serviceTitle} has been received.`,
-    });
+  //   createAndDispatchNotification(dispatch, {
+  //     title: "Service Inquiry Sent",
+  //     message: `Your inquiry about ${formData.serviceTitle} has been received.`,
+  //   });
 
-    setIsContactModalVisible(false);
+  //   setIsContactModalVisible(false);
+  // };
+  const handleContactFormSubmit = async (formData: any) => {
+    // console.log("Contact form submitted:", formData);
+
+    // Submit to Firebase
+    const result = await authService.submitContactForm(formData);
+
+    if (result.success) {
+      // Create notification
+      createAndDispatchNotification(dispatch, {
+        title: "Service Inquiry Sent",
+        message: `Your inquiry about ${formData.serviceTitle} has been received.`,
+      });
+
+      setIsContactModalVisible(false);
+    }
+    // Error handling is already done in authService via Toast
   };
 
   const title = useMemo(() => {

@@ -13,7 +13,7 @@ export const ASSETS = {
     makaTonBootcamp: require("../images/png/maka-ton-bootcamp.png"),
     techNormads: require("../images/png/tech-normads.png"),
     // devDive: require("../images/png/devDive.png"),
-    droidHealthWebiner: require("../images/png/Droid-health-webinar.png"),
-    interprenualWebiner: require("../images/png/interprenual-webinar.png"),
+    // droidHealthWebiner: require("../images/png/Droid-health-webinar.jpg"),
+    // interprenualWebiner: require("../images/png/interprenual-webinar.jpg"),
   },
 };

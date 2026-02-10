@@ -45,8 +45,10 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
     phone: "",
     message: "",
     serviceTitle,
-    serviceType,
-    fees,
+    serviceType: serviceType || "", // ✅ Default to empty string
+    fees: fees || "", // ✅ Default to empty string
+    // serviceType,
+    // fees,
   });
 
   const [errors, setErrors] = useState<Partial<ContactFormData>>({});
@@ -82,7 +84,13 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      onSubmit(formData);
+      // onSubmit(formData);
+      onSubmit({
+        ...formData,
+        serviceTitle, // Use prop directly
+        serviceType: serviceType || "",
+        fees: fees || "",
+      });
       // Reset form
       setFormData({
         name: "",
@@ -90,8 +98,10 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
         phone: "",
         message: "",
         serviceTitle,
-        serviceType,
-        fees,
+        serviceType: serviceType || "",
+        fees: fees || "",
+        // serviceType,
+        // fees,
       });
       setErrors({});
     }
@@ -104,8 +114,10 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       phone: "",
       message: "",
       serviceTitle,
-      serviceType,
-      fees,
+      serviceType: serviceType || "", // ✅ Default to empty string
+      fees: fees || "",
+      // serviceType,
+      // fees,
     });
     setErrors({});
     onClose();
@@ -135,8 +147,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
                 {/* <Text style={styles.modalFees}>
                   Service Fee : {fees} ₦500,000 - ₦5,000,000
                 </Text> */}
-                <Text style={styles.serviceInfoLabel}>Service Fee (Varies by Project):</Text>
-              <Text style={styles.serviceInfoValue}>₦500,000 - ₦5,000,000</Text>
+                <Text style={styles.serviceInfoLabel}>
+                  Service Fee (Varies by Project):
+                </Text>
+                <Text style={styles.serviceInfoValue}>
+                  ₦499.90 - ₦4,998,000
+                </Text>
               </View>
             </View>
             <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
@@ -240,18 +256,18 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
 
             {/* Submit Button */}
             <View>
-                <TouchableOpacity
-                  style={styles.submitButton}
-                  onPress={handleSubmit}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.submitButtonText}>Send Inquiry</Text>
-                  <Ionicons name="send" size={20} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.submitButtonText}>Send Inquiry</Text>
+                <Ionicons name="send" size={20} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
             {/* <View style={styles.submitButtonContainer}> */}
-              
-              {/* <View>
+
+            {/* <View>
                 <TouchableOpacity
                   style={styles.submitButton}
                   onPress={handleSubmit}

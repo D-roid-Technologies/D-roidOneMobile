@@ -235,7 +235,8 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
       category: "Events",
       readTime: "6 min read",
-      image: ASSETS.images.droidHealthWebiner,
+      // image: ASSETS.images.droidHealthWebiner,
+      image: ASSETS.images.liftOffConference,
       content: [
         "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
 
@@ -258,7 +259,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
       category: "Events",
       readTime: "5 min read",
-      image: ASSETS.images.interprenualWebiner,
+      image: ASSETS.images.internship,
       content: [
         "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today's competitive market.",
 
