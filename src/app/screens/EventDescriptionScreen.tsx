@@ -28,7 +28,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
 
   // Get registered events from Redux store
   const registeredEvents = useSelector(
-    (state: any) => state.events?.registeredEvents || []
+    (state: any) => state.events?.registeredEvents || [],
   );
 
   // Registration modal states
@@ -45,7 +45,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
   // Check event status based on date
   const checkEventStatus = (sampleDateStr: string): string => {
     const sampleDate = new Date(
-      sampleDateStr.replace(/(\d+)(st|nd|rd|th)/, "$1")
+      sampleDateStr.replace(/(\d+)(st|nd|rd|th)/, "$1"),
     );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -59,7 +59,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
     } else if (diffInDays < 0) {
       return "Event Passed";
     } else {
-      return "Event Today";
+      return "Event Ongoing";
     }
   };
 
@@ -74,7 +74,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
   // Get status color based on event status
   const getStatusColor = (status: string | null): string => {
     switch (status) {
-      case "Event Today":
+      case "Event Ongoing":
         return "#10B981"; // Green
       case "Event Tomorrow":
         return "#F59E0B"; // Amber
@@ -100,7 +100,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
         ...event,
         registrationData: formData,
         registeredAt: new Date().toISOString(),
-      })
+      }),
     );
 
     setIsRegistrationModalVisible(false);
@@ -199,7 +199,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
               name={
                 eventStatus === "Event Passed"
                   ? "checkmark-circle"
-                  : eventStatus === "Event Today"
+                  : eventStatus === "Event Ongoing"
                     ? "flame"
                     : "time"
               }
@@ -380,7 +380,7 @@ const EventDescriptionScreen: React.FunctionComponent = () => {
                         <Text style={styles.registeredAtText}>
                           Registered on{" "}
                           {new Date(
-                            registeredEvent.registeredAt
+                            registeredEvent.registeredAt,
                           ).toLocaleDateString()}
                         </Text>
                       </View>
