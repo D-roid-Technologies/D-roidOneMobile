@@ -378,7 +378,7 @@ const CoursesScreen: React.FC = () => {
       </ScrollView>
 
       {/* Bottom Action Bar */}
-      <View style={styles.bottomActions}>
+      {/* <View style={styles.bottomActions}>
         <TouchableOpacity
           style={[styles.primaryActionBtn, !isPlatinum && styles.disabledBtn]}
           disabled={!isPlatinum}
@@ -421,7 +421,7 @@ const CoursesScreen: React.FC = () => {
             Upload a Course
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Download Modal */}
       <Modal
