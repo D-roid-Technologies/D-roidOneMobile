@@ -661,8 +661,8 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
             color="#203499"
           />
           <Text style={chessStyles.infoCardText}>
-            Matches are played online. A link to the tournament platform will be
-            sent to your email before the event starts.
+            Matches are played online. Top players from each tier will be
+            invited to a live-streamed finale.
           </Text>
         </View>
       </>
