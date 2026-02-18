@@ -168,9 +168,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   // const TEMPLATE_ID = "template_p8h58ur";
   // const PUBLIC_KEY = "hcj3DsJ8MfNfUrE8J";
 
-  // const PAYSTACK_PUBLIC_KEY = "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
   const PAYSTACK_PUBLIC_KEY =
-    "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
+    "pk_live_d2b967eddda456841f504b85549767fc33cc9fd4";
+  // const PAYSTACK_PUBLIC_KEY =
+  //   "pk_test_db0145199289f83c428d57cf70755142bb0b8b28";
 
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
@@ -192,7 +193,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const isFormValid = Boolean(
     customerInfo.name.trim() &&
       customerInfo.email.trim() &&
-      customerInfo.phone.trim()
+      customerInfo.phone.trim(),
   );
 
   const generateReferenceNumber = (): string => {
@@ -326,7 +327,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
       setTimeout(onClose, 2000);
     },
-    [customerInfo, plan, onPaymentSuccess, onClose]
+    [customerInfo, plan, onPaymentSuccess, onClose],
   );
 
   const handlePaymentCancel = useCallback(() => {
