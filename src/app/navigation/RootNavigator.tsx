@@ -14,6 +14,7 @@ import LoginScreen from "../screens/LoginScreen";
 import BottomTabs from "../screens/BottomTabs";
 import NotificationScreen from "../screens/NotificationScreen";
 import EventDescriptionScreen from "../screens/EventDescriptionScreen";
+import EventProgressScreen from "../screens/EventProgressScreen";
 // import ServicesScreen from "../screens/ServiceScreen";
 import ProgressionScreen from "../screens/Progression/ProgressionScreen";
 import CreateEventScreen from "../screens/schedles/CreateEventScreen";
@@ -78,6 +79,7 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen name="Progression" component={ProgressionScreen} />
           <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
           <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+          <Stack.Screen name="EventProgress" component={EventProgressScreen} />
 
           {/* Quick Actions - Member Screens */}
           <Stack.Screen
