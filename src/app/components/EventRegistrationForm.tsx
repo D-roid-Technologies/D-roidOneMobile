@@ -374,6 +374,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
     } finally {
       isSubmittingRef.current = false;
       setIsLoading(false);
+      setFormData(INITIAL_FORM);
     }
   };
 
@@ -449,14 +450,14 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
         desc: "Leverage AI to create leverage",
       },
       {
-        key: "Personal Finance & Investing",
-        icon: "💰",
-        desc: "Build wealth strategically",
+        key: "Software Development",
+        icon: "💻",
+        desc: "Build scalable and impactful applications",
       },
       {
-        key: "Product Development & Startups",
+        key: "Product Engineering & Innovation",
         icon: "🚀",
-        desc: "Build products that matter",
+        desc: "Design and develop products that solve real problems",
       },
       {
         key: "Leadership & Growth Mindset",
@@ -472,7 +473,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
           <Text style={iLeadStyles.heroTagline}>iLead Tech Community</Text>
           <Text style={iLeadStyles.heroTitle}>Join the Global Collective</Text>
           <Text style={iLeadStyles.heroSub}>
-            We don't just build systems — we build systems that build us.
+            We don't just build systems, we build systems that build us.
           </Text>
           <View style={iLeadStyles.heroPillRow}>
             {["iLead X", "iLead Network", "iLead Innovation"].map((pill) => (
@@ -571,9 +572,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
         {/* Section 2: Professional DNA */}
         <View style={iLeadStyles.sectionDivider}>
           <View style={iLeadStyles.dividerLine} />
-          <Text style={iLeadStyles.dividerLabel}>
-            Section 2 · Professional DNA
-          </Text>
+          <Text style={iLeadStyles.dividerLabel}>Section 2 · Professional</Text>
           <View style={iLeadStyles.dividerLine} />
         </View>
 
@@ -1674,7 +1673,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
           <Ionicons
             name="close"
             size={24}
-            color={isChess ? "#ffffff" : "#000c3a"}
+            color={isChess || isILead ? "#ffffff" : "#000c3a"}
           />
         </TouchableOpacity>
         <Text
@@ -1697,14 +1696,14 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
         scrollEnabled={!isLoading}
       >
         {/* Chess uses its own hero banner; all other events show an info banner */}
-        {!isChess && (
+        {!isChess && !isILead && (
           <View style={styles.eventInfo}>
             <Text style={styles.eventTitle}>{selectedEvent.title}</Text>
             <Text style={styles.eventDate}>{selectedEvent.date}</Text>
           </View>
         )}
 
-        {isChess ? (
+        {isChess || isILead ? (
           <View style={styles.formSection}>{renderEventSpecificFields()}</View>
         ) : (
           <>
