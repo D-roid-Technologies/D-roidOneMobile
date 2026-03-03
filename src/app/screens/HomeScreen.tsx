@@ -148,7 +148,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
       category: "Community",
       readTime: "3 min read",
-      image: ASSETS.images.internship,
+      image: ASSETS.images.techNormads,
       content: [
         "iLead is not another tech group. It is a global collective built at the intersection of high-level technology, artificial intelligence, and strategic wealth building. We believe that true leadership in the digital age isn't just about understanding systems — it's about coding your life's trajectory to align with your highest potential.",
         "Our community is a greenhouse for 'Value Architects': individuals who leverage AI to buy back their time, and personal investment to secure their future. If you are here to consume, iLead may not be for you. If you are here to build, contribute, and grow — welcome home.",
