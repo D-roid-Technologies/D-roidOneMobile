@@ -236,7 +236,7 @@ const DEVDIVE_PERKS = [
   { icon: "🤝", title: "Industry Network", desc: "Connect with professionals" },
 ];
 
-// ─── Not Registered Screen ────────────────────────────────
+//  Not Registered Screen
 const NotRegisteredView: React.FC<{ event: any; onRegister: () => void }> = ({
   event,
   onRegister,
@@ -282,17 +282,14 @@ const NotRegisteredView: React.FC<{ event: any; onRegister: () => void }> = ({
   );
 };
 
-// ─── Main Screen ──────────────────────────────────────────
+//  Main Screen
 const EventProgressScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
-  // // Route params — only event object is used. Registration status is always
-  // re-derived live from Redux to avoid stale closure/navigation param issues.
+
+  // live from Redux to avoid stale closure/navigation param issues.
   const { event } = route.params as RouteParams;
 
-  // Always read registration status LIVE from Redux — never trust route params.
-  // Fix: route params can be stale if the user registers then navigates here immediately.
-  // Change this in both files:
   const registeredEvents = useSelector(
     (state: any) => state.droidevents?.registeredEvents || [],
   );
@@ -567,7 +564,6 @@ const EventProgressScreen: React.FC = () => {
 
 export default EventProgressScreen;
 
-// ─── Styles ───────────────────────────────────────────────
 const styles = StyleSheet.create({
   container: {
     flex: 1,

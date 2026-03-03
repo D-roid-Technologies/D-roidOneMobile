@@ -125,6 +125,16 @@ interface FormData {
   chessGoal: string;
   chessHasCompeted: string;
   chessDiscovery: string;
+  // Ilead community event specific
+  iLeadWhatsApp: string;
+  iLeadCurrentLocation: string;
+  iLeadLinkedIn: string;
+  iLeadPrimarySkillset: string;
+  iLeadCurrentFocus: string;
+  iLeadInterest: string;
+  iLeadWhyTech: string;
+  iLeadGive: string;
+  iLeadCommitment: string;
 }
 
 interface EventRegistrationFormProps {
@@ -265,6 +275,16 @@ const INITIAL_FORM: FormData = {
   chessGoal: "",
   chessHasCompeted: "",
   chessDiscovery: "",
+  // Ilead event
+  iLeadWhatsApp: "",
+  iLeadCurrentLocation: "",
+  iLeadLinkedIn: "",
+  iLeadPrimarySkillset: "",
+  iLeadCurrentFocus: "",
+  iLeadInterest: "",
+  iLeadWhyTech: "",
+  iLeadGive: "",
+  iLeadCommitment: "",
 };
 
 // ─────────────────────────────────────────────────────────
@@ -294,6 +314,23 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
     }
     if (!selectedEvent) {
       return "No event selected";
+    }
+    // ilead event
+    if (selectedEvent.id === 26) {
+      if (!formData.fullName) return "Please enter your full name";
+      if (!formData.iLeadWhatsApp) return "Please enter your WhatsApp number";
+      if (!formData.iLeadCurrentLocation)
+        return "Please enter your current location";
+      if (!formData.iLeadPrimarySkillset)
+        return "Please select your primary skillset";
+      if (!formData.iLeadCurrentFocus)
+        return "Please describe your current focus";
+      if (!formData.iLeadInterest)
+        return "Please select your iLead interest area";
+      if (!formData.iLeadWhyTech) return "Please answer The Why";
+      if (!formData.iLeadGive) return "Please answer The Give";
+      if (formData.iLeadCommitment !== "agreed")
+        return "Please agree to the community commitment";
     }
     if (selectedEvent.id === 25) {
       if (!formData.chessTier || !formData.chessPreferredFormat) {
@@ -390,6 +427,361 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
       </View>
     </>
   );
+
+  // iLeas Community Event (event id 26)
+  const renderILeadFields = () => {
+    const skillsetOptions = [
+      "Software Development",
+      "Data Analysis / Science",
+      "Marketing & Growth",
+      "Finance & Investing",
+      "Product Management",
+      "Design (UI/UX)",
+      "Entrepreneurship",
+      "Student",
+      "Other",
+    ];
+
+    const interestAreas = [
+      {
+        key: "AI & Automation",
+        icon: "🤖",
+        desc: "Leverage AI to create leverage",
+      },
+      {
+        key: "Personal Finance & Investing",
+        icon: "💰",
+        desc: "Build wealth strategically",
+      },
+      {
+        key: "Product Development & Startups",
+        icon: "🚀",
+        desc: "Build products that matter",
+      },
+      {
+        key: "Leadership & Growth Mindset",
+        icon: "🧠",
+        desc: "Lead yourself and others",
+      },
+    ];
+
+    return (
+      <>
+        {/* Hero Banner */}
+        <View style={iLeadStyles.heroBanner}>
+          <Text style={iLeadStyles.heroTagline}>iLead Tech Community</Text>
+          <Text style={iLeadStyles.heroTitle}>Join the Global Collective</Text>
+          <Text style={iLeadStyles.heroSub}>
+            We don't just build systems — we build systems that build us.
+          </Text>
+          <View style={iLeadStyles.heroPillRow}>
+            {["iLead X", "iLead Network", "iLead Innovation"].map((pill) => (
+              <View key={pill} style={iLeadStyles.heroPill}>
+                <Text style={iLeadStyles.heroPillText}>{pill}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Section 1: The Basics */}
+        <View style={iLeadStyles.sectionDivider}>
+          <View style={iLeadStyles.dividerLine} />
+          <Text style={iLeadStyles.dividerLabel}>Section 1 · The Basics</Text>
+          <View style={iLeadStyles.dividerLine} />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Full Name <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your full name"
+            value={formData.fullName}
+            onChangeText={(text) => updateField("fullName", text)}
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Email Address <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="you@example.com"
+            value={formData.email}
+            onChangeText={(text) => updateField("email", text)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+        </View>
+
+        <View style={styles.rowContainer}>
+          <View style={[styles.fieldContainer, styles.halfWidth]}>
+            <Text style={styles.label}>
+              WhatsApp Number <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="+234..."
+              value={formData.iLeadWhatsApp}
+              onChangeText={(text) => updateField("iLeadWhatsApp", text)}
+              keyboardType="phone-pad"
+              placeholderTextColor="#999"
+              editable={!isLoading}
+            />
+            <Text style={iLeadStyles.fieldHint}>Include country code</Text>
+          </View>
+
+          <View style={[styles.fieldContainer, styles.halfWidth]}>
+            <Text style={styles.label}>
+              Current Location <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="City / Country"
+              value={formData.iLeadCurrentLocation}
+              onChangeText={(text) => updateField("iLeadCurrentLocation", text)}
+              placeholderTextColor="#999"
+              editable={!isLoading}
+            />
+          </View>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>LinkedIn Profile</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="https://linkedin.com/in/yourprofile"
+            value={formData.iLeadLinkedIn}
+            onChangeText={(text) => updateField("iLeadLinkedIn", text)}
+            autoCapitalize="none"
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+          <Text style={iLeadStyles.fieldHint}>
+            Optional — helps with networking
+          </Text>
+        </View>
+
+        {/* Section 2: Professional DNA */}
+        <View style={iLeadStyles.sectionDivider}>
+          <View style={iLeadStyles.dividerLine} />
+          <Text style={iLeadStyles.dividerLabel}>
+            Section 2 · Professional DNA
+          </Text>
+          <View style={iLeadStyles.dividerLine} />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <CustomDropdown
+            label="Primary Skillset"
+            value={formData.iLeadPrimarySkillset}
+            options={skillsetOptions}
+            onSelect={(value) => updateField("iLeadPrimarySkillset", value)}
+            placeholder="Select your main area..."
+            required
+          />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Current Focus <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="What are you currently building, learning, or working on?"
+            value={formData.iLeadCurrentFocus}
+            onChangeText={(text) => updateField("iLeadCurrentFocus", text)}
+            multiline
+            numberOfLines={3}
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+        </View>
+
+        {/* Interest Area card grid */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Your iLead Interest Area <Text style={styles.required}>*</Text>
+          </Text>
+          <Text style={iLeadStyles.fieldHint}>
+            Select the area that best represents your focus.
+          </Text>
+          <View style={iLeadStyles.interestGrid}>
+            {interestAreas.map((item) => {
+              const selected = formData.iLeadInterest === item.key;
+              return (
+                <TouchableOpacity
+                  key={item.key}
+                  style={[
+                    iLeadStyles.interestCard,
+                    selected && iLeadStyles.interestCardSelected,
+                  ]}
+                  onPress={() => updateField("iLeadInterest", item.key)}
+                  disabled={isLoading}
+                  activeOpacity={0.8}
+                >
+                  <Text style={iLeadStyles.interestIcon}>{item.icon}</Text>
+                  <Text
+                    style={[
+                      iLeadStyles.interestLabel,
+                      selected && iLeadStyles.interestLabelSelected,
+                    ]}
+                  >
+                    {item.key}
+                  </Text>
+                  <Text style={iLeadStyles.interestDesc}>{item.desc}</Text>
+                  {selected && (
+                    <View style={iLeadStyles.interestCheck}>
+                      <Ionicons name="checkmark" size={10} color="#fff" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* Section 3: Intent & Contribution */}
+        <View style={iLeadStyles.sectionDivider}>
+          <View style={iLeadStyles.dividerLine} />
+          <Text style={iLeadStyles.dividerLabel}>
+            Section 3 · Intent & Contribution
+          </Text>
+          <View style={iLeadStyles.dividerLine} />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            The "Why" <Text style={styles.required}>*</Text>
+          </Text>
+          <Text style={iLeadStyles.fieldHint}>
+            How do you want tech to help you achieve financial independence?
+          </Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="e.g. I want to use AI to automate my income streams and free up my time..."
+            value={formData.iLeadWhyTech}
+            onChangeText={(text) => updateField("iLeadWhyTech", text)}
+            multiline
+            numberOfLines={3}
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            The "Give" <Text style={styles.required}>*</Text>
+          </Text>
+          <Text style={iLeadStyles.fieldHint}>
+            What skill or knowledge do you bring to the community? We value
+            contributors over consumers.
+          </Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="e.g. I can teach data analysis and help members understand financial reports..."
+            value={formData.iLeadGive}
+            onChangeText={(text) => updateField("iLeadGive", text)}
+            multiline
+            numberOfLines={3}
+            placeholderTextColor="#999"
+            editable={!isLoading}
+          />
+        </View>
+
+        {/* Commitment checkbox */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Community Commitment <Text style={styles.required}>*</Text>
+          </Text>
+          <TouchableOpacity
+            style={[
+              iLeadStyles.commitmentCard,
+              formData.iLeadCommitment === "agreed" &&
+                iLeadStyles.commitmentCardSelected,
+            ]}
+            onPress={() =>
+              updateField(
+                "iLeadCommitment",
+                formData.iLeadCommitment === "agreed" ? "" : "agreed",
+              )
+            }
+            disabled={isLoading}
+            activeOpacity={0.8}
+          >
+            <View
+              style={[
+                iLeadStyles.checkbox,
+                formData.iLeadCommitment === "agreed" &&
+                  iLeadStyles.checkboxChecked,
+              ]}
+            >
+              {formData.iLeadCommitment === "agreed" && (
+                <Ionicons name="checkmark" size={14} color="#fff" />
+              )}
+            </View>
+            <Text style={iLeadStyles.commitmentText}>
+              I agree to share insights (not just links), focus 80% on
+              execution, maintain a culture of respect and privacy, and avoid
+              spam or unrelated self-promotion.
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Community Guidelines card */}
+        <View style={iLeadStyles.guidelinesCard}>
+          <View style={iLeadStyles.guidelinesHeader}>
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={18}
+              color="#071D6A"
+            />
+            <Text style={iLeadStyles.guidelinesTitle}>
+              Community Guidelines
+            </Text>
+          </View>
+          {[
+            {
+              num: "1",
+              rule: "Value First",
+              desc: "Share insights, not just links.",
+            },
+            {
+              num: "2",
+              rule: "No Spam",
+              desc: "Promotion without value is a fast track out.",
+            },
+            {
+              num: "3",
+              rule: "The 80/20 Rule",
+              desc: "80% execution, 20% theory.",
+            },
+            {
+              num: "4",
+              rule: "Privacy",
+              desc: "What's shared in the network stays in the network.",
+            },
+          ].map((g) => (
+            <View key={g.num} style={iLeadStyles.guidelineRow}>
+              <View style={iLeadStyles.guidelineNumBadge}>
+                <Text style={iLeadStyles.guidelineNumText}>{g.num}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={iLeadStyles.guidelineRule}>{g.rule}</Text>
+                <Text style={iLeadStyles.guidelineDesc}>{g.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </>
+    );
+  };
 
   // Chess Championship (event id 25)
   const renderChessFields = () => {
@@ -1226,6 +1618,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
     if (!selectedEvent) return null;
     const { id } = selectedEvent;
 
+    if (id === 26) return renderILeadFields();
     if (id === 25) return renderChessFields();
     if (id === 24) return renderDevDiveFields();
     if (id === 23) return renderTechWebinarFields();
@@ -1246,21 +1639,33 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
     );
   }
 
+  const isILead = selectedEvent.id === 26;
   const isChess = selectedEvent.id === 25;
   const isDevDive = selectedEvent.id === 24;
 
   const submitLabel = isChess
     ? "♟  Claim My Spot"
-    : isDevDive
-      ? "Submit Application"
-      : "Submit Registration";
+    : isILead
+      ? " Apply to iLead"
+      : isDevDive
+        ? "Submit Application"
+        : "Submit Registration";
+  // if (isILead) {
+  //   submitLabel = "  Apply to iLead Event";
+  // }
 
   // Render
 
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isChess && chessStyles.chessHeader]}>
+      <View
+        style={[
+          styles.header,
+          isILead && iLeadStyles.iLeadHeader,
+          isChess && chessStyles.chessHeader,
+        ]}
+      >
         <TouchableOpacity
           onPress={onClose}
           style={styles.closeButton}
@@ -1365,6 +1770,7 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
             styles.submitButton,
             isChess && chessStyles.chessSubmitButton,
             isLoading && styles.submitButtonDisabled,
+            isILead && iLeadStyles.iLeadSubmitButton,
           ]}
           onPress={handleSubmit}
           disabled={isLoading}
@@ -1398,9 +1804,200 @@ const EventRegistrationForm: React.FC<EventRegistrationFormProps> = ({
   );
 };
 
-// ─────────────────────────────────────────────────────────
+// iLead styles
+const iLeadStyles = StyleSheet.create({
+  iLeadHeader: { backgroundColor: "#071D6A", borderBottomColor: "#0c2a8a" },
+  iLeadHeaderTitle: { color: "#ffffff" },
+  iLeadSubmitButton: { backgroundColor: "#071D6A" },
+  heroBanner: {
+    backgroundColor: "#071D6A",
+    borderRadius: 16,
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    marginBottom: 28,
+  },
+  heroTagline: {
+    fontSize: 11,
+    fontWeight: "800",
+    color: "#C7D2FE",
+    textTransform: "uppercase",
+    letterSpacing: 1.5,
+    marginBottom: 6,
+  },
+  heroTitle: {
+    fontSize: 22,
+    fontWeight: "900",
+    color: "#ffffff",
+    marginBottom: 8,
+    letterSpacing: 0.3,
+    textAlign: "center",
+  },
+  heroSub: {
+    fontSize: 13,
+    color: "#C7D2FE",
+    textAlign: "center",
+    lineHeight: 20,
+    fontStyle: "italic",
+    marginBottom: 16,
+  },
+  heroPillRow: {
+    flexDirection: "row",
+    gap: 8,
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  heroPill: {
+    backgroundColor: "rgba(199,210,254,0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(199,210,254,0.3)",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  heroPillText: { fontSize: 12, color: "#C7D2FE", fontWeight: "700" },
+  sectionDivider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  dividerLine: { flex: 1, height: 1, backgroundColor: "#E5E7EB" },
+  dividerLabel: {
+    marginHorizontal: 12,
+    fontSize: 11,
+    fontWeight: "800",
+    color: "#071D6A",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  fieldHint: {
+    fontSize: 12,
+    color: "#9CA3AF",
+    marginTop: 4,
+    marginBottom: 2,
+    lineHeight: 17,
+  },
+  interestGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 10,
+  },
+  interestCard: {
+    width: "47%",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    backgroundColor: "#F9FAFB",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    alignItems: "center",
+    position: "relative",
+  },
+  interestCardSelected: {
+    borderColor: "#071D6A",
+    backgroundColor: "#EEF2FF",
+    borderWidth: 2,
+  },
+  interestIcon: { fontSize: 26, marginBottom: 6 },
+  interestLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#374151",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  interestLabelSelected: { color: "#071D6A" },
+  interestDesc: {
+    fontSize: 10,
+    color: "#9CA3AF",
+    textAlign: "center",
+    lineHeight: 14,
+  },
+  interestCheck: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "#071D6A",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  commitmentCard: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    backgroundColor: "#F9FAFB",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 12,
+    padding: 14,
+  },
+  commitmentCardSelected: {
+    backgroundColor: "#EEF2FF",
+    borderColor: "#071D6A",
+    borderWidth: 2,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: "#D1D5DB",
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    marginTop: 1,
+  },
+  checkboxChecked: { backgroundColor: "#071D6A", borderColor: "#071D6A" },
+  commitmentText: {
+    flex: 1,
+    fontSize: 13,
+    color: "#374151",
+    lineHeight: 20,
+    fontWeight: "500",
+  },
+  guidelinesCard: {
+    backgroundColor: "#EEF2FF",
+    borderRadius: 14,
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 8,
+    gap: 12,
+  },
+  guidelinesHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  guidelinesTitle: { fontSize: 14, fontWeight: "800", color: "#071D6A" },
+  guidelineRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  guidelineNumBadge: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: "#071D6A",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    marginTop: 1,
+  },
+  guidelineNumText: { fontSize: 11, fontWeight: "900", color: "#fff" },
+  guidelineRule: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#071D6A",
+    marginBottom: 2,
+  },
+  guidelineDesc: { fontSize: 12, color: "#4B5563", lineHeight: 17 },
+});
+
 // Chess-specific styles
-// ─────────────────────────────────────────────────────────
+
 const chessStyles = StyleSheet.create({
   chessHeader: {
     backgroundColor: "#000c3a",
