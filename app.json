@@ -32,8 +32,17 @@
         "projectId": "5f4c0fec-eb00-43eb-9eee-ff22ab1d8700"
       }
     },
+
     "plugins": [
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow access to save QR codes to your gallery.",
+          "savePhotosPermission": "Allow D'roid One to save QR codes to your gallery.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
     ]
   }
 }
