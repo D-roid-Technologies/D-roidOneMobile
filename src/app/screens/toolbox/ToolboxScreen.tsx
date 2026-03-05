@@ -135,23 +135,14 @@ const ToolboxsScreen: React.FC = () => {
       case "Word Counter":
         return <WordCounterScreen />;
 
-      case "QR Generator":
+      case "QR Code Generator":
         return <QRGeneratorScreen />;
 
       case "Translator":
         return <TranslatorScreen />;
 
       case "PDF Scanner":
-        return (
-          <PdfScannerScreen />
-          // <ToolView>
-          //     <Ionicons name="document-text-outline" size={60} color="#F59E0B" style={{ alignSelf: 'center' }} />
-          //     <Text style={styles.toolPlaceholder}>Scan documents into PDF</Text>
-          //     <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#F59E0B' }]}>
-          //         <Text style={styles.actionBtnText}>Start Scanning</Text>
-          //     </TouchableOpacity>
-          // </ToolView>
-        );
+        return <PdfScannerScreen />;
 
       case "Video Trim":
         return (
