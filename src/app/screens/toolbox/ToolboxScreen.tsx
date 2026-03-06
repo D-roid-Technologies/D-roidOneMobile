@@ -17,6 +17,7 @@ import QRGeneratorScreen from "./QRGeneratorScreen";
 import TranslatorScreen from "./TranslatorScreen";
 import PdfScannerScreen from "./PdfScannerScreen";
 import ImageCompressScreen from "./ImageCompressorScreen";
+import VideoTrimScreen from "./VideoTrimScreen";
 
 const tools = [
   {
@@ -147,20 +148,21 @@ const ToolboxsScreen: React.FC = () => {
 
       case "Video Trim":
         return (
-          <ToolView>
-            <Ionicons
-              name="videocam-outline"
-              size={60}
-              color="#EF4444"
-              style={{ alignSelf: "center" }}
-            />
-            <Text style={styles.toolPlaceholder}>Select a video to trim</Text>
-            <TouchableOpacity
-              style={[styles.actionBtn, { backgroundColor: "#EF4444" }]}
-            >
-              <Text style={styles.actionBtnText}>Upload Video</Text>
-            </TouchableOpacity>
-          </ToolView>
+          // <ToolView>
+          //   <Ionicons
+          //     name="videocam-outline"
+          //     size={60}
+          //     color="#EF4444"
+          //     style={{ alignSelf: "center" }}
+          //   />
+          //   <Text style={styles.toolPlaceholder}>Select a video to trim</Text>
+          //   <TouchableOpacity
+          //     style={[styles.actionBtn, { backgroundColor: "#EF4444" }]}
+          //   >
+          //     <Text style={styles.actionBtnText}>Upload Video</Text>
+          //   </TouchableOpacity>
+          // </ToolView>
+          <VideoTrimScreen />
         );
 
       case "Image Compress":
