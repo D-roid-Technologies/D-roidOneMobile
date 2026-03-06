@@ -16,6 +16,7 @@ import CropToolScreen from "./CropToolScreen";
 import QRGeneratorScreen from "./QRGeneratorScreen";
 import TranslatorScreen from "./TranslatorScreen";
 import PdfScannerScreen from "./PdfScannerScreen";
+import ImageCompressScreen from "./ImageCompressorScreen";
 
 const tools = [
   {
@@ -163,22 +164,7 @@ const ToolboxsScreen: React.FC = () => {
         );
 
       case "Image Compress":
-        return (
-          <ToolView>
-            <Ionicons
-              name="images-outline"
-              size={60}
-              color="#6366F1"
-              style={{ alignSelf: "center" }}
-            />
-            <Text style={styles.toolPlaceholder}>Reduce image file size</Text>
-            <TouchableOpacity
-              style={[styles.actionBtn, { backgroundColor: "#6366F1" }]}
-            >
-              <Text style={styles.actionBtnText}>Select Image</Text>
-            </TouchableOpacity>
-          </ToolView>
-        );
+        return <ImageCompressScreen />;
 
       case "Audio Rec":
         return (
