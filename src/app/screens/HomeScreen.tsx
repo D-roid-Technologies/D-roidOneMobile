@@ -32,6 +32,388 @@ import WhatsAppButton from "./membersActions/Services/WhatsAppButton";
 
 const { height } = Dimensions.get("window");
 
+export const eventsPosts = [
+  {
+    id: 26,
+    title: "iLead Tech Community — Join the Global Collective",
+    excerpt:
+      "Where AI meets ambition. iLead is a global greenhouse for Value Architects who use technology and strategic thinking to build wealth and reclaim their time.",
+    date: "Open Enrollment — 2026",
+    author: "iLead Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+    category: "Community",
+    readTime: "3 min read",
+    image: ASSETS.images.techNormads,
+    content: [
+      "iLead is not another tech group. It is a global collective built at the intersection of high-level technology, artificial intelligence, and strategic wealth building. We believe that true leadership in the digital age isn't just about understanding systems — it's about coding your life's trajectory to align with your highest potential.",
+      "Our community is a greenhouse for 'Value Architects': individuals who leverage AI to buy back their time, and personal investment to secure their future. If you are here to consume, iLead may not be for you. If you are here to build, contribute, and grow — welcome home.",
+      "The iLead ecosystem runs on three pillars. iLead X is our high-octane exploration wing where we dive into emerging tech, AI breakthroughs, and the 'What's Next' of the digital frontier. iLead Network is your global boardroom — a curated space to connect with like-minded innovators, mentors, and partners who trade in ideas and real opportunities. iLead Innovation is the laboratory where we move from theory to execution, building sustainable income streams and digital assets that fund your purpose.",
+      "Joining iLead requires more than interest — it requires intent. Members are expected to share insights not just links, focus 80% on execution and 20% on theory, and maintain a culture of respect and privacy. What is shared in the network stays in the network. Spam and self-promotion without value are a fast track out.",
+      "To apply, you will share your professional background, your current focus, your iLead interest area — whether that's AI & Automation, Personal Finance & Investing, Product Development & Startups, or Leadership & Growth Mindset — and most importantly, your 'Why': how you want tech to help you achieve financial independence, and your 'Give': the skill or knowledge you bring to the table. We don't just build systems. We build systems that build us.",
+    ],
+  },
+  {
+    id: 25,
+    title: "clash of kings - chess competition 2026",
+    excerpt:
+      "Compete from anywhere in the world. One board, infinite strategies — the ultimate online chess showdown is here.",
+    date: "15th - 17th March 2026",
+    author: "D'roid Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
+    category: "Competition",
+    readTime: "4 min read",
+    image: ASSETS.images.chessOne,
+    content: [
+      "Every great player started with a single move. Now, it's your turn. Checkmate Online is a high-stakes digital chess championship that brings together sharp minds from across Nigeria, and beyond, to compete on one electrifying virtual battlefield.",
+      "No travel. No venue. No barriers. Whether you're playing from your bedroom, a café, or your office desk, all you need is your mind, your device, and the hunger to win. The competition runs entirely online across three intense days, with matches streamed live for spectators to follow every calculated move.",
+      "Players will compete across three skill-based tiers — Elite (ELO 1800+), Challenger (ELO 1200–1799), and Rising Star (Under 1200), so whether you're a seasoned grandmaster-in-the-making or a passionate beginner ready to prove yourself, there's a board with your name on it.",
+      "The stakes? Real cash prizes, exclusive digital trophies, national rankings, and a chance for the top finisher to represent Nigeria in the Pan-African Online Chess Invitational. Every game counts. Every move matters. One wrong decision and it's over, but one brilliant sacrifice could change everything.",
+      "Registration is free for players under 18. Spots are strictly limited and filling fast. Don't think too long, in chess and in life, hesitation is the enemy of greatness. Register now, study your openings, and come ready to dominate the board.",
+    ],
+  },
+  {
+    id: 24,
+    title: "DevDive Internship Program",
+    excerpt:
+      "A hands-on, tuition-free internship program designed to help aspiring developers transition from theory to real-world software development.",
+    date: "1st - 28th February 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
+    category: "Programs",
+    readTime: "6 min read",
+    image: ASSETS.images.aiForDevelopers,
+    content: [
+      "DevDive is a comprehensive, tuition-free 3-month internship program by D'roid Technologies, created to bridge the gap between theoretical knowledge and professional software development practice in Nigeria.",
+      "The program is designed to address common barriers faced by aspiring tech professionals, including limited access to quality training, unstable infrastructure, and lack of real-world project experience.",
+      "Participants will gain hands-on experience by working on real products, collaborating with mentors, and applying industry-standard tools, workflows, and best practices.",
+      "DevDive emphasizes practical learning, resilience building, and portfolio development, ensuring interns are equipped with skills that are relevant and immediately applicable in the tech industry.",
+      "Open to motivated beginners and early-stage developers, DevDive offers a supportive environment focused on growth, accountability, and career readiness. Apply early and take the first step toward building a sustainable tech career.",
+    ],
+  },
+
+  {
+    id: 23,
+    title: "Tech Webinar - July 2026",
+    excerpt:
+      "An engaging tech-focused webinar designed to equip participants with in-demand digital and software development skills.",
+    date: "Saturday, 25th July 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.techNormads,
+    content: [
+      "The Tech Webinar [July 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
+      "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
+      "Participants will gain practical understanding through real-world examples, live demonstrations, and interactive Q&A sessions designed to simplify complex technical concepts.",
+      "Beyond learning, the webinar creates a collaborative environment where attendees can connect with fellow learners, developers, and industry experts, fostering meaningful professional relationships.",
+      "This event is open to beginners and experienced professionals alike. Register early and join us as we explore current technologies, sharpen skills, and prepare for the future of tech.",
+    ],
+  },
+
+  {
+    id: 22,
+    title: "Lift Up Tech Conference & Hackathon [2026]",
+    excerpt:
+      "A flagship tech event combining an inspiring conference with a hands-on hackathon experience.",
+    date: "Friday, 10th July 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
+    category: "Conference ",
+    readTime: "7 min read",
+    image: ASSETS.images.liftOffConference,
+    content: [
+      "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
+
+      "The conference segment features keynote talks, panel discussions, and workshops led by industry leaders, covering emerging technologies, career growth, and digital transformation.",
+
+      "Following the conference, the hackathon challenges participants to apply their knowledge by building solutions that address real societal and business challenges.",
+
+      "This event brings together developers, designers, entrepreneurs, students, and tech enthusiasts, creating a vibrant community of innovators and problem-solvers.",
+
+      "Lift Up Tech is more than an event — it's a movement to empower talent, promote innovation, and shape the future of technology.",
+    ],
+  },
+  {
+    id: 21,
+    title: "D'roid Hackathon [September 2026]",
+    excerpt:
+      "A high-energy hackathon bringing developers and designers together to build impactful digital solutions.",
+    date: " Thursday, 17th September 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+    category: "Hackathon",
+    readTime: "6 min read",
+    image: ASSETS.images.makaTonBootcamp,
+    content: [
+      "The D'roid Hackathon [September 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
+
+      "Participants will work in teams to brainstorm, design, and develop functional solutions within a limited timeframe, encouraging creativity, teamwork, and rapid problem-solving.",
+
+      "The hackathon welcomes frontend and backend developers, UI/UX designers, and tech creatives of all skill levels, creating a diverse and inclusive innovation environment.",
+
+      "Mentors and judges from the tech industry will provide guidance, feedback, and evaluation, helping participants refine their ideas and technical implementations.",
+
+      "Outstanding teams will receive prizes, recognition, and opportunities to further develop their projects with support from D'roid Technologies.",
+    ],
+  },
+
+  {
+    id: 20,
+    title: "Health & Innovation Conference [2026]",
+    excerpt:
+      "A forward-looking conference exploring the intersection of health, technology, and innovation.",
+    date: "Saturday, 7th May 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
+    category: "Events",
+    readTime: "6 min read",
+    // image: ASSETS.images.droidHealthWebiner,
+    image: ASSETS.images.liftOffConference,
+    content: [
+      "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
+
+      "Sessions will cover topics such as digital health solutions, health data management, AI in healthcare, wellness technology, and the future of patient-centered care.",
+
+      "Attendees will gain insights from keynote speakers and panel discussions focused on solving real-world healthcare challenges using innovative and sustainable approaches.",
+
+      "The conference also encourages collaboration between health professionals and tech experts, creating a space for knowledge exchange and solution-driven conversations.",
+
+      "Whether you are a healthcare practitioner, tech enthusiast, or innovator, this conference offers valuable perspectives on shaping the future of health through technology.",
+    ],
+  },
+  {
+    id: 19,
+    title: "Entrepreneurial Webinar [2026]",
+    excerpt:
+      "A practical and inspiring webinar focused on building, scaling, and sustaining successful businesses.",
+    date: "Saturday, 24th July 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.internship,
+    content: [
+      "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today's competitive market.",
+
+      "The webinar features experienced entrepreneurs and industry experts who will share insights on idea validation, funding strategies, brand building, digital marketing, and leveraging technology for business growth.",
+
+      "Participants will gain practical knowledge through real-life case studies, interactive discussions, and Q&A sessions that address common challenges faced by entrepreneurs at different stages of their journey.",
+
+      "Beyond learning, the webinar provides an opportunity to network with fellow entrepreneurs, innovators, and mentors, fostering collaborations and long-term professional relationships.",
+
+      "This event is open to students, professionals, and business owners. Secure your spot and take the next step toward building a sustainable and impactful business.",
+    ],
+  },
+
+  {
+    id: 18,
+    title: "Internship Program 2026 - Apply Now!",
+    excerpt:
+      "Join our dynamic internship program and gain hands-on experience in your field of interest.",
+    date: " 2026",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Internship",
+    readTime: "4 min read",
+    image: ASSETS.images.internship,
+    isInternship: true,
+    content: [
+      "D'roid Technologies is excited to announce our 2026 Internship Program, designed to empower the next generation of innovators, developers, and professionals. This program offers students and recent graduates an opportunity to gain real-world experience, work on impactful projects, and learn from industry experts.",
+
+      "Our internship spans across multiple departments including Engineering, Marketing, Human Resources, Finance, IT, Design, Sales, and Operations. Interns will be immersed in a collaborative environment where they can apply their academic knowledge to practical challenges, develop new skills, and contribute to meaningful projects.",
+
+      "We believe in nurturing talent and providing comprehensive mentorship. Throughout the program, interns will receive guidance from experienced professionals, participate in training sessions, and have access to resources that will accelerate their career growth. This is more than just an internship — it's a launchpad for your future.",
+
+      "Program durations range from 1 month to 12 months, offering flexibility to accommodate different academic schedules and career goals. Successful interns may also be considered for full-time positions upon completion of the program.",
+
+      "Don't miss this opportunity to jumpstart your career with D'roid Technologies. Click 'Apply Now' to submit your application and take the first step towards an exciting and rewarding experience. We look forward to welcoming you to our team!",
+    ],
+  },
+  {
+    id: 12,
+    title: "Clash of Kings - Chess Tournament[2025]",
+    excerpt:
+      "An exciting chess tournament featuring some of the region's top players.",
+    date: "Sunday, 7th December 2025",
+    author: "D'roid Technologies",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.chessOne,
+    //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2025/2026]"),
+    content: [
+      "Clash of Kings, organized by D'roid Technologies, is a premier annual chess competition dedicated to empowering minds through strategy, focus, and creativity. The event brings together chess enthusiasts, learners, and masters from across communities, creating an atmosphere of inspiration, competition, and excellence.",
+
+      "Every round is designed as a battlefield — from intense opening moves to decisive endgames — participants are challenged to test their skills, resilience, and tactical brilliance. Players not only sharpen their chess strategies but also gain valuable lessons in patience, discipline, and problem-solving that extend beyond the board.",
+
+      "Beyond the matches, Clash of Kings emphasizes values of resilience, intelligence, and creativity. It offers participants an opportunity to network, collaborate, and grow while being supported by a community of like-minded competitors and learners.",
+
+      "Winners receive exciting rewards: 1st Place — ₦15,000 + crowned the Chess King 2025 + named Ambassador of D'roid Technologies; 2nd Place — ₦10,000; 3rd Place — ₦5,000. Other prizes include books, pens, and chess boards.",
+
+      "Registration is open to all with a participation fee of ₦1000. Hurry, registration closes on November 30, 2025. Secure your spot, make your moves, and claim your crown in the ultimate Clash of Kings!",
+    ],
+  },
+  {
+    id: 9,
+    title: "CUMSA Financial Summit 2025 – Money Meets Medicine",
+    excerpt: "Think Health, Think Wealth, Think Global.",
+    date: "Wednesday, 17th September 2025",
+    author: "Medical/Tech Events Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+    category: "Events",
+    readTime: "6 min read",
+    image: ASSETS.images.cumsaEvent,
+    featured: true,
+    //   readMoreLink: generateBlogLink(
+    //     "events",
+    //     "CUMSA Financial Summit 2025 – Money Meets Medicine"
+    //   ),
+    content: [
+      "The Calabar University Medical Students' Association (CUMSA) through the Office of the Financial Secretary proudly presents the CUMSA Financial Summit 2025. This forward-thinking event is designed to empower medical students and young professionals with the knowledge and tools to merge health, wealth, and global opportunities in today's fast-evolving world.",
+    ],
+  },
+  // {
+  //   id: 10,
+  //   title: "Lift Off - Tech Conference",
+  //   excerpt:
+  //     "Highlights and key takeaways from this year's premier developer event.",
+  //   date: "Monday, 15th June 2026",
+  //   author: "D'roid Technologies",
+  //   authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+  //   category: "Events",
+  //   readTime: "6 min read",
+  //   image:
+  //     "https://media.istockphoto.com/id/1271984096/vector/help-to-succeed.jpg?s=612x612&w=0&k=20&c=X4MT1Uk3i70u-XOJE1phLMOcAkhjVAFvMA-bKOMLiDQ=",
+  //   featured: true,
+  //   //   readMoreLink: generateBlogLink("events", "Lift Off - Tech Conference"),
+  //   content: [
+  //     "LiftOff - Tech Conference, organized by D'roid Technologies, is a premier annual event dedicated to empowering individuals and helping them stand on their own two feet through the power of technology. The conference brings together innovators, professionals, entrepreneurs, and learners from across industries, creating an atmosphere of inspiration, collaboration, and transformation.",
+
+  //     "Every session is designed as a launchpad — from keynote speeches by industry leaders to hands-on workshops and panel discussions — participants are guided to explore cutting-edge innovations, practical tools, and success strategies that can fuel their personal and professional growth. Attendees not only gain valuable insights but also learn actionable skills to apply in real-world scenarios.",
+
+  //     "Beyond the talks and workshops, LiftOff emphasizes values of independence, resilience, and creativity. It offers participants an opportunity to network, collaborate, and challenge themselves while being supported by a community of like-minded innovators and changemakers.",
+
+  //     "Individuals register with a participation fee, and the most outstanding participants — including entrepreneurs with innovative solutions, developers with impactful projects, and learners who demonstrate exceptional growth — receive awards, monetary prizes, and recognition on stage. Hosted twice each year, LiftOff stands as a beacon of empowerment, showcasing how technology can inspire people of all ages to rise, stand strong, and create their own path to success.",
+  //   ],
+  // },
+  {
+    id: 11,
+    title: "Tech Conference Calabar",
+    excerpt:
+      "A fast-paced event packed with learning opportunities for tech enthusiasts.",
+    date: "Friday, 5th December 2025",
+    author: "Calabar Tech Community",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.CTC2025,
+    //   readMoreLink: generateBlogLink("events", "Tech Conference Calabar"),
+    content: [
+      "The Tech Conference Calabar is a premier gathering for innovators, developers, entrepreneurs, and tech enthusiasts from across Nigeria and beyond.",
+      "This event features keynote sessions, workshops, and panel discussions focused on emerging technologies, digital transformation, and real-world applications.",
+      "Attendees will learn directly from industry leaders, connect with startups and established companies, and explore how technology is shaping the future of Africa.",
+      "Hosted in the vibrant city of Calabar, the conference also provides rich networking opportunities, cultural experiences, and inspiration for both beginners and seasoned professionals.",
+    ],
+  },
+
+  {
+    id: 13,
+    title: "Clash of Kings - Chess Tournament[2022/2023]",
+    excerpt:
+      "A fast-paced event packed with learning opportunities for tech enthusiasts.",
+    date: "Thursday, 30th November 2023",
+    author: "Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.chessOne,
+    //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2022/2023]"),
+    content: [
+      "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
+      "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
+      "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
+      "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
+    ],
+  },
+  {
+    id: 14,
+    title: "Clash of Kings - Chess Tournament[2021/2022]",
+    excerpt:
+      "A fast-paced event packed with learning opportunities for tech enthusiasts.",
+    date: "Wednesday, 30th November 2022",
+    author: "Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.chessOne,
+    //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2021/2022]"),
+    content: [
+      "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
+      "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
+      "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
+      "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
+    ],
+  },
+  {
+    id: 15,
+    title: "National ICT Competition 2020",
+    excerpt:
+      "A fast-paced event packed with learning opportunities for tech enthusiasts.",
+    date: "May 30, 2023",
+    author: "Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.nationalICT,
+    //   readMoreLink: generateBlogLink("events", "National ICT Competition 2020"),
+    content: [
+      "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
+      "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
+      "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
+      "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
+    ],
+  },
+  {
+    id: 16,
+    title: "National ICT Competition 2022",
+    excerpt:
+      "A fast-paced event packed with learning opportunities for tech enthusiasts.",
+    date: "May 30, 2023",
+    author: "Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Events",
+    readTime: "5 min read",
+    image: ASSETS.images.nationalICT2,
+    //   readMoreLink: generateBlogLink("events", "National ICT Competition 2022"),
+    content: [
+      "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
+      "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
+      "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
+      "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
+    ],
+  },
+  {
+    id: 17,
+    title: "Outreach at State Primary School Rukpokwu, Rivers State",
+    excerpt:
+      "Photos of the outreach held on 07/10/25 at State Primary School Rukpokwu, Rivers State — supported by D'ROID Technologies. It was all shades of amazing!",
+    date: "October 7, 2025",
+    author: "Community Team",
+    authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    category: "Outreach",
+    readTime: "3 min read",
+    image: ASSETS.images.PrimarySchoolRukpokwu,
+    //   readMoreLink: generateBlogLink("events", "Outreach at State Primary School Rukpokwu Rivers State"),
+    content: [
+      "Our team, supported by D'ROID Technologies, held an inspiring outreach program at State Primary School, Rukpokwu, Rivers State, on October 7, 2025.",
+      "The event was filled with excitement, learning, and community spirit as pupils engaged in tech awareness activities and motivational sessions.",
+      "It was a day to remember — filled with smiles, shared knowledge, and positive energy.",
+      "A huge thank you to everyone who made this outreach possible. It was truly all shades of amazing!",
+    ],
+  },
+];
+
 const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
   const userMain: any = useSelector((state: RootState) => state.user);
   const userTypee = userMain.userType;
@@ -137,387 +519,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
     };
   }, [membershipTier.totalHours]);
 
-  const eventsPosts = [
-    {
-      id: 26,
-      title: "iLead Tech Community — Join the Global Collective",
-      excerpt:
-        "Where AI meets ambition. iLead is a global greenhouse for Value Architects who use technology and strategic thinking to build wealth and reclaim their time.",
-      date: "Open Enrollment — 2026",
-      author: "iLead Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-      category: "Community",
-      readTime: "3 min read",
-      image: ASSETS.images.techNormads,
-      content: [
-        "iLead is not another tech group. It is a global collective built at the intersection of high-level technology, artificial intelligence, and strategic wealth building. We believe that true leadership in the digital age isn't just about understanding systems — it's about coding your life's trajectory to align with your highest potential.",
-        "Our community is a greenhouse for 'Value Architects': individuals who leverage AI to buy back their time, and personal investment to secure their future. If you are here to consume, iLead may not be for you. If you are here to build, contribute, and grow — welcome home.",
-        "The iLead ecosystem runs on three pillars. iLead X is our high-octane exploration wing where we dive into emerging tech, AI breakthroughs, and the 'What's Next' of the digital frontier. iLead Network is your global boardroom — a curated space to connect with like-minded innovators, mentors, and partners who trade in ideas and real opportunities. iLead Innovation is the laboratory where we move from theory to execution, building sustainable income streams and digital assets that fund your purpose.",
-        "Joining iLead requires more than interest — it requires intent. Members are expected to share insights not just links, focus 80% on execution and 20% on theory, and maintain a culture of respect and privacy. What is shared in the network stays in the network. Spam and self-promotion without value are a fast track out.",
-        "To apply, you will share your professional background, your current focus, your iLead interest area — whether that's AI & Automation, Personal Finance & Investing, Product Development & Startups, or Leadership & Growth Mindset — and most importantly, your 'Why': how you want tech to help you achieve financial independence, and your 'Give': the skill or knowledge you bring to the table. We don't just build systems. We build systems that build us.",
-      ],
-    },
-    {
-      id: 25,
-      title: "clash of kings - chess competition 2026",
-      excerpt:
-        "Compete from anywhere in the world. One board, infinite strategies — the ultimate online chess showdown is here.",
-      date: "15th - 17th March 2026",
-      author: "D'roid Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
-      category: "Competition",
-      readTime: "4 min read",
-      image: ASSETS.images.chessOne,
-      content: [
-        "Every great player started with a single move. Now, it's your turn. Checkmate Online is a high-stakes digital chess championship that brings together sharp minds from across Nigeria, and beyond, to compete on one electrifying virtual battlefield.",
-        "No travel. No venue. No barriers. Whether you're playing from your bedroom, a café, or your office desk, all you need is your mind, your device, and the hunger to win. The competition runs entirely online across three intense days, with matches streamed live for spectators to follow every calculated move.",
-        "Players will compete across three skill-based tiers — Elite (ELO 1800+), Challenger (ELO 1200–1799), and Rising Star (Under 1200), so whether you're a seasoned grandmaster-in-the-making or a passionate beginner ready to prove yourself, there's a board with your name on it.",
-        "The stakes? Real cash prizes, exclusive digital trophies, national rankings, and a chance for the top finisher to represent Nigeria in the Pan-African Online Chess Invitational. Every game counts. Every move matters. One wrong decision and it's over, but one brilliant sacrifice could change everything.",
-        "Registration is free for players under 18. Spots are strictly limited and filling fast. Don't think too long, in chess and in life, hesitation is the enemy of greatness. Register now, study your openings, and come ready to dominate the board.",
-      ],
-    },
-    {
-      id: 24,
-      title: "DevDive Internship Program",
-      excerpt:
-        "A hands-on, tuition-free internship program designed to help aspiring developers transition from theory to real-world software development.",
-      date: "1st - 28th February 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
-      category: "Programs",
-      readTime: "6 min read",
-      image: ASSETS.images.aiForDevelopers,
-      content: [
-        "DevDive is a comprehensive, tuition-free 3-month internship program by D'roid Technologies, created to bridge the gap between theoretical knowledge and professional software development practice in Nigeria.",
-        "The program is designed to address common barriers faced by aspiring tech professionals, including limited access to quality training, unstable infrastructure, and lack of real-world project experience.",
-        "Participants will gain hands-on experience by working on real products, collaborating with mentors, and applying industry-standard tools, workflows, and best practices.",
-        "DevDive emphasizes practical learning, resilience building, and portfolio development, ensuring interns are equipped with skills that are relevant and immediately applicable in the tech industry.",
-        "Open to motivated beginners and early-stage developers, DevDive offers a supportive environment focused on growth, accountability, and career readiness. Apply early and take the first step toward building a sustainable tech career.",
-      ],
-    },
 
-    {
-      id: 23,
-      title: "Tech Webinar - July 2026",
-      excerpt:
-        "An engaging tech-focused webinar designed to equip participants with in-demand digital and software development skills.",
-      date: "Saturday, 25th July 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.techNormads,
-      content: [
-        "The Tech Webinar [July 2025], organized by D'roid Technologies, is a knowledge-driven virtual event aimed at developers, tech enthusiasts, and aspiring professionals seeking to grow their technical skills and industry awareness.",
-        "The webinar features seasoned tech professionals who will share insights on modern web development, emerging technologies, best practices in software engineering, and navigating career paths in the tech industry.",
-        "Participants will gain practical understanding through real-world examples, live demonstrations, and interactive Q&A sessions designed to simplify complex technical concepts.",
-        "Beyond learning, the webinar creates a collaborative environment where attendees can connect with fellow learners, developers, and industry experts, fostering meaningful professional relationships.",
-        "This event is open to beginners and experienced professionals alike. Register early and join us as we explore current technologies, sharpen skills, and prepare for the future of tech.",
-      ],
-    },
-
-    {
-      id: 22,
-      title: "Lift Up Tech Conference & Hackathon [2026]",
-      excerpt:
-        "A flagship tech event combining an inspiring conference with a hands-on hackathon experience.",
-      date: "Friday, 10th July 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/6.jpg",
-      category: "Conference ",
-      readTime: "7 min read",
-      image: ASSETS.images.liftOffConference,
-      content: [
-        "The Lift Up Tech Conference & Hackathon [2026] is a premier technology event aimed at inspiring innovation, collaboration, and skill development within the tech ecosystem.",
-
-        "The conference segment features keynote talks, panel discussions, and workshops led by industry leaders, covering emerging technologies, career growth, and digital transformation.",
-
-        "Following the conference, the hackathon challenges participants to apply their knowledge by building solutions that address real societal and business challenges.",
-
-        "This event brings together developers, designers, entrepreneurs, students, and tech enthusiasts, creating a vibrant community of innovators and problem-solvers.",
-
-        "Lift Up Tech is more than an event — it's a movement to empower talent, promote innovation, and shape the future of technology.",
-      ],
-    },
-    {
-      id: 21,
-      title: "D'roid Hackathon [September 2026]",
-      excerpt:
-        "A high-energy hackathon bringing developers and designers together to build impactful digital solutions.",
-      date: " Thursday, 17th September 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-      category: "Hackathon",
-      readTime: "6 min read",
-      image: ASSETS.images.makaTonBootcamp,
-      content: [
-        "The D'roid Hackathon [September 2026] is a collaborative innovation event designed for developers and designers passionate about solving real-world problems through technology.",
-
-        "Participants will work in teams to brainstorm, design, and develop functional solutions within a limited timeframe, encouraging creativity, teamwork, and rapid problem-solving.",
-
-        "The hackathon welcomes frontend and backend developers, UI/UX designers, and tech creatives of all skill levels, creating a diverse and inclusive innovation environment.",
-
-        "Mentors and judges from the tech industry will provide guidance, feedback, and evaluation, helping participants refine their ideas and technical implementations.",
-
-        "Outstanding teams will receive prizes, recognition, and opportunities to further develop their projects with support from D'roid Technologies.",
-      ],
-    },
-
-    {
-      id: 20,
-      title: "Health & Innovation Conference [2026]",
-      excerpt:
-        "A forward-looking conference exploring the intersection of health, technology, and innovation.",
-      date: "Saturday, 7th May 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/4.jpg",
-      category: "Events",
-      readTime: "6 min read",
-      // image: ASSETS.images.droidHealthWebiner,
-      image: ASSETS.images.liftOffConference,
-      content: [
-        "The Health & Innovation Conference [2026] brings together healthcare professionals, tech innovators, researchers, and policymakers to explore how technology is transforming modern healthcare.",
-
-        "Sessions will cover topics such as digital health solutions, health data management, AI in healthcare, wellness technology, and the future of patient-centered care.",
-
-        "Attendees will gain insights from keynote speakers and panel discussions focused on solving real-world healthcare challenges using innovative and sustainable approaches.",
-
-        "The conference also encourages collaboration between health professionals and tech experts, creating a space for knowledge exchange and solution-driven conversations.",
-
-        "Whether you are a healthcare practitioner, tech enthusiast, or innovator, this conference offers valuable perspectives on shaping the future of health through technology.",
-      ],
-    },
-    {
-      id: 19,
-      title: "Entrepreneurial Webinar [2026]",
-      excerpt:
-        "A practical and inspiring webinar focused on building, scaling, and sustaining successful businesses.",
-      date: "Saturday, 24th July 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/3.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.internship,
-      content: [
-        "The Entrepreneurial Webinar [2026], organized by D'roid Technologies, is designed to empower aspiring entrepreneurs, startup founders, and business leaders with the knowledge and mindset required to succeed in today's competitive market.",
-
-        "The webinar features experienced entrepreneurs and industry experts who will share insights on idea validation, funding strategies, brand building, digital marketing, and leveraging technology for business growth.",
-
-        "Participants will gain practical knowledge through real-life case studies, interactive discussions, and Q&A sessions that address common challenges faced by entrepreneurs at different stages of their journey.",
-
-        "Beyond learning, the webinar provides an opportunity to network with fellow entrepreneurs, innovators, and mentors, fostering collaborations and long-term professional relationships.",
-
-        "This event is open to students, professionals, and business owners. Secure your spot and take the next step toward building a sustainable and impactful business.",
-      ],
-    },
-
-    {
-      id: 18,
-      title: "Internship Program 2026 - Apply Now!",
-      excerpt:
-        "Join our dynamic internship program and gain hands-on experience in your field of interest.",
-      date: " 2026",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Internship",
-      readTime: "4 min read",
-      image: ASSETS.images.internship,
-      isInternship: true,
-      content: [
-        "D'roid Technologies is excited to announce our 2026 Internship Program, designed to empower the next generation of innovators, developers, and professionals. This program offers students and recent graduates an opportunity to gain real-world experience, work on impactful projects, and learn from industry experts.",
-
-        "Our internship spans across multiple departments including Engineering, Marketing, Human Resources, Finance, IT, Design, Sales, and Operations. Interns will be immersed in a collaborative environment where they can apply their academic knowledge to practical challenges, develop new skills, and contribute to meaningful projects.",
-
-        "We believe in nurturing talent and providing comprehensive mentorship. Throughout the program, interns will receive guidance from experienced professionals, participate in training sessions, and have access to resources that will accelerate their career growth. This is more than just an internship — it's a launchpad for your future.",
-
-        "Program durations range from 1 month to 12 months, offering flexibility to accommodate different academic schedules and career goals. Successful interns may also be considered for full-time positions upon completion of the program.",
-
-        "Don't miss this opportunity to jumpstart your career with D'roid Technologies. Click 'Apply Now' to submit your application and take the first step towards an exciting and rewarding experience. We look forward to welcoming you to our team!",
-      ],
-    },
-    {
-      id: 12,
-      title: "Clash of Kings - Chess Tournament[2025]",
-      excerpt:
-        "An exciting chess tournament featuring some of the region's top players.",
-      date: "Sunday, 7th December 2025",
-      author: "D'roid Technologies",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.chessOne,
-      //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2025/2026]"),
-      content: [
-        "Clash of Kings, organized by D'roid Technologies, is a premier annual chess competition dedicated to empowering minds through strategy, focus, and creativity. The event brings together chess enthusiasts, learners, and masters from across communities, creating an atmosphere of inspiration, competition, and excellence.",
-
-        "Every round is designed as a battlefield — from intense opening moves to decisive endgames — participants are challenged to test their skills, resilience, and tactical brilliance. Players not only sharpen their chess strategies but also gain valuable lessons in patience, discipline, and problem-solving that extend beyond the board.",
-
-        "Beyond the matches, Clash of Kings emphasizes values of resilience, intelligence, and creativity. It offers participants an opportunity to network, collaborate, and grow while being supported by a community of like-minded competitors and learners.",
-
-        "Winners receive exciting rewards: 1st Place — ₦15,000 + crowned the Chess King 2025 + named Ambassador of D'roid Technologies; 2nd Place — ₦10,000; 3rd Place — ₦5,000. Other prizes include books, pens, and chess boards.",
-
-        "Registration is open to all with a participation fee of ₦1000. Hurry, registration closes on November 30, 2025. Secure your spot, make your moves, and claim your crown in the ultimate Clash of Kings!",
-      ],
-    },
-    {
-      id: 9,
-      title: "CUMSA Financial Summit 2025 – Money Meets Medicine",
-      excerpt: "Think Health, Think Wealth, Think Global.",
-      date: "Wednesday, 17th September 2025",
-      author: "Medical/Tech Events Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-      category: "Events",
-      readTime: "6 min read",
-      image: ASSETS.images.cumsaEvent,
-      featured: true,
-      //   readMoreLink: generateBlogLink(
-      //     "events",
-      //     "CUMSA Financial Summit 2025 – Money Meets Medicine"
-      //   ),
-      content: [
-        "The Calabar University Medical Students' Association (CUMSA) through the Office of the Financial Secretary proudly presents the CUMSA Financial Summit 2025. This forward-thinking event is designed to empower medical students and young professionals with the knowledge and tools to merge health, wealth, and global opportunities in today's fast-evolving world.",
-      ],
-    },
-    // {
-    //   id: 10,
-    //   title: "Lift Off - Tech Conference",
-    //   excerpt:
-    //     "Highlights and key takeaways from this year's premier developer event.",
-    //   date: "Monday, 15th June 2026",
-    //   author: "D'roid Technologies",
-    //   authorAvatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-    //   category: "Events",
-    //   readTime: "6 min read",
-    //   image:
-    //     "https://media.istockphoto.com/id/1271984096/vector/help-to-succeed.jpg?s=612x612&w=0&k=20&c=X4MT1Uk3i70u-XOJE1phLMOcAkhjVAFvMA-bKOMLiDQ=",
-    //   featured: true,
-    //   //   readMoreLink: generateBlogLink("events", "Lift Off - Tech Conference"),
-    //   content: [
-    //     "LiftOff - Tech Conference, organized by D'roid Technologies, is a premier annual event dedicated to empowering individuals and helping them stand on their own two feet through the power of technology. The conference brings together innovators, professionals, entrepreneurs, and learners from across industries, creating an atmosphere of inspiration, collaboration, and transformation.",
-
-    //     "Every session is designed as a launchpad — from keynote speeches by industry leaders to hands-on workshops and panel discussions — participants are guided to explore cutting-edge innovations, practical tools, and success strategies that can fuel their personal and professional growth. Attendees not only gain valuable insights but also learn actionable skills to apply in real-world scenarios.",
-
-    //     "Beyond the talks and workshops, LiftOff emphasizes values of independence, resilience, and creativity. It offers participants an opportunity to network, collaborate, and challenge themselves while being supported by a community of like-minded innovators and changemakers.",
-
-    //     "Individuals register with a participation fee, and the most outstanding participants — including entrepreneurs with innovative solutions, developers with impactful projects, and learners who demonstrate exceptional growth — receive awards, monetary prizes, and recognition on stage. Hosted twice each year, LiftOff stands as a beacon of empowerment, showcasing how technology can inspire people of all ages to rise, stand strong, and create their own path to success.",
-    //   ],
-    // },
-    {
-      id: 11,
-      title: "Tech Conference Calabar",
-      excerpt:
-        "A fast-paced event packed with learning opportunities for tech enthusiasts.",
-      date: "Friday, 5th December 2025",
-      author: "Calabar Tech Community",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.CTC2025,
-      //   readMoreLink: generateBlogLink("events", "Tech Conference Calabar"),
-      content: [
-        "The Tech Conference Calabar is a premier gathering for innovators, developers, entrepreneurs, and tech enthusiasts from across Nigeria and beyond.",
-        "This event features keynote sessions, workshops, and panel discussions focused on emerging technologies, digital transformation, and real-world applications.",
-        "Attendees will learn directly from industry leaders, connect with startups and established companies, and explore how technology is shaping the future of Africa.",
-        "Hosted in the vibrant city of Calabar, the conference also provides rich networking opportunities, cultural experiences, and inspiration for both beginners and seasoned professionals.",
-      ],
-    },
-
-    {
-      id: 13,
-      title: "Clash of Kings - Chess Tournament[2022/2023]",
-      excerpt:
-        "A fast-paced event packed with learning opportunities for tech enthusiasts.",
-      date: "Thursday, 30th November 2023",
-      author: "Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.chessOne,
-      //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2022/2023]"),
-      content: [
-        "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
-        "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
-        "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
-        "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
-      ],
-    },
-    {
-      id: 14,
-      title: "Clash of Kings - Chess Tournament[2021/2022]",
-      excerpt:
-        "A fast-paced event packed with learning opportunities for tech enthusiasts.",
-      date: "Wednesday, 30th November 2022",
-      author: "Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.chessOne,
-      //   readMoreLink: generateBlogLink("events", "Clash of Kings - Chess Tournament[2021/2022]"),
-      content: [
-        "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
-        "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
-        "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
-        "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
-      ],
-    },
-    {
-      id: 15,
-      title: "National ICT Competition 2020",
-      excerpt:
-        "A fast-paced event packed with learning opportunities for tech enthusiasts.",
-      date: "May 30, 2023",
-      author: "Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.nationalICT,
-      //   readMoreLink: generateBlogLink("events", "National ICT Competition 2020"),
-      content: [
-        "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
-        "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
-        "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
-        "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
-      ],
-    },
-    {
-      id: 16,
-      title: "National ICT Competition 2022",
-      excerpt:
-        "A fast-paced event packed with learning opportunities for tech enthusiasts.",
-      date: "May 30, 2023",
-      author: "Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Events",
-      readTime: "5 min read",
-      image: ASSETS.images.nationalICT2,
-      //   readMoreLink: generateBlogLink("events", "National ICT Competition 2022"),
-      content: [
-        "The Rapid Training Conference is designed for tech enthusiasts who want to level up their skills quickly.",
-        "The program includes lightning talks, live coding sessions, and interactive problem-solving challenges.",
-        "Industry experts will share strategies for staying productive, learning faster, and adapting to changing tech trends.",
-        "It's the perfect opportunity for both beginners and seasoned developers to gain valuable insights in a short time.",
-      ],
-    },
-    {
-      id: 17,
-      title: "Outreach at State Primary School Rukpokwu, Rivers State",
-      excerpt:
-        "Photos of the outreach held on 07/10/25 at State Primary School Rukpokwu, Rivers State — supported by D'ROID Technologies. It was all shades of amazing!",
-      date: "October 7, 2025",
-      author: "Community Team",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-      category: "Outreach",
-      readTime: "3 min read",
-      image: ASSETS.images.PrimarySchoolRukpokwu,
-      //   readMoreLink: generateBlogLink("events", "Outreach at State Primary School Rukpokwu Rivers State"),
-      content: [
-        "Our team, supported by D'ROID Technologies, held an inspiring outreach program at State Primary School, Rukpokwu, Rivers State, on October 7, 2025.",
-        "The event was filled with excitement, learning, and community spirit as pupils engaged in tech awareness activities and motivational sessions.",
-        "It was a day to remember — filled with smiles, shared knowledge, and positive energy.",
-        "A huge thank you to everyone who made this outreach possible. It was truly all shades of amazing!",
-      ],
-    },
-  ];
 
   const quickActions = [
     { title: "Personal Details", icon: "user", color: "#3B82F6", type: "all" },
@@ -768,7 +770,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
             <View>
               <Text style={styles.greetingText}>{greeting}</Text>
               <Text style={styles.userName}>
-                {userMain.firstName} {userMain.lastName}
+                {userMain.firstName}
               </Text>
             </View>
             <Text style={styles.userEmail}>{userMain.email}</Text>
@@ -791,11 +793,11 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
             <Text style={styles.statTitle}>Membership</Text>
             <Text style={styles.statValue}>{membershipTier.tier}</Text>
             {membershipTier.tier ===
-            "Platinum" ? null : membershipTier.nextTier ? (
-              <Text style={styles.statChange}>
-                {`Next: ${membershipTier.nextTier}`}
-              </Text>
-            ) : (
+              "Platinum" ? null : membershipTier.nextTier ? (
+                <Text style={styles.statChange}>
+                  {`Next: ${membershipTier.nextTier}`}
+                </Text>
+              ) : (
               <TouchableOpacity onPress={onDowngradePress}>
                 <Text style={[styles.statChange, styles.topTierButtonText]}>
                   {text}
@@ -1183,7 +1185,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   userName: {
-    fontSize: 28,
+    fontSize: 21,
     fontWeight: "900",
     color: "#ffffff",
     marginBottom: 4,
@@ -1195,7 +1197,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#E0E7FF",
     marginBottom: 2,
     fontWeight: "300",

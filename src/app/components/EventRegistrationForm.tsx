@@ -2016,6 +2016,7 @@ const chessStyles = StyleSheet.create({
   heroIcon: {
     fontSize: 48,
     marginBottom: 8,
+    color: "#ffffff"
   },
   heroTitle: {
     fontSize: 22,
@@ -2176,7 +2177,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#000c3a",
+    color: "#ffffff",
   },
   scrollView: {
     flex: 1,
