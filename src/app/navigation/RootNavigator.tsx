@@ -46,6 +46,8 @@ import DroidCompanion from "../screens/DroidCompanion";
 import AboutOgoScreen from "../screens/AboutOgoScreen";
 import KnowledgeCityOverview from "../screens/KnowledgeCityOverview";
 import CoursesScreen from "../screens/membersActions/Training/CoursesScreen";
+import ToolBoxOverview from "../screens/ToolBoxOverview";
+import OrgPortalOverview from "../screens/OrgPortalOverview";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,6 +120,14 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen
             name="Knowledge City"
             component={KnowledgeCityOverview}
+          />
+          <Stack.Screen
+            name="Tool Box"
+            component={ToolBoxOverview}
+          />
+          <Stack.Screen
+            name="Organisational Portal"
+            component={OrgPortalOverview}
           />
         </Stack.Navigator>
       </SafeAreaView>

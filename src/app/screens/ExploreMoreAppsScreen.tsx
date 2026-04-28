@@ -24,13 +24,22 @@ const apps = [
         type: "AI",
     },
     {
-        id: "3",
+        id: "2",
         title: "Knowledge City",
         subtitle: "Learning which is streamlined to you",
         icon: "book",
         color: "#F59E0B",
         owner: "D'roid",
         type: "Education",
+    },
+    {
+        id: "3",
+        title: "Tool Box",
+        subtitle: "Custom utilities and developer frameworks",
+        icon: "hammer", // Represents building/crafting
+        color: "#475569", // A sophisticated Slate/Steel blue for a technical feel
+        owner: "Dev Ekene",
+        type: "Productivity", // Or "Utility"
     },
 ];
 

@@ -574,6 +574,12 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
       icon: "handshake",
       color: "#10B981",
     },
+    {
+      title: "Organisational Portal",
+      subtitle: "Management, internal resources, and governance",
+      icon: "building", // High-end corporate/architectural icon
+      color: "#1E293B", // A sophisticated Slate/Charcoal for a professional "Enterprise" feel
+    },
   ];
 
   const filteredQuickActions = quickActions.filter(
@@ -683,7 +689,7 @@ const HomeScreen: React.FC = ({ navigation, whatsappPhone }: any) => {
     // Optionally create a notification
     createAndDispatchNotification(dispatch, {
       title: "Event Registration Confirmed",
-      message: `You've successfully registered for ${formData.eventId ? eventsPosts.find((e) => e.id === formData.eventId)?.title : "the event"}.`,
+      message: `You've successfully registered for ${formData.eventId ? eventsPosts.find((e: { id: any; }) => e.id === formData.eventId)?.title : "the event"}.`,
     });
   };
 

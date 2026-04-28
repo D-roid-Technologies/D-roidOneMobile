@@ -116,38 +116,38 @@ const CareersScreen: React.FC = () => {
     // },
 
     /* Internship Positions */
-    {
-      id: 4,
-      title: "Frontend Developer Intern",
-      department: "Engineering",
-      type: "Internship",
-      location: "Remote",
-      experienceLevel: "Student/Entry-level",
-      salaryRange: "Stipend: ₦150,000 / month",
-      postedDate: "2025-01-15",
-      deadline: "2025-02-28",
-      description:
-        "Looking for a motivated Frontend Developer Intern to assist in building web applications and gain hands-on experience with React and TypeScript.",
-      responsibilities: [
-        "Assist in developing frontend features",
-        "Fix bugs and improve UI components",
-        "Collaborate with senior developers",
-        "Participate in code reviews",
-      ],
-      requirements: [
-        "Basic knowledge of HTML, CSS, JavaScript",
-        "Familiarity with React",
-        "Eager to learn and take on challenges",
-      ],
-      benefits: [
-        "Mentorship from senior developers",
-        "Learning & development opportunities",
-        "Flexible schedule",
-        "Stipend provided",
-      ],
-      contactEmail: "careers@droidtechnologies.com",
-      status: "Open",
-    },
+    // {
+    //   id: 4,
+    //   title: "Frontend Developer Intern",
+    //   department: "Engineering",
+    //   type: "Internship",
+    //   location: "Remote",
+    //   experienceLevel: "Student/Entry-level",
+    //   salaryRange: "Stipend: ₦150,000 / month",
+    //   postedDate: "2025-01-15",
+    //   deadline: "2025-02-28",
+    //   description:
+    //     "Looking for a motivated Frontend Developer Intern to assist in building web applications and gain hands-on experience with React and TypeScript.",
+    //   responsibilities: [
+    //     "Assist in developing frontend features",
+    //     "Fix bugs and improve UI components",
+    //     "Collaborate with senior developers",
+    //     "Participate in code reviews",
+    //   ],
+    //   requirements: [
+    //     "Basic knowledge of HTML, CSS, JavaScript",
+    //     "Familiarity with React",
+    //     "Eager to learn and take on challenges",
+    //   ],
+    //   benefits: [
+    //     "Mentorship from senior developers",
+    //     "Learning & development opportunities",
+    //     "Flexible schedule",
+    //     "Stipend provided",
+    //   ],
+    //   contactEmail: "careers@droidtechnologies.com",
+    //   status: "Open",
+    // },
   ];
 
   return (
@@ -310,7 +310,7 @@ const CareersScreen: React.FC = () => {
                     <Text style={styles.detailText}>{job.location}</Text>
                   </View>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("CareerDescriptionScreen", {
                       position: job,
@@ -320,7 +320,7 @@ const CareersScreen: React.FC = () => {
                 >
                   <Text style={styles.applyButtonText}>Apply Now</Text>
                   <Ionicons name="arrow-forward" size={16} color="#000c3a" />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             ))
         )}
