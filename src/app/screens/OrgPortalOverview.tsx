@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions, Linking } from "react-native";
 
 const { width } = Dimensions.get('window');
 
@@ -71,7 +71,7 @@ const OrgPortalOverview: React.FunctionComponent = ({ navigation }: any) => {
                         <Text style={styles.mHeader}>Business Operations</Text>
                     </View>
                     <Text style={styles.message}>
-                        Manage payroll, inventory, and B2B relations. Automate the 
+                        Manage payroll, inventory, and B2B relations. Automate the
                         back-office so you can focus on growth.
                     </Text>
                     <View style={[styles.badge, styles.success]}>
@@ -97,9 +97,9 @@ const OrgPortalOverview: React.FunctionComponent = ({ navigation }: any) => {
             {/* NEW: Navigation Action Footer */}
             <View style={styles.footerAction}>
                 <Text style={styles.footerNote}>Authorized Access Required</Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.portalButton}
-                    onPress={() => navigation.navigate("PortalAuthScreen")} // Update with your actual route
+                    onPress={() => Linking.openURL('https://droidtechhq.com/auth/join-our-community')} // Update with your actual route
                 >
                     <Text style={styles.portalButtonText}>Enter Portal</Text>
                     <Ionicons name="arrow-forward" size={20} color="#FFF" />
